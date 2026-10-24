@@ -1,0 +1,567 @@
+{
+  "_説明": "選手名簿。草野球スコアブックから取り込み。admin.html で編集できます。",
+  "players": [
+    {
+      "id": "7lrk29vxyuof6dbsccob",
+      "name": "児玉 淳希",
+      "kana": "",
+      "number": "37",
+      "position": "右翼手",
+      "positionSource": "スコアブックの打順表から推定",
+      "bats": "",
+      "throws": "",
+      "active": true,
+      "comment": "ハイブリッド・スラッガー",
+      "look": {
+        "photo": true,
+        "build": "normal",
+        "hair": "short",
+        "hairColor": "#3a2a1e",
+        "face": "grin",
+        "sleeveL": "#ff7a1a",
+        "sleeveR": "#1d1d24"
+      },
+      "source": "scorebook"
+    },
+    {
+      "id": "pl-fukimoto",
+      "name": "吹本 尚哉",
+      "kana": "",
+      "number": "66",
+      "position": "控え",
+      "positionSource": "",
+      "bats": "",
+      "throws": "",
+      "active": true,
+      "comment": "初代エース",
+      "look": {
+      },
+      "source": "scorebook"
+    },
+    {
+      "id": "pl-funai",
+      "name": "船井",
+      "kana": "",
+      "number": "",
+      "position": "二塁手",
+      "positionSource": "スコアブックの打順表から推定",
+      "bats": "",
+      "throws": "",
+      "active": true,
+      "comment": "",
+      "look": {
+      },
+      "source": "scorebook"
+    },
+    {
+      "id": "pl-hirohashi",
+      "name": "廣橋 昂英",
+      "kana": "",
+      "number": "16",
+      "position": "投手",
+      "positionSource": "スコアブックの打順表から推定",
+      "bats": "",
+      "throws": "",
+      "active": true,
+      "comment": "新婚ヒットマン",
+      "look": {
+      },
+      "source": "scorebook"
+    },
+    {
+      "id": "pl-hirooka",
+      "name": "廣岡 竜成",
+      "kana": "",
+      "number": "5",
+      "position": "左翼手",
+      "positionSource": "スコアブックの打順表から推定",
+      "bats": "",
+      "throws": "",
+      "active": true,
+      "comment": "Base Burglar",
+      "look": {
+        "photo": true,
+        "build": "slim",
+        "hair": "short",
+        "hairColor": "#1c1714",
+        "face": "cool"
+      },
+      "source": "scorebook"
+    },
+    {
+      "id": "pl-hiura",
+      "name": "日浦総",
+      "kana": "",
+      "number": "",
+      "position": "遊撃手",
+      "positionSource": "スコアブックの打順表から推定",
+      "bats": "",
+      "throws": "",
+      "active": true,
+      "comment": "H10のフィジカルギフテッド",
+      "look": {
+        "photo": true,
+        "build": "muscle",
+        "hair": "spiky",
+        "hairColor": "#141210",
+        "cap": "none",
+        "brows": "thick",
+        "face": "cool"
+      },
+      "source": "scorebook"
+    },
+    {
+      "id": "pl-kuromatsu",
+      "name": "黒松貴樹",
+      "kana": "",
+      "number": "20",
+      "position": "一塁手",
+      "positionSource": "スコアブックの打順表から推定",
+      "bats": "",
+      "throws": "",
+      "active": true,
+      "comment": "THE FREEZE（ザ・フリーズ）",
+      "look": {
+        "photo": true,
+        "build": "slim",
+        "hair": "long",
+        "hairColor": "#1c1714",
+        "cap": "backward",
+        "face": "cool"
+      },
+      "source": "scorebook"
+    },
+    {
+      "id": "pl-maeyama",
+      "name": "前山",
+      "kana": "",
+      "number": "",
+      "position": "三塁手",
+      "positionSource": "スコアブックの打順表から推定",
+      "bats": "",
+      "throws": "",
+      "active": true,
+      "comment": "",
+      "look": {
+      },
+      "source": "scorebook"
+    },
+    {
+      "id": "pl-masaki",
+      "name": "正木良輔",
+      "kana": "",
+      "number": "55",
+      "position": "捕手",
+      "positionSource": "スコアブックの打順表から推定",
+      "bats": "",
+      "throws": "",
+      "active": true,
+      "comment": "ピッチャーの操り人形師",
+      "look": {
+        "photo": true,
+        "build": "normal",
+        "hair": "short",
+        "hairColor": "#1c1714",
+        "cap": "helmet",
+        "gear": "catcher",
+        "face": "cool"
+      },
+      "source": "scorebook"
+    },
+    {
+      "id": "pl-matsutani",
+      "name": "松谷和人",
+      "kana": "",
+      "number": "46",
+      "position": "控え",
+      "positionSource": "",
+      "bats": "",
+      "throws": "",
+      "active": true,
+      "comment": "期待の新人",
+      "look": {
+      },
+      "source": "scorebook"
+    },
+    {
+      "id": "pl-mori",
+      "name": "森 陽友真",
+      "kana": "",
+      "number": "7",
+      "position": "控え",
+      "positionSource": "",
+      "bats": "",
+      "throws": "",
+      "active": true,
+      "comment": "覚醒間近の打者",
+      "look": {
+      },
+      "source": "scorebook"
+    },
+    {
+      "id": "pl-nakagawa",
+      "name": "中川 翔太",
+      "kana": "",
+      "number": "22",
+      "position": "右翼手",
+      "positionSource": "スコアブックの打順表から推定",
+      "bats": "",
+      "throws": "",
+      "active": true,
+      "comment": "鉄人22",
+      "look": {
+        "photo": true,
+        "build": "sturdy",
+        "hair": "short",
+        "hairColor": "#1c1714",
+        "cap": "none",
+        "brows": "thick",
+        "face": "cool"
+      },
+      "source": "scorebook"
+    },
+    {
+      "id": "pl-nakanishi",
+      "name": "中西 亮馬",
+      "kana": "",
+      "number": "51",
+      "position": "中堅手",
+      "positionSource": "スコアブックの打順表から推定",
+      "bats": "",
+      "throws": "",
+      "active": true,
+      "comment": "新代表 兼 DH",
+      "look": {
+        "photo": true,
+        "build": "slim",
+        "tall": true,
+        "hair": "short",
+        "hairColor": "#1c1714",
+        "sleeveL": "#1d1d24",
+        "sleeveR": "#1d1d24",
+        "face": "cool"
+      },
+      "source": "scorebook"
+    },
+    {
+      "id": "pl-nakao",
+      "name": "中尾 将基",
+      "kana": "",
+      "number": "1",
+      "position": "三塁手",
+      "positionSource": "スコアブックの打順表から推定",
+      "bats": "左",
+      "throws": "",
+      "active": true,
+      "comment": "左のスラッガー",
+      "look": {
+        "photo": true,
+        "build": "normal",
+        "hair": "short",
+        "hairColor": "#2a211b",
+        "face": "cool",
+        "sleeveL": "#1d1d24",
+        "sleeveR": "#1d1d24"
+      },
+      "source": "scorebook"
+    },
+    {
+      "id": "pl-nakayama",
+      "name": "中山",
+      "kana": "",
+      "number": "",
+      "position": "二塁手",
+      "positionSource": "スコアブックの打順表から推定",
+      "bats": "",
+      "throws": "",
+      "active": true,
+      "comment": "",
+      "look": {
+      },
+      "source": "scorebook"
+    },
+    {
+      "id": "pl-nishimoto",
+      "name": "西本",
+      "kana": "",
+      "number": "",
+      "position": "遊撃手",
+      "positionSource": "スコアブックの打順表から推定",
+      "bats": "",
+      "throws": "",
+      "active": true,
+      "comment": "",
+      "look": {
+      },
+      "source": "scorebook"
+    },
+    {
+      "id": "pl-ogura",
+      "name": "小椋 悠生",
+      "kana": "",
+      "number": "3",
+      "position": "一塁手",
+      "positionSource": "スコアブックの打順表から推定",
+      "bats": "",
+      "throws": "",
+      "active": true,
+      "comment": "送球の終着駅",
+      "look": {
+        "photo": true,
+        "build": "slim",
+        "hair": "short",
+        "hairColor": "#2a211b",
+        "glasses": "sport",
+        "sleeveL": "#ff9fc6",
+        "sleeveR": "#ff9fc6"
+      },
+      "source": "scorebook"
+    },
+    {
+      "id": "pl-oka",
+      "name": "岡 雅人",
+      "kana": "",
+      "number": "19",
+      "position": "三塁手",
+      "positionSource": "スコアブックの打順表から推定",
+      "bats": "",
+      "throws": "",
+      "active": true,
+      "comment": "復帰したツッコミ打法",
+      "look": {
+      },
+      "source": "scorebook"
+    },
+    {
+      "id": "pl-oku",
+      "name": "奥杏詩",
+      "kana": "",
+      "number": "28",
+      "position": "控え",
+      "positionSource": "",
+      "bats": "",
+      "throws": "",
+      "active": true,
+      "comment": "期待値高き若手野手",
+      "look": {
+      },
+      "source": "scorebook"
+    },
+    {
+      "id": "pl-suzuki",
+      "name": "鈴木",
+      "kana": "",
+      "number": "",
+      "position": "一塁手",
+      "positionSource": "スコアブックの打順表から推定",
+      "bats": "",
+      "throws": "",
+      "active": true,
+      "comment": "",
+      "look": {
+      },
+      "source": "scorebook"
+    },
+    {
+      "id": "pl-taniguchi",
+      "name": "谷口太基",
+      "kana": "",
+      "number": "3",
+      "position": "捕手",
+      "positionSource": "スコアブックの打順表から推定",
+      "bats": "",
+      "throws": "",
+      "active": true,
+      "comment": "クラッチヒッター",
+      "look": {
+        "photo": true,
+        "build": "chubby",
+        "hair": "short",
+        "hairColor": "#1c1714",
+        "glasses": "round",
+        "face": "smile",
+        "sleeveL": "#1d1d24",
+        "sleeveR": "#1d1d24"
+      },
+      "source": "scorebook"
+    },
+    {
+      "id": "pl-tsuge",
+      "name": "柘植 雄三",
+      "kana": "",
+      "number": "18",
+      "position": "投手",
+      "positionSource": "スコアブックの打順表から推定",
+      "bats": "",
+      "throws": "",
+      "active": true,
+      "comment": "縦カーブの使い手",
+      "look": {
+      },
+      "source": "scorebook"
+    },
+    {
+      "id": "pl-tsujimoto-kaito",
+      "name": "辻本 魁音",
+      "kana": "",
+      "number": "17",
+      "position": "中堅手",
+      "positionSource": "スコアブックの打順表から推定",
+      "bats": "",
+      "throws": "",
+      "active": true,
+      "comment": "外野の支配者（ルーラー）",
+      "look": {
+        "photo": true,
+        "build": "slim",
+        "hair": "short",
+        "hairColor": "#3a2a1e",
+        "sleeveL": "#c6f03c",
+        "sleeveR": "#c6f03c"
+      },
+      "source": "scorebook"
+    },
+    {
+      "id": "pl-tsujimoto-kodai",
+      "name": "辻本 紘大",
+      "kana": "",
+      "number": "12",
+      "position": "控え",
+      "positionSource": "",
+      "bats": "",
+      "throws": "",
+      "active": true,
+      "comment": "真二刀流",
+      "look": {
+      },
+      "source": "scorebook"
+    },
+    {
+      "id": "pl-tsujimoto",
+      "name": "辻本雄大",
+      "kana": "",
+      "number": "8",
+      "position": "投手",
+      "positionSource": "スコアブックの打順表から推定",
+      "bats": "",
+      "throws": "",
+      "active": true,
+      "comment": "変則サイド",
+      "look": {
+        "photo": true,
+        "build": "sturdy",
+        "hair": "short",
+        "hairColor": "#1c1714",
+        "throwStyle": "side",
+        "sleeveL": "#1a2f73",
+        "sleeveR": "#1a2f73"
+      },
+      "source": "scorebook"
+    },
+    {
+      "id": "pl-tsunemi",
+      "name": "常深 凌也",
+      "kana": "",
+      "number": "23",
+      "position": "控え",
+      "positionSource": "",
+      "bats": "",
+      "throws": "",
+      "active": true,
+      "comment": "本気マン",
+      "look": {
+      },
+      "source": "scorebook"
+    },
+    {
+      "id": "pl-tsunoda-atsuki",
+      "name": "角田 篤紀",
+      "kana": "",
+      "number": "34",
+      "position": "二塁手",
+      "positionSource": "スコアブックの打順表から推定",
+      "bats": "",
+      "throws": "",
+      "active": true,
+      "comment": "期待の有望株",
+      "look": {
+        "photo": true,
+        "build": "normal",
+        "hair": "wavy",
+        "hairColor": "#1c1714",
+        "face": "round"
+      },
+      "source": "scorebook"
+    },
+    {
+      "id": "pl-tsunoda",
+      "name": "角田 俊紀",
+      "kana": "",
+      "number": "",
+      "position": "遊撃手",
+      "positionSource": "スコアブックの打順表から推定",
+      "bats": "",
+      "throws": "",
+      "active": true,
+      "comment": "いぶし銀",
+      "look": {
+        "photo": true,
+        "build": "slim",
+        "tall": true,
+        "hair": "short",
+        "hairColor": "#1c1714",
+        "cap": "helmet",
+        "sleeveL": "#1d1d24",
+        "sleeveR": "#1d1d24",
+        "face": "cool"
+      },
+      "source": "scorebook"
+    },
+    {
+      "id": "pl-uehara",
+      "name": "上原秀太",
+      "kana": "",
+      "number": "10",
+      "position": "控え",
+      "positionSource": "",
+      "bats": "",
+      "throws": "",
+      "active": true,
+      "comment": "沖縄の甲斐野央",
+      "look": {
+      },
+      "source": "scorebook"
+    },
+    {
+      "id": "pl-uemae",
+      "name": "ウエマエ",
+      "kana": "",
+      "number": "",
+      "position": "遊撃手",
+      "positionSource": "スコアブックの打順表から推定",
+      "bats": "",
+      "throws": "",
+      "active": true,
+      "comment": "",
+      "look": {
+      },
+      "source": "scorebook"
+    },
+    {
+      "id": "pl-yoshida",
+      "name": "吉田 大佑",
+      "kana": "",
+      "number": "6",
+      "position": "控え",
+      "positionSource": "",
+      "bats": "",
+      "throws": "",
+      "active": true,
+      "comment": "フルスインガー",
+      "look": {
+      },
+      "source": "scorebook"
+    }
+  ],
+  "updatedAt": "2026-10-22T05:44:52Z"
+}

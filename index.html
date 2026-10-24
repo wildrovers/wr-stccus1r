@@ -1,0 +1,1604 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#12235a">
+<meta name="robots" content="noindex,nofollow"><!-- 検索エンジンに載せない（URLを知っている人だけが見る想定） -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ワイロバ">
+<meta property="og:title" content="ワイルドローバーズ ボールパーク">
+<meta property="og:description" content="ワイルドローバーズの成績・ランキング・試合結果をチェック！">
+<meta property="og:image" content="logo-512.png">
+<link rel="icon" type="image/png" href="favicon-32.png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>ワイロバ ボールパーク</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;800&display=swap" rel="stylesheet">
+<script type="importmap">
+{ "imports": {
+  "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+} }
+</script>
+<style>
+:root{
+  --navy:#12235a; --navy2:#0a1638; --navy3:#1d3580;
+  --yellow:#ffc928; --yellow2:#ffe27a;
+  --sky:#bfe6ff; --grass:#5cbf4f;
+  --card:#ffffff; --text:#13213f; --muted:#5b6788; --line:#e3e8f3;
+  --gold:#f5c542; --silver:#c3cdd8; --bronze:#d9935a;
+  --win:#1e9e53; --lose:#d64545; --draw:#8a93a6;
+  --header-h:56px; --nav-h:64px;
+  --safe-b:env(safe-area-inset-bottom,0px); --safe-t:env(safe-area-inset-top,0px);
+  --font:'M PLUS Rounded 1c','Hiragino Maru Gothic ProN','Hiragino Sans','Noto Sans JP',sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;}
+body{font-family:var(--font);font-weight:800;color:var(--text);background:linear-gradient(#9fd8ff,#dff3ff 45%,#8fd17f 45%,#5cbf4f);overflow:hidden;overscroll-behavior:none}
+button{font-family:inherit;font-weight:800;cursor:pointer}
+select{font-family:inherit;font-weight:800}
+.hidden{display:none!important}
+
+/* ---------- ヘッダー ---------- */
+#header{position:fixed;left:0;right:0;top:0;z-index:30;height:calc(var(--header-h) + var(--safe-t));padding:var(--safe-t) 12px 0;
+  display:flex;align-items:center;gap:8px;background:linear-gradient(180deg,rgba(10,22,56,.96),rgba(18,35,90,.92));color:#fff;border-bottom:3px solid var(--yellow)}
+#header .logo{display:flex;align-items:center;gap:8px;min-width:0;flex:1}
+#header .logo svg{flex:none}
+#header .logo b{font-size:16px;line-height:1.05;white-space:nowrap}
+#header .logo small{display:block;font-size:10px;color:var(--yellow);letter-spacing:.12em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#header .logo div{min-width:0}
+@media (max-width:440px){ #header .logo div{display:none} } /* 狭い画面ではロゴ画像だけ（チーム名はロゴに入っている） */
+.pill-select{appearance:none;-webkit-appearance:none;border:2px solid var(--yellow);background:var(--navy2);color:#fff;border-radius:999px;padding:6px 26px 6px 12px;font-size:14px;
+  background-image:linear-gradient(45deg,transparent 50%,var(--yellow) 50%),linear-gradient(135deg,var(--yellow) 50%,transparent 50%);background-position:calc(100% - 14px) 52%,calc(100% - 9px) 52%;background-size:5px 5px;background-repeat:no-repeat}
+.mode-btn{border:none;border-radius:999px;background:var(--yellow);color:var(--navy);padding:8px 12px;font-size:13px;box-shadow:0 3px 0 #c99a10;min-height:36px}
+.mode-btn:active{transform:translateY(2px);box-shadow:0 1px 0 #c99a10}
+
+/* ---------- バナー ---------- */
+#banner{position:fixed;top:calc(var(--header-h) + var(--safe-t) + 6px);left:50%;transform:translateX(-50%);z-index:29;max-width:calc(100% - 24px);
+  background:#fff3c4;border:2px solid var(--yellow);color:var(--navy);border-radius:14px;padding:6px 12px;font-size:12px;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,.15)}
+#banner.test{background:#ffe0e0;border-color:#ff7b7b}
+
+/* ---------- 3D ---------- */
+#stage{position:fixed;inset:0;z-index:1;touch-action:none}
+#stage canvas{display:block;width:100%;height:100%}
+#hud{position:fixed;z-index:10;right:12px;top:calc(var(--header-h) + var(--safe-t) + 48px);display:flex;flex-direction:column;gap:10px}
+.round-btn{width:46px;height:46px;border-radius:50%;border:3px solid #fff;background:var(--navy);color:#fff;font-size:20px;box-shadow:0 4px 0 var(--navy2),0 6px 14px rgba(0,0,0,.25);display:grid;place-items:center}
+.round-btn.on{background:var(--yellow);color:var(--navy)}
+.round-btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--navy2)}
+#spots{position:fixed;z-index:10;left:0;right:0;bottom:calc(var(--nav-h) + var(--safe-b) + 10px);display:flex;gap:8px;overflow-x:auto;padding:0 12px;scrollbar-width:none}
+#spots::-webkit-scrollbar{display:none}
+.chip{flex:none;border:2px solid var(--navy);background:#fff;color:var(--navy);border-radius:999px;padding:8px 14px;font-size:13px;box-shadow:0 3px 0 var(--navy);min-height:40px;white-space:nowrap}
+.chip.on{background:var(--navy);color:var(--yellow)}
+.chip:active{transform:translateY(2px);box-shadow:0 1px 0 var(--navy)}
+#tapHint{position:fixed;z-index:9;left:50%;transform:translateX(-50%);top:calc(var(--header-h) + var(--safe-t) + 14px);background:rgba(18,35,90,.85);color:#fff;border-radius:999px;padding:6px 14px;font-size:12px;pointer-events:none;transition:opacity .6s;white-space:nowrap}
+#emptyCard{position:fixed;z-index:11;left:50%;top:50%;transform:translate(-50%,-50%);width:min(340px,calc(100% - 32px));background:#fff;border-radius:20px;border:3px solid var(--navy);padding:18px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+#emptyCard p{font-weight:500;font-size:14px;line-height:1.6;margin:8px 0 14px}
+
+/* ---------- 2Dホーム ---------- */
+#home2d{position:fixed;inset:0;z-index:2;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:calc(var(--header-h) + var(--safe-t) + 14px) 16px calc(var(--nav-h) + var(--safe-b) + 20px);
+  background:linear-gradient(#bfe6ff,#e9f7ff 220px,#f4f8ef)}
+.wrap{max-width:760px;margin:0 auto}
+
+/* ---------- シート（詳細画面） ---------- */
+#sheet{position:fixed;z-index:20;left:0;right:0;margin:0 auto;max-width:760px;top:calc(var(--header-h) + var(--safe-t) + 8px);bottom:calc(var(--nav-h) + var(--safe-b));
+  background:#f4f6fb;border-radius:22px 22px 0 0;box-shadow:0 -8px 30px rgba(0,0,0,.25);transform:translateY(110%);transition:transform .32s cubic-bezier(.2,.9,.3,1.1);display:flex;flex-direction:column;border:3px solid var(--navy);border-bottom:none}
+#sheet.open{transform:translateY(0)}
+.sheet-head{display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--navy);color:#fff;border-radius:18px 18px 0 0}
+.sheet-head h2{flex:1;margin:0;font-size:18px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.icon-btn{width:40px;height:40px;border-radius:50%;border:none;background:rgba(255,255,255,.15);color:#fff;font-size:20px;flex:none}
+.icon-btn.ghost{visibility:hidden}
+#sheetBody{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 14px 28px;overscroll-behavior:contain}
+
+/* ---------- 下部メニュー ---------- */
+#nav{position:fixed;z-index:40;left:0;right:0;bottom:0;height:calc(var(--nav-h) + var(--safe-b));padding-bottom:var(--safe-b);background:var(--navy);border-top:3px solid var(--yellow);display:flex}
+#nav button{flex:1;background:none;border:none;color:#c8d2f0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:11px;padding:4px 0}
+#nav button span{font-size:22px;line-height:1;transition:transform .2s}
+#nav button.on{color:var(--yellow)}
+#nav button.on span{transform:translateY(-2px) scale(1.15)}
+
+/* ---------- 部品 ---------- */
+.card{background:var(--card);border-radius:18px;padding:14px;margin-bottom:12px;box-shadow:0 3px 0 var(--line),0 6px 14px rgba(18,35,90,.06);border:2px solid var(--line)}
+.card h3{margin:0 0 10px;font-size:15px;display:flex;align-items:center;gap:6px;color:var(--navy)}
+.card h3 .sub{margin-left:auto;font-size:11px;color:var(--muted);font-weight:500}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:none;border-radius:999px;background:var(--navy);color:#fff;padding:12px 18px;font-size:15px;min-height:46px;box-shadow:0 4px 0 var(--navy2);text-decoration:none}
+.btn.y{background:var(--yellow);color:var(--navy);box-shadow:0 4px 0 #c99a10}
+.btn.w{background:#fff;color:var(--navy);border:2px solid var(--navy);box-shadow:0 4px 0 var(--navy)}
+.btn.sm{padding:8px 12px;min-height:38px;font-size:13px}
+.btn:active{transform:translateY(3px);box-shadow:none}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.unreg{color:#9aa3b8;font-size:.72em;font-weight:500}
+.muted{color:var(--muted);font-weight:500;font-size:12px}
+.note{font-size:11px;color:var(--muted);font-weight:500;line-height:1.6;margin-top:8px}
+.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:8px}
+.stat{background:#f4f6fb;border-radius:12px;padding:8px 6px;text-align:center;border:2px solid #e8ecf6}
+.stat .l{font-size:11px;color:var(--muted);font-weight:500}
+.stat .v{font-size:20px;line-height:1.3;color:var(--navy);word-break:keep-all}
+.stat.hl{background:linear-gradient(#fff6d3,#ffe9a0);border-color:var(--yellow)}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:2px 0 8px;margin:0 -2px 6px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chips .chip{min-height:36px;padding:6px 12px}
+.badge{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:4px 10px;font-size:12px;background:#eef2fb;color:var(--navy);margin:0 4px 6px 0;border:2px solid #dbe2f3}
+.badge.gold{background:linear-gradient(#fff3bf,#ffd659);border-color:#e7b625}
+.res{display:inline-grid;place-items:center;min-width:34px;height:26px;border-radius:8px;color:#fff;font-size:13px;padding:0 6px}
+.res.勝{background:var(--win)} .res.負{background:var(--lose)} .res.分{background:var(--draw)}
+table.t{width:100%;border-collapse:collapse;font-size:13px}
+.tscroll{overflow-x:auto;margin:0 -4px}
+table.t th{font-size:11px;color:var(--muted);font-weight:500;padding:6px 6px;border-bottom:2px solid var(--line);white-space:nowrap;text-align:center}
+table.t td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:center;white-space:nowrap}
+table.t td.l,table.t th.l{text-align:left}
+.stat-table .sticky{position:sticky;left:0;background:#fff;z-index:1;box-shadow:2px 0 0 var(--line);max-width:9em;overflow:hidden;text-overflow:ellipsis}
+.list-item{display:flex;align-items:center;gap:10px;padding:10px;border-radius:14px;background:#fff;border:2px solid var(--line);margin-bottom:8px;cursor:pointer;min-height:56px}
+.list-item:active{transform:scale(.98)}
+.list-item .grow{flex:1;min-width:0}
+.list-item .nm{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.num-tag{display:inline-grid;place-items:center;min-width:28px;height:22px;border-radius:7px;background:var(--navy);color:var(--yellow);font-size:12px;padding:0 5px;margin-right:4px}
+
+/* 選手名鑑 */
+.roster{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.pcard{background:linear-gradient(180deg,#fff 0,#fff 60%,#eef3ff 100%);border-radius:18px;border:3px solid var(--navy);padding:10px 8px 12px;text-align:center;cursor:pointer;position:relative;box-shadow:0 4px 0 var(--navy)}
+.pcard:active{transform:translateY(3px);box-shadow:0 1px 0 var(--navy)}
+.pcard .nm{font-size:15px;margin-top:2px}
+.pcard .pos{font-size:11px;color:var(--muted);font-weight:500}
+.pcard .wp{z-index:2;position:absolute;top:6px;right:6px;display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.pcard .wp b{border-radius:999px;font-size:10.5px;padding:2px 7px;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.pcard .wp .mv1{background:var(--yellow);color:var(--navy)}
+.pcard .wp .mv2{background:#e3e8ef;color:#3f4a57}
+.pcard .wpline{margin-top:4px;font-size:13px;color:var(--navy);background:#fff6d3;border-radius:999px;display:inline-block;padding:1px 10px}
+.pcard.inactive{opacity:.55}
+
+/* ランキング */
+.rk{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:16px;background:#fff;border:2px solid var(--line);margin-bottom:8px;cursor:pointer;position:relative;overflow:hidden;min-height:60px}
+.rk .no{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:#eef2fb;color:var(--navy);font-size:16px;flex:none;position:relative}
+.rk .val{font-size:22px;color:var(--navy);text-align:right}
+.rk .val small{font-size:11px;margin-left:2px}
+.rk .chg{font-size:11px;display:block;text-align:right;font-weight:500}
+.chg.up{color:var(--win)} .chg.down{color:var(--lose)}
+.rk.r1{background:linear-gradient(110deg,#fff8d6,#ffe27a 55%,#ffd23d);border-color:#e7b625;box-shadow:0 0 0 3px rgba(255,201,40,.35),0 6px 18px rgba(231,182,37,.45)}
+.rk.r2{background:linear-gradient(110deg,#fbfcfe,#dfe6ee);border-color:var(--silver)}
+.rk.r3{background:linear-gradient(110deg,#fff6ef,#f2c7a2);border-color:var(--bronze)}
+.rk.r1 .no{background:var(--gold);color:#7a5600}
+.rk.r2 .no{background:var(--silver);color:#3f4a57}
+.rk.r3 .no{background:var(--bronze);color:#5d3313}
+.rk.r1 .no::before{content:'👑';position:absolute;top:-17px;font-size:18px;animation:bob 1.6s ease-in-out infinite}
+.rk.r1::after{content:'';position:absolute;inset:-40% auto -40% -30%;width:40%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.75),transparent);transform:skewX(-20deg);animation:shine 2.8s ease-in-out infinite}
+.spot{position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 26px 50%,rgba(255,255,255,.9),transparent 60px)}
+@keyframes shine{0%{left:-40%}60%,100%{left:130%}}
+@keyframes bob{50%{transform:translateY(-3px) rotate(-6deg)}}
+
+/* プロフィール */
+.hero{display:flex;gap:12px;align-items:center;background:linear-gradient(135deg,var(--navy),var(--navy3));color:#fff;border-radius:20px;padding:14px;margin-bottom:12px;border:3px solid var(--yellow);position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;right:-30px;top:-30px;width:140px;height:140px;border-radius:50%;background:rgba(255,201,40,.15)}
+.hero .big-no{font-size:44px;color:var(--yellow);line-height:1}
+.hero .nm{font-size:22px;line-height:1.2}
+.hero .meta{font-size:12px;color:#c8d2f0;font-weight:500;margin-top:4px}
+.rankgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.rankgrid div{background:#f4f6fb;border-radius:10px;padding:6px 4px;text-align:center;font-size:11px;font-weight:500;color:var(--muted)}
+.rankgrid b{display:block;font-size:15px;color:var(--navy);font-weight:800}
+.rankgrid .top b{color:#b8860b}
+
+/* スコア */
+.score-big{display:flex;align-items:center;justify-content:center;gap:16px;background:var(--navy);color:#fff;border-radius:16px;padding:14px;border:3px solid var(--yellow)}
+.score-big .tm{text-align:center;font-size:12px;font-weight:500;max-width:110px}
+.score-big .pt{font-size:40px;color:var(--yellow);line-height:1}
+.mvp-card{display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,#fff6d3,#ffd659);border:3px solid #e7b625;border-radius:18px;padding:12px;cursor:pointer;position:relative;overflow:hidden}
+.mvp-card .ttl{font-size:12px;color:#7a5600}
+.mvp-card .nm{font-size:20px}
+.confetti{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.confetti i{position:absolute;top:-12px;width:8px;height:12px;border-radius:2px;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(420px) rotate(720deg);opacity:.2}}
+
+/* トースト・ローディング */
+.card-ava{position:relative;flex:none;display:inline-block}
+.card-ava img{width:100%;height:100%;object-fit:cover;object-position:50% 18%;border-radius:7px;border:2px solid var(--yellow);box-shadow:0 3px 8px rgba(0,0,0,.25);display:block;background:#0b1433}
+.card-crown{position:absolute;top:-15px;left:50%;transform:translateX(-50%);font-style:normal;font-size:18px;z-index:1;animation:bob 1.6s ease-in-out infinite}
+.card-big{margin:2px auto 4px;display:flex;justify-content:center}
+.card-zoom{border:none;background:none;padding:0;flex:none;position:relative;z-index:1}
+#lightbox{position:fixed;inset:0;z-index:70;background:rgba(5,10,30,.88);display:grid;place-items:center;padding:20px}
+#lightbox img{max-width:min(420px,90vw);max-height:80vh;border-radius:16px;box-shadow:0 10px 40px rgba(0,0,0,.6);border:3px solid var(--yellow);animation:pop .35s cubic-bezier(.2,.9,.3,1.3)}
+@keyframes pop{from{transform:scale(.6) rotate(-6deg);opacity:0}}
+#toast{position:fixed;z-index:60;left:50%;bottom:calc(var(--nav-h) + var(--safe-b) + 70px);transform:translateX(-50%) translateY(20px);opacity:0;background:var(--navy);color:#fff;border:2px solid var(--yellow);border-radius:999px;padding:10px 18px;font-size:13px;transition:.25s;pointer-events:none;max-width:calc(100% - 32px);text-align:center}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+#loading{position:fixed;inset:0;z-index:100;background:var(--navy);color:#fff;display:grid;place-items:center;text-align:center;transition:opacity .5s}
+#loading .ball{width:56px;height:56px;border-radius:50%;background:#fff;margin:0 auto 14px;position:relative;animation:spin 1s linear infinite;box-shadow:0 0 0 4px var(--yellow)}
+#loading .ball::before,#loading .ball::after{content:'';position:absolute;top:6px;bottom:6px;width:16px;border:3px dashed #e33;border-top:none;border-bottom:none}
+#loading .ball::before{left:4px;border-left:none;border-radius:0 50% 50% 0}
+#loading .ball::after{right:4px;border-right:none;border-radius:50% 0 0 50%}
+@keyframes spin{to{transform:rotate(360deg)}}
+#loading{background:#0b1433}
+.logo-bounce{display:block;margin:0 auto 10px;max-width:60vw;height:auto;animation:lb 1.2s ease-in-out infinite}
+@keyframes lb{50%{transform:translateY(-8px) scale(1.03)}}
+@media (min-width:900px){ #header .logo b{font-size:18px} }
+@media (prefers-reduced-motion:reduce){ *{animation:none!important;transition:none!important} }
+</style>
+</head>
+<body>
+<div id="loading"><div><img src="logo-512.png" alt="Wild Rovers" class="logo-bounce" width="220" height="220"><div>ボールパークを準備中…</div></div></div>
+
+<header id="header">
+  <div class="logo">
+    <img src="icon-192.png" width="46" height="46" alt="Wild Rovers" style="flex:none;border-radius:10px;margin:-4px -2px">
+    <div><b>ワイルドローバーズ</b><small>WILD ROVERS BALLPARK</small></div>
+  </div>
+  <select id="seasonSel" class="pill-select" aria-label="シーズン"></select>
+  <button id="modeBtn" class="mode-btn" aria-label="表示切替">2D</button>
+</header>
+<div id="banner" class="hidden"></div>
+
+<div id="stage"></div>
+<div id="tapHint">ドラッグで回転・ピンチで拡大／選手や看板をタップ！</div>
+<div id="hud" class="hidden">
+  <button class="round-btn on" id="rotBtn" title="自動回転">🔄</button>
+  <button class="round-btn" id="resetBtn" title="視点リセット">🎯</button>
+</div>
+<div id="spots" class="hidden">
+  <button class="chip" data-spot="board">🏆 ランキング板</button>
+  <button class="chip" data-spot="score">📋 スコアボード</button>
+  <button class="chip" data-spot="mvp">🥇 MVP表彰台</button>
+  <button class="chip" data-spot="trophy">🏅 トロフィー</button>
+  <button class="chip" data-spot="bench">🪑 ベンチ</button>
+</div>
+<div id="emptyCard" class="hidden"></div>
+
+<main id="home2d" class="hidden"><div class="wrap" id="home2dBody"></div></main>
+
+<section id="sheet" aria-hidden="true">
+  <div class="sheet-head">
+    <button class="icon-btn" id="backBtn" aria-label="戻る">‹</button>
+    <h2 id="sheetTitle"></h2>
+    <button class="icon-btn" id="closeBtn" aria-label="閉じる">✕</button>
+  </div>
+  <div id="sheetBody"></div>
+</section>
+
+<nav id="nav">
+  <button data-nav="home" class="on"><span>🏟️</span>ホーム</button>
+  <button data-nav="roster"><span>⚾</span>選手名鑑</button>
+  <button data-nav="ranking"><span>🏆</span>ランキング</button>
+  <button data-nav="me"><span>📊</span>個人成績</button>
+  <button data-nav="games"><span>📅</span>試合結果</button>
+</nav>
+<div id="toast"></div>
+
+<script src="wr-core.js"></script>
+<script src="logo-data.js"></script>
+<script type="module">
+const C = window.WRCore;
+const $ = (s, el = document) => el.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const UNREG = '<span class="unreg">未登録</span>';
+const num = v => C.isNum(v) ? v : UNREG;
+const rate = (v, depsOk, f) => !depsOk ? UNREG : (C.isNum(v) ? f(v) : '—');
+const params = new URLSearchParams(location.search);
+const TEST = params.has('test');
+const PREVIEW = params.has('preview');
+
+/* ================= 状態 ================= */
+const S = {
+  data: null, season: null, source: '', mode: '3d', stack: [], my: null,
+  gamesOrder: 'desc', boardCat: 'AVG', kind: 'all'
+};
+try { S.my = localStorage.getItem('wr-my-player'); S.kind = localStorage.getItem('wr-kind') || 'all'; } catch (e) {}
+
+function toast(msg, ms = 2400) {
+  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove('show'), ms);
+}
+
+/* ================= データ読み込み ================= */
+async function load() {
+  let res;
+  if (PREVIEW) {
+    try {
+      const d = JSON.parse(localStorage.getItem(TEST ? 'wr-admin-draft-test' : 'wr-admin-draft') || 'null');
+      if (d) res = { raw: d.data || d, source: 'preview' };
+    } catch (e) {}
+  }
+  if (!res) {
+    try { res = await C.loadData({ base: TEST ? 'testdata/' : '', cacheName: TEST ? 'test' : 'main' }); }
+    catch (e) { res = { raw: null, source: 'none' }; }
+  }
+  const norm = C.normalize(res.raw);
+  if (norm.warnings.length) console.warn(norm.warnings);
+  S.data = norm.data; S.source = res.source;
+  const st = S.data.rankings.settings;
+  if (!S.season || st.seasons.indexOf(S.season) < 0) S.season = st.currentSeason;
+  // バナー表示
+  const b = $('#banner'); b.className = ''; b.innerHTML = '';
+  const msgs = [];
+  if (TEST) { b.classList.add('test'); msgs.push('🧪 テストデータ表示中（架空の選手です／本番の成績ではありません）'); }
+  if (PREVIEW) msgs.push('👀 管理画面の下書きをプレビュー中（まだ公開されていません）');
+  if (res.source === 'cache') msgs.push('📴 通信できないため、前回保存したデータを表示中（' + (res.cachedAt || '').slice(0, 10) + '）');
+  if (res.source === 'none') msgs.push('⚠️ データを読み込めませんでした');
+  if (msgs.length) { b.innerHTML = msgs.map(esc).join('<br>'); b.onclick = () => b.classList.add('hidden'); setTimeout(() => b.classList.add('hidden'), 7000); }
+  else b.classList.add('hidden');
+  const sel = $('#seasonSel');
+  // シーズン × 試合の種類（全試合 / 大会 / 練習試合）
+  sel.innerHTML = st.seasons.slice().reverse().map(s => `<optgroup label="${esc(s)}年">${['all', 'tour', 'prac'].map(k => `<option value="${esc(s)}|${k}">${esc(s)}年 ${C.KIND_LABEL[k]}</option>`).join('')}</optgroup>`).join('');
+  sel.value = S.season + '|' + S.kind;
+}
+const D = () => S.data;
+// 今の集計範囲（シーズン＋試合の種類）と、その表示名
+const SC = () => ({ season: S.season, kind: S.kind });
+const SL = () => `${S.season}年${S.kind === 'all' ? '' : '・' + C.KIND_LABEL[S.kind]}`;
+function setScope(season, kind) {
+  S.season = season; S.kind = kind;
+  try { localStorage.setItem('wr-kind', kind); } catch (e) {}
+  $('#seasonSel').value = S.season + '|' + S.kind;
+  World && World.refresh(); if (S.mode === '2d') renderHome2D(); refreshSheet();
+  toast(SL() + 'の成績を表示中');
+}
+// 画面の上に出す「全試合／大会／練習試合」切り替えボタン
+const kindChips = () => `<div class="chips kind-chips">${['all', 'tour', 'prac'].map(k => `<button class="chip ${S.kind === k ? 'on' : ''}" data-kind="${k}">${k === 'tour' ? '🏆 ' : k === 'prac' ? '⚾ ' : ''}${C.KIND_LABEL[k]}</button>`).join('')}</div>`;
+const P = id => C.playerById(D(), id);
+const activePlayers = () => D().players.players.filter(p => p.active !== false)
+  .sort((a, b) => (parseInt(a.number, 10) || 9999) - (parseInt(b.number, 10) || 9999));
+
+/* ================= 選手カードの読み込み ================= */
+function loadCards() {
+  const apply = map => {
+    S.cards = {};
+    // data URI のままだと重いので、ブラウザ内の短いURL（blob:）に変換
+    Object.entries(map || {}).forEach(([id, uri]) => {
+      if (String(uri).indexOf('data:') !== 0) { S.cards[id] = uri; return; } // URL・置き場所で登録したカード
+      try { const [h, b64] = uri.split(','); const bin = atob(b64), u8 = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i); S.cards[id] = URL.createObjectURL(new Blob([u8], { type: h.slice(5, h.indexOf(';')) })); }
+      catch (e) { S.cards[id] = uri; }
+    });
+    if (!Object.keys(S.cards).length) return;
+    if (S.mode === '2d') renderHome2D();
+    if (S.stack.length) { const keep = $('#sheetBody').scrollTop; refreshSheet(); $('#sheetBody').scrollTop = keep; }
+  };
+  if (PREVIEW) { try { const c = JSON.parse(localStorage.getItem(TEST ? 'wr-admin-cards-test' : 'wr-admin-cards') || 'null'); if (c && c.cards) return apply(c.cards); } catch (e) {} }
+  const sc = document.createElement('script');
+  sc.src = (TEST ? 'testdata/' : '') + 'cards.js?t=' + Date.now();
+  sc.onload = () => apply(window.WR_CARDS);
+  document.head.appendChild(sc);
+}
+
+/* ================= 2Dアバター（オリジナルデザイン） ================= */
+// 選手ごとの見た目（players.json の look。写真を参考に作成。未設定なら標準）
+const LOOK_DEFAULT = { build: 'normal', hair: 'short', hairColor: '#1c1714', cap: 'normal', glasses: 'none', face: 'normal', brows: 'normal', sleeveL: '#12235a', sleeveR: '#12235a' };
+const lookOf = p => Object.assign({}, LOOK_DEFAULT, (p && p.look) || {});
+const BUILD_W = { slim: 22, normal: 26, sturdy: 30, chubby: 33, muscle: 30 };
+// 選手カード（admin.html で ChatGPT などで作った画像）。あれば2Dキャラクターの代わりに表示
+const cardOf = p => p && S.cards && S.cards[p.id];
+function avatar(p, size = 64, crown = false) {
+  const cu = cardOf(p);
+  if (cu) return `<span class="card-ava" style="width:${Math.round(size * 0.78)}px;height:${Math.round(size * 1.15)}px">${crown ? '<i class="card-crown">👑</i>' : ''}<img src="${cu}" alt="" loading="lazy"></span>`;
+  const no = esc(p ? (p.number || '') : '?');
+  const L = lookOf(p), bw = BUILD_W[L.build] || 26, hc = esc(L.hairColor);
+  const headR = L.face === 'round' || L.build === 'chubby' ? 31 : 29;
+  const hy = 52, top = hy - headR;
+  let back = '', capSvg = '', hairFront = '', extra = '';
+  // 髪（帽子の下からのぞく部分）
+  if (L.hair === 'long') back += `<path d="M${50 - headR - 2} ${hy} q-2 26 8 30 h8 v-26z M${50 + headR + 2} ${hy} q2 26 -8 30 h-8 v-26z" fill="${hc}"/>`;
+  if (L.hair === 'wavy') hairFront += [24, 30, 70, 76].map((x, i) => `<circle cx="${x}" cy="${hy - 2 + (i % 2) * 6}" r="5" fill="${hc}"/>`).join('');
+  if (L.hair !== 'long' && L.cap !== 'none') hairFront += `<path d="M${50 - headR + 1} ${hy - 2} q2 10 5 12 v-12z M${50 + headR - 1} ${hy - 2} q-2 10 -5 12 v-12z" fill="${hc}"/>`;
+  // 帽子
+  if (L.cap === 'none') {
+    capSvg = L.hair === 'spiky'
+      ? `<path d="M${50 - headR} ${hy - 2} L26 ${top + 2} 33 ${top + 8} 38 ${top - 4} 45 ${top + 5} 51 ${top - 6} 57 ${top + 5} 63 ${top - 4} 68 ${top + 8} 75 ${top + 2} ${50 + headR} ${hy - 2} q-6 -6 -14 -4 q-15 -6 -30 0 q-8 -2 -15 4z" fill="${hc}"/>`
+      : `<path d="M${50 - headR} ${hy + 2} a${headR} ${headR} 0 0 1 ${headR * 2} 0 q-8 -9 -22 -7 q-10 -5 -20 0 q-10 -1 -16 7z" fill="${hc}"/>`;
+  } else if (L.cap === 'backward') {
+    capSvg = `<ellipse cx="50" cy="${top + 4}" rx="20" ry="5" fill="#ffc928" transform="rotate(-8 50 ${top + 4})"/><path d="M${50 - headR + 1} ${hy - 4}a${headR - 1} ${headR - 1} 0 0 1 ${(headR - 1) * 2} 0z" fill="#12235a"/><rect x="44" y="${hy - 9}" width="12" height="4" rx="2" fill="#ffc928"/>`;
+  } else if (L.cap === 'helmet') {
+    capSvg = `<path d="M${50 - headR - 2} ${hy + 2}a${headR + 2} ${headR + 2} 0 0 1 ${(headR + 2) * 2} 0z" fill="#0f1c4d"/><path d="M${50 - headR - 2} ${hy + 2}a${headR + 2} ${headR + 2} 0 0 1 14 -22" stroke="#3b56b0" stroke-width="3" fill="none" opacity=".7"/><ellipse cx="50" cy="${hy + 2}" rx="${headR + 5}" ry="4" fill="#0f1c4d"/><text x="50" y="${hy - 10}" text-anchor="middle" font-size="12" font-weight="900" fill="#ffc928" font-family="Arial Black,Arial">W</text>`;
+  } else {
+    capSvg = `<path d="M${50 - headR} ${hy - 2}a${headR} ${headR} 0 0 1 ${headR * 2} 0z" fill="#12235a"/><path d="M${54 - headR} ${hy - 2}h${headR * 2 - 8}c3 0 6 3 6 6H${48 - headR}c0-3 0-6 2-6z" fill="#ffc928"/><circle cx="50" cy="${top + 1}" r="3" fill="#ffc928"/><text x="50" y="${hy - 7}" text-anchor="middle" font-size="12" font-weight="900" fill="#ffc928" font-family="Arial Black,Arial">W</text>`;
+  }
+  // 顔
+  const eyeRy = L.face === 'cool' ? 3.4 : 5;
+  const eyes = L.face === 'grin'
+    ? `<path d="M35 66q4 -5 8 0M57 66q4 -5 8 0" stroke="#1d1d2b" stroke-width="2.6" fill="none" stroke-linecap="round"/>`
+    : `<ellipse cx="39" cy="66" rx="3.6" ry="${eyeRy}" fill="#1d1d2b"/><ellipse cx="61" cy="66" rx="3.6" ry="${eyeRy}" fill="#1d1d2b"/><circle cx="40" cy="64.5" r="1.2" fill="#fff"/><circle cx="62" cy="64.5" r="1.2" fill="#fff"/>`;
+  const mouth = { smile: '<path d="M42 74q8 7 16 0" stroke="#8a3b2b" stroke-width="2.6" fill="none" stroke-linecap="round"/>', grin: '<path d="M41 73h18q-2 9 -9 9t-9 -9z" fill="#8a2b2b"/><path d="M42 73.5h16v2.5h-16z" fill="#fff"/>', cool: '<path d="M45 76h10" stroke="#8a3b2b" stroke-width="2.4" stroke-linecap="round"/>' }[L.face] || '<path d="M44 75q6 5 12 0" stroke="#8a3b2b" stroke-width="2.6" fill="none" stroke-linecap="round"/>';
+  if (L.brows === 'thick') extra += '<path d="M33 58l11 -1M56 57l11 1" stroke="#1d1d2b" stroke-width="3.4" stroke-linecap="round"/>';
+  if (L.glasses === 'round') extra += '<circle cx="39" cy="66" r="8" fill="none" stroke="#222" stroke-width="2.4"/><circle cx="61" cy="66" r="8" fill="none" stroke="#222" stroke-width="2.4"/><path d="M47 66h6" stroke="#222" stroke-width="2.4"/>';
+  if (L.glasses === 'sport') extra += '<defs><linearGradient id="sg" x1="0" x2="1"><stop offset="0" stop-color="#ff3d2e"/><stop offset=".5" stop-color="#ffb02e"/><stop offset="1" stop-color="#ff3d2e"/></linearGradient></defs><path d="M27 61q23 -6 46 0l-2 9q-8 4 -17 -1h-8q-9 5 -17 1z" fill="url(#sg)" stroke="#222" stroke-width="1.5"/>';
+  const gear = L.gear === 'catcher' ? `<path d="M${50 - bw + 6} 76q${bw - 6} -6 ${(bw - 6) * 2} 0v20q-${bw - 6} 8 -${(bw - 6) * 2} 0z" fill="#c8323c" stroke="#7d1b22" stroke-width="1.5"/>` : '';
+  const arms = `<ellipse cx="${50 - bw - 2}" cy="88" rx="6" ry="11" fill="${esc(L.sleeveR)}"/><ellipse cx="${50 + bw + 2}" cy="88" rx="6" ry="11" fill="${esc(L.sleeveL)}"/><circle cx="${50 - bw - 2}" cy="99" r="5" fill="#ffd9b8"/><circle cx="${50 + bw + 2}" cy="99" r="5" fill="#ffd9b8"/>`;
+  return `<svg width="${size}" height="${size * 1.15}" viewBox="0 0 100 115" aria-hidden="true" style="flex:none">
+  ${crown ? `<path d="M30 ${top - 14} 38 ${top - 2} 50 ${top - 20} 62 ${top - 2} 70 ${top - 14} 68 ${top + 4}H32z" fill="#f5c542" stroke="#b8860b" stroke-width="2"/>` : ''}
+  <ellipse cx="50" cy="110" rx="${bw}" ry="4.5" fill="rgba(0,0,0,.15)"/>
+  ${back}${arms}
+  <ellipse cx="50" cy="88" rx="${bw}" ry="22" fill="#12235a"/>
+  ${L.build === 'muscle' ? `<ellipse cx="${50 - bw + 4}" cy="74" rx="8" ry="6" fill="#12235a"/><ellipse cx="${50 + bw - 4}" cy="74" rx="8" ry="6" fill="#12235a"/>` : ''}
+  <rect x="${50 - bw + 2}" y="96" width="${(bw - 2) * 2}" height="5" rx="2" fill="#ffc928"/>
+  ${gear}
+  <text x="50" y="94" text-anchor="middle" font-size="19" font-weight="900" fill="#ffc928" font-family="Arial Black,Arial">${no}</text>
+  <circle cx="50" cy="${hy}" r="${headR}" fill="#ffd9b8"/>
+  ${hairFront}${capSvg}
+  ${eyes}
+  <circle cx="30" cy="73" r="4.5" fill="#ff9e8f" opacity=".6"/><circle cx="70" cy="73" r="4.5" fill="#ff9e8f" opacity=".6"/>
+  ${mouth}${extra}
+  </svg>`;
+}
+const pname = id => { if (id === C.GUEST) return '助っ人'; const p = P(id); return p ? esc(p.name) : '<span class="unreg">（削除された選手）</span>'; };
+const kindTag = g => `<span class="badge ${C.gameKind(g) === 'tour' ? 'gold' : ''}" style="margin:0 0 0 4px;padding:1px 8px;font-size:11px">${C.gameKind(g) === 'tour' ? '🏆 大会' : '練習試合'}</span>`;
+const ptag = p => `<span class="num-tag">${esc(p.number)}</span>`;
+
+function confetti(el, n = 40) {
+  const box = document.createElement('div'); box.className = 'confetti';
+  const colors = ['#ffc928', '#12235a', '#ff6b6b', '#4cc3ff', '#5cbf4f', '#fff'];
+  for (let i = 0; i < n; i++) {
+    const c = document.createElement('i');
+    c.style.left = Math.random() * 100 + '%';
+    c.style.background = colors[i % colors.length];
+    c.style.animationDuration = (1.6 + Math.random() * 1.8) + 's';
+    c.style.animationDelay = (Math.random() * .6) + 's';
+    box.appendChild(c);
+  }
+  el.appendChild(box); setTimeout(() => box.remove(), 4200);
+}
+
+/* ================= 画面（ビュー） ================= */
+const VIEWS = {};
+
+// --- 選手名鑑
+VIEWS.roster = () => {
+  const ps = D().players.players.slice().sort((a, b) => (a.active === false) - (b.active === false) || (parseInt(a.number, 10) || 9999) - (parseInt(b.number, 10) || 9999));
+  if (!ps.length) return { title: '⚾ 選手名鑑', html: emptyMsg('選手がまだ登録されていません。') };
+  const note = S.kind === 'all' ? '' : `（${C.KIND_LABEL[S.kind]}だけ。WPは${C.KIND_LABEL[S.kind]}のMVP・準MVPの分だけで、手入力のWPは含みません）`;
+  const html = `${kindChips()}<div class="muted" style="margin:-4px 0 8px">MVP・準MVPの回数とWPは ${esc(SL())} の集計です${note}</div><div class="roster">${ps.map(p => {
+    const wp = C.wpSummary(D(), p.id, SC()).current, m = C.mvpCounts(D(), p.id, SC());
+    return `<div class="pcard ${p.active === false ? 'inactive' : ''}" data-player="${esc(p.id)}">
+      <span class="wp">${m.game ? `<b class="mv1">🏆MVP ${m.game}回</b>` : ''}${m.game2 ? `<b class="mv2">🥈準MVP ${m.game2}回</b>` : ''}</span>${cardOf(p) ? `<div class="card-big">${avatar(p, 128)}</div>` : avatar(p, 70)}
+      <div class="nm">${esc(p.name)}</div>
+      <div class="pos">${p.number ? `#${esc(p.number)}・` : ''}${esc(p.position || '未登録')}${p.active === false ? '・休部/退団' : ''}</div>
+      <div class="wpline">${wp.toLocaleString('ja-JP')} WP</div></div>`;
+  }).join('')}</div>`;
+  return { title: '⚾ 選手名鑑', html };
+};
+
+// --- ランキング
+VIEWS.ranking = (prm = {}) => {
+  const key = prm.key || S.boardCat || 'AVG';
+  const r = C.ranking(D(), SC(), key);
+  const cat = r.category, q = r.qualifiers;
+  const GROUPS = [['bat', '🏏 打撃'], ['pit', '⚾ 投手'], ['etc', '🏅 その他']];
+  const chips = GROUPS.map(([g, lab]) => `<div class="chips" style="margin-bottom:0;align-items:center"><span class="muted" style="flex:none;font-size:11px;min-width:44px">${lab}</span>${C.CATEGORIES.filter(c => c.group === g).map(c => `<button class="chip ${c.key === key ? 'on' : ''}" data-rank="${c.key}">${c.label}</button>`).join('')}</div>`).join('') +
+    `<div class="row" style="margin:6px 0 10px"><button class="btn w sm" data-go="table" data-key="${cat.group === 'pit' ? 'pit' : 'bat'}">📋 全選手・全項目の成績一覧表</button></div>`;
+  let qual = '';
+  if (cat.rate === 'bat') qual = `規定打席：<b>${q.PA}</b>打席（チーム${q.teamGames}試合 × ${D().rankings.settings.qualifyPAPerGame}）。未到達 ${r.unqualified}人は表示されません。`;
+  if (cat.rate === 'pit') qual = `規定投球回：<b>${C.outsToIPText(q.outs)}</b>（${q.ipFixed ? '固定' : `チーム${q.teamGames}試合 × ${D().rankings.settings.qualifyIPPerGame}回`}）。未到達 ${r.unqualified}人は表示されません。防御率は${D().rankings.settings.eraInnings}回換算。`;
+  if (key === 'MVP2') qual = '試合の準MVPに選ばれた回数です。';
+  if (cat.group !== 'etc' && !cat.rate) qual = `${cat.higher ? '多い順' : '少ない順'}。0の選手は表示しません。`;
+  if (key === 'MVP') qual = '試合MVPの獲得回数です（月間・年間MVPは選手プロフィールに表示）。';
+  if (key === 'WP') qual = (S.kind === 'all' ? '今シーズンの獲得WP合計。' : `${C.KIND_LABEL[S.kind]}のMVP・準MVPで付いたWPだけの合計です（手入力のWPは「全試合」のときだけ数えます）。`) + '「▲▼」は最新の付与日より前の順位との比較です。';
+  const list = r.items.length ? r.items.map(it => {
+    const cls = it.rank <= 3 ? 'r' + it.rank : '';
+    let chg = '';
+    if (key === 'WP') {
+      if (it.change > 0) chg = `<span class="chg up">▲${it.change}</span>`;
+      else if (it.change < 0) chg = `<span class="chg down">▼${-it.change}</span>`;
+      else if (it.change === 0) chg = `<span class="chg">→</span>`;
+    }
+    return `<div class="rk ${cls}" data-player="${esc(it.playerId)}">${it.rank === 1 ? '<div class="spot"></div>' : ''}
+      <div class="no">${it.rank}</div>${avatar(it.player, 36, it.rank === 1)}
+      <div class="grow" style="flex:1;min-width:0"><div class="nm" style="font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${ptag(it.player)}${esc(it.player.name)}</div>
+      <div class="muted">${esc(it.sub || it.player.position || '')}</div></div>
+      <div><div class="val">${esc(it.display)}<small>${esc(cat.unit)}</small></div>${chg}</div></div>`;
+  }).join('') : emptyMsg('このランキングの対象データがまだありません。');
+  return {
+    title: `🏆 ${cat.label}ランキング`,
+    html: `${kindChips()}${chips}<div class="card" style="padding:10px 12px"><div class="muted">${esc(SL())}</div><div class="note" style="margin-top:2px">${qual}同じ数値は同順位。同順位の中は背番号の小さい順に並べています。</div></div>${list}`,
+    after: el => { if (r.items[0]) setTimeout(() => confetti(el.querySelector('.rk.r1') || el, 18), 200); }
+  };
+};
+
+// --- 成績一覧表（全選手 × 全項目。見出しを押すと並べ替え）
+const TABLE_COLS = {
+  bat: [['G', '試合'], ['PA', '打席'], ['AB', '打数'], ['H', '安打'], ['D', '二塁打'], ['T', '三塁打'], ['HR', '本塁打'], ['TB', '塁打'], ['RBI', '打点'], ['R', '得点'], ['SB', '盗塁'],
+    ['BB', '四球'], ['HBP', '死球'], ['SH', '犠打'], ['SF', '犠飛'], ['SO', '三振'], ['AVG', '打率', C.fmtRate3], ['OBP', '出塁率', C.fmtRate3], ['SLG', '長打率', C.fmtRate3], ['OPS', 'OPS', C.fmtRate3]],
+  pit: [['G', '登板'], ['outs', '投球回', C.outsToIPText], ['W', '勝'], ['L', '敗'], ['SV', 'S'], ['SO', '奪三振'], ['BB', '与四球'], ['H', '被安打'], ['R', '失点'], ['ER', '自責点'],
+    ['ERA', '防御率', C.fmt2], ['WHIP', 'WHIP', C.fmt2]]
+};
+S.tableSort = { bat: { k: 'OPS', dir: -1 }, pit: { k: 'ERA', dir: 1 } };
+VIEWS.table = (prm = {}) => {
+  const type = prm.key === 'pit' ? 'pit' : 'bat', d = D(), sc = SC(), q = C.qualifiers(d, sc), cols = TABLE_COLS[type];
+  const srt = S.tableSort[type];
+  const agg = type === 'bat' ? C.aggregateBatting : C.aggregatePitching;
+  const rows = d.players.players.map(p => ({ p, s: agg(d, p.id, sc) })).filter(r => r.s.registered);
+  rows.forEach(r => { r.q = type === 'bat' ? C.isNum(r.s.PA) && r.s.PA >= q.PA : C.isNum(r.s.outs) && r.s.outs >= q.outs; });
+  const isRate = ['AVG', 'OBP', 'SLG', 'OPS', 'ERA', 'WHIP'].includes(srt.k);
+  rows.sort((a, b) => {
+    if (isRate && a.q !== b.q) return a.q ? -1 : 1; // 率の項目は規定到達者を先に
+    const va = a.s[srt.k], vb = b.s[srt.k];
+    if (!C.isNum(va) && !C.isNum(vb)) return 0; if (!C.isNum(va)) return 1; if (!C.isNum(vb)) return -1;
+    return (va - vb) * srt.dir || (parseInt(a.p.number, 10) || 999) - (parseInt(b.p.number, 10) || 999);
+  });
+  // チーム合計（回数は合計、率は合計から同じ計算式で）
+  const sum = {}; cols.forEach(([k]) => { sum[k] = rows.reduce((t, r) => t + (C.isNum(r.s[k]) ? r.s[k] : 0), 0); });
+  if (type === 'bat') {
+    const g = C.teamRecord(d, sc).G; sum.G = g;
+    sum.AVG = sum.AB ? sum.H / sum.AB : null; const od = sum.AB + sum.BB + sum.HBP + sum.SF;
+    sum.OBP = od ? (sum.H + sum.BB + sum.HBP) / od : null; sum.SLG = sum.AB ? sum.TB / sum.AB : null; sum.OPS = C.isNum(sum.OBP) && C.isNum(sum.SLG) ? sum.OBP + sum.SLG : null;
+  } else {
+    sum.G = C.teamRecord(d, sc).G; const inn = sum.outs / 3, eraInn = Number(d.rankings.settings.eraInnings) || 9;
+    sum.ERA = inn ? sum.ER * eraInn / inn : null; sum.WHIP = inn ? (sum.BB + sum.H) / inn : null;
+  }
+  const cell = (s, k, f) => { const v = s[k]; return C.isNum(v) ? esc(f ? f(v) : v) : (v === null && s.registered ? '—' : UNREG); };
+  const head = `<tr><th class="l sticky">選手</th>${cols.map(([k, lab]) => `<th data-tsort="${k}" data-ttype="${type}" style="cursor:pointer;${srt.k === k ? 'color:var(--navy);font-weight:800' : ''}">${lab}${srt.k === k ? (srt.dir < 0 ? '▼' : '▲') : ''}</th>`).join('')}</tr>`;
+  const body = rows.map(r => `<tr data-player="${esc(r.p.id)}" style="cursor:pointer"><td class="l sticky">${r.q ? '' : '<span title="規定未到達" style="color:#9aa3b8">・</span>'}${r.p.number ? `<span class="num-tag">${esc(r.p.number)}</span>` : ''}${esc(r.p.name)}</td>${cols.map(([k, , f]) => `<td${srt.k === k ? ' style="background:#fff6d3;font-weight:800"' : ''}>${cell(r.s, k, f)}</td>`).join('')}</tr>`).join('');
+  const total = `<tr style="background:#eef2fb;font-weight:800"><td class="l sticky" style="background:#eef2fb">チーム合計</td>${cols.map(([k, , f]) => `<td>${C.isNum(sum[k]) ? esc(f ? f(sum[k]) : sum[k]) : '—'}</td>`).join('')}</tr>`;
+  return {
+    title: '📋 成績一覧表',
+    html: `${kindChips()}<div class="chips"><button class="chip ${type === 'bat' ? 'on' : ''}" data-go="table" data-key="bat">🏏 打撃成績</button><button class="chip ${type === 'pit' ? 'on' : ''}" data-go="table" data-key="pit">⚾ 投手成績</button></div>
+      <div class="card" style="padding:8px"><div class="muted" style="padding:0 4px 6px">${esc(SL())}・${rows.length}人。見出しを押すと並べ替え／選手名を押すと詳しく。「・」は${type === 'bat' ? `規定打席（${q.PA}打席）` : `規定投球回（${C.outsToIPText(q.outs)}）`}未到達。</div>
+      <div class="tscroll"><table class="t stat-table">${head}${body || `<tr><td class="l" colspan="${cols.length + 1}">データが未登録です</td></tr>`}${rows.length ? total : ''}</table></div></div>
+      <div class="note">打率＝安打÷打数、出塁率＝(安打＋四球＋死球)÷(打数＋四球＋死球＋犠飛)、長打率＝塁打÷打数、OPS＝出塁率＋長打率、防御率＝自責点×${D().rankings.settings.eraInnings}÷投球回、WHIP＝(与四球＋被安打)÷投球回</div>`
+  };
+};
+
+// --- 選手プロフィール
+VIEWS.profile = ({ id }) => {
+  const p = P(id);
+  if (!p) return { title: '選手', html: emptyMsg('この選手は見つかりません。') };
+  const d = D(), s = SC(), sl = SL();
+  const b = C.aggregateBatting(d, id, s), pt = C.aggregatePitching(d, id, s), f = C.aggregateFielding(d, id, s);
+  const m = C.mvpCounts(d, id, s), mAll = C.mvpCounts(d, id, { season: null, kind: S.kind });
+  const wp = C.wpSummary(d, id, s), ranks = C.playerRanks(d, id, s);
+  const titles = C.playerTitles(d, id, s), badges = C.playerBadges(d, id);
+  const bOk = (...k) => k.every(x => C.isNum(b[x]));
+  const pOk = (...k) => k.every(x => C.isNum(pt[x]));
+  const tile = (l, v, hl) => `<div class="stat ${hl ? 'hl' : ''}"><div class="l">${l}</div><div class="v">${v}</div></div>`;
+  const rankCell = (c) => {
+    const r = ranks[c.key];
+    if (r) return `<div class="${r.rank <= 3 ? 'top' : ''}">${c.label}<b>${r.rank === 1 ? '👑' : ''}${r.rank}位<small style="font-size:10px;color:var(--muted)">/${r.of}</small></b></div>`;
+    let why = '未登録';
+    if (c.rate === 'bat' && b.registered && C.isNum(b[c.field])) why = '規定未到達';
+    if (c.rate === 'pit' && pt.registered && C.isNum(pt[c.field])) why = '規定未到達';
+    if (!c.rate && c.group !== 'etc' && (c.group === 'bat' ? b.registered : pt.registered)) why = '0';
+    return `<div>${c.label}<b style="font-size:12px;color:#9aa3b8">${why}</b></div>`;
+  };
+  const wpR = ranks.WP;
+  const chg = wpR && wpR.change != null ? (wpR.change > 0 ? `▲${wpR.change}` : wpR.change < 0 ? `▼${-wpR.change}` : '→') : '—';
+
+  // 過去の成績（シーズン別）
+  const seasons = d.rankings.settings.seasons;
+  const pastRows = seasons.map(se => {
+    const sco = { season: se, kind: S.kind }, bb = C.aggregateBatting(d, id, sco), pp = C.aggregatePitching(d, id, sco);
+    return `<tr><td class="l">${esc(se)}</td><td>${bb.registered ? bb.G : UNREG}</td><td>${rate(bb.AVG, bb.registered && C.isNum(bb.AB), C.fmtRate3)}</td><td>${bb.registered ? num(bb.HR) : UNREG}</td><td>${bb.registered ? num(bb.RBI) : UNREG}</td><td>${rate(bb.OPS, bb.registered && C.isNum(bb.AB), C.fmtRate3)}</td>
+      <td>${pp.registered ? pp.G : UNREG}</td><td>${pp.registered ? `${num(pp.W)}-${num(pp.L)}` : UNREG}</td><td>${rate(pp.ERA, pp.registered && C.isNum(pp.outs), C.fmt2)}</td></tr>`;
+  }).join('');
+  const tb = C.aggregateBatting(d, id, { season: null, kind: S.kind }), tp = C.aggregatePitching(d, id, { season: null, kind: S.kind });
+  // 大会・練習試合別（このシーズン）
+  const splitRow = k => {
+    const sco = { season: S.season, kind: k }, bk = C.aggregateBatting(d, id, sco), pk = C.aggregatePitching(d, id, sco), mk = C.mvpCounts(d, id, sco);
+    const ok = bk.registered && C.isNum(bk.AB);
+    return `<tr${S.kind === k ? ' style="background:#fff6d3"' : ''}><td class="l">${k === 'tour' ? '🏆 ' : k === 'prac' ? '⚾ ' : ''}${C.KIND_LABEL[k]}</td>
+      <td>${bk.registered ? bk.G : UNREG}</td><td>${rate(bk.AVG, ok, C.fmtRate3)}</td><td>${bk.registered ? num(bk.H) : UNREG}</td><td>${bk.registered ? num(bk.HR) : UNREG}</td><td>${bk.registered ? num(bk.RBI) : UNREG}</td><td>${bk.registered ? num(bk.SB) : UNREG}</td><td>${rate(bk.OPS, ok, C.fmtRate3)}</td>
+      <td>${pk.registered ? pk.G : UNREG}</td><td>${pk.registered ? C.outsToIPText(pk.outs) : UNREG}</td><td>${pk.registered ? `${num(pk.W)}-${num(pk.L)}` : UNREG}</td><td>${rate(pk.ERA, pk.registered && C.isNum(pk.outs), C.fmt2)}</td><td>${pk.registered ? num(pk.SO) : UNREG}</td><td>${mk.game}</td></tr>`;
+  };
+  const splitCard = `<div class="card"><h3>🏆 大会・練習試合別<span class="sub">${esc(S.season)}年</span></h3><div class="tscroll"><table class="t">
+    <tr><th class="l"></th><th>試合</th><th>打率</th><th>安打</th><th>本</th><th>打点</th><th>盗塁</th><th>OPS</th><th>登板</th><th>投球回</th><th>勝-敗</th><th>防御率</th><th>奪三振</th><th>MVP</th></tr>
+    ${['all', 'tour', 'prac'].map(splitRow).join('')}</table></div></div>`;
+  const totalRow = `<tr style="background:#fff6d3"><td class="l">通算</td><td>${tb.registered ? tb.G : UNREG}</td><td>${rate(tb.AVG, tb.registered && C.isNum(tb.AB), C.fmtRate3)}</td><td>${tb.registered ? num(tb.HR) : UNREG}</td><td>${tb.registered ? num(tb.RBI) : UNREG}</td><td>${rate(tb.OPS, tb.registered && C.isNum(tb.AB), C.fmtRate3)}</td><td>${tp.registered ? tp.G : UNREG}</td><td>${tp.registered ? `${num(tp.W)}-${num(tp.L)}` : UNREG}</td><td>${rate(tp.ERA, tp.registered && C.isNum(tp.outs), C.fmt2)}</td></tr>`;
+
+  // 試合別
+  const sg = C.seasonGames(d, s).slice().reverse();
+  const gRows = sg.map(g => {
+    const br = d.stats.batting.find(r => r.gameId === g.id && r.playerId === id);
+    const pr = d.stats.pitching.find(r => r.gameId === g.id && r.playerId === id);
+    if (!br && !pr) return '';
+    return `<tr data-game="${esc(g.id)}" style="cursor:pointer"><td class="l">${esc(g.date.slice(5).replace('-', '/'))}</td><td class="l" style="max-width:110px;overflow:hidden;text-overflow:ellipsis">${esc(g.opponent)}</td>
+      <td>${br ? `${num(br.AB)}-${num(br.H)}` : '—'}</td><td>${br ? num(br.HR) : '—'}</td><td>${br ? num(br.RBI) : '—'}</td><td>${pr ? C.outsToIPText(pr.outs) : '—'}</td><td>${g.mvp === id ? '🏅' : ''}</td></tr>`;
+  }).join('');
+
+  const html = `
+  ${kindChips()}
+  <div class="hero">${cardOf(p) ? `<button class="card-zoom" data-zoomcard="${esc(p.id)}" aria-label="カードを拡大">${avatar(p, 128, ranks.WP && ranks.WP.rank === 1)}</button>` : avatar(p, 86, ranks.WP && ranks.WP.rank === 1)}
+    <div style="position:relative;z-index:1;min-width:0">
+      <div class="big-no">#${esc(p.number || '—')}</div>
+      <div class="nm">${esc(p.name)}</div>
+      <div class="meta">${esc(p.position || 'ポジション未登録')}・${p.throws || p.bats ? `${esc(p.throws || '?')}投${esc(p.bats || '?')}打` : '投打 未登録'}${p.active === false ? '・休部/退団' : ''}</div>
+      ${p.look && p.look.photo ? '<div class="meta">📷 キャラクターは登録写真を参考に作成</div>' : ''}
+      ${p.comment ? `<div class="meta">${esc(p.comment)}</div>` : ''}
+    </div></div>
+  <div class="row" style="margin-bottom:12px">
+    <button class="btn y sm" data-setmy="${esc(p.id)}">${S.my === p.id ? '⭐ 自分の選手に設定済み' : '☆ 自分の選手にする'}</button>
+    <button class="btn w sm" data-share>🔗 この画面を共有</button>
+  </div>
+  ${splitCard}
+  <div class="card"><h3>🏅 称号・タイトル<span class="sub">${esc(sl)}</span></h3>
+    ${titles.length ? titles.map(t => `<span class="badge gold">👑 ${esc(t)}</span>`).join('') : ''}
+    ${badges.length ? badges.map(x => `<span class="badge">${x.icon} ${esc(x.name)}</span>`).join('') : ''}
+    ${!titles.length && !badges.length ? '<div class="muted">まだ称号はありません。試合に出て獲得しよう！</div>' : ''}
+  </div>
+  <div class="card"><h3>📈 チーム内ランキング<span class="sub">${esc(sl)}</span></h3><div class="rankgrid">${C.CATEGORIES.filter(c => c.main).map(rankCell).join('')}</div>
+    <details style="margin-top:8px"><summary class="muted" style="cursor:pointer">すべての種目の順位を見る（${C.CATEGORIES.length}種目）</summary>
+    ${[['bat', '🏏 打撃'], ['pit', '⚾ 投手'], ['etc', '🏅 その他']].map(([g, lab]) => `<div class="muted" style="margin:8px 0 4px">${lab}</div><div class="rankgrid">${C.CATEGORIES.filter(c => c.group === g).map(rankCell).join('')}</div>`).join('')}</details></div>
+  <div class="card"><h3>💎 WPポイント</h3><div class="stats">
+    ${tile('今季WP', wp.current, true)}${tile('累計WP', wp.total)}${tile('WP順位', wpR ? wpR.rank + '位' : '—')}${tile('前回から', chg)}
+    ${tile('試合MVP', m.game + '回', m.game > 0)}${tile('準MVP', m.game2 + '回')}${tile('月間MVP', m.month + '回')}${tile('年間MVP', m.year + '回')}${tile('通算MVP', mAll.game + '回')}
+  </div>
+  ${wp.history.length ? `<details style="margin-top:10px"><summary class="muted" style="cursor:pointer">WP獲得履歴（${wp.history.length}件）</summary>
+    <table class="t" style="margin-top:6px"><tr><th class="l">日付</th><th class="l">内容</th><th>WP</th></tr>
+    ${wp.history.map(h => `<tr><td class="l">${esc(h.date)}</td><td class="l" style="white-space:normal">${esc(h.reason || '')}</td><td style="color:${h.points < 0 ? 'var(--lose)' : 'var(--win)'}">${h.points > 0 ? '+' : ''}${h.points}</td></tr>`).join('')}</table></details>` : '<div class="note">WPの履歴はまだありません。</div>'}
+  </div>
+  <div class="card"><h3>🏏 打撃成績<span class="sub">${esc(sl)}</span></h3><div class="stats">
+    ${tile('試合', b.registered ? b.G : UNREG)}${tile('打席', num(b.PA))}${tile('打数', num(b.AB))}${tile('安打', num(b.H))}
+    ${tile('打率', rate(b.AVG, bOk('H', 'AB'), C.fmtRate3), true)}${tile('出塁率', rate(b.OBP, bOk('H', 'AB', 'BB'), C.fmtRate3))}${tile('長打率', rate(b.SLG, bOk('H', 'AB'), C.fmtRate3))}${tile('OPS', rate(b.OPS, bOk('H', 'AB', 'BB'), C.fmtRate3), true)}
+    ${tile('本塁打', num(b.HR))}${tile('打点', num(b.RBI))}${tile('得点', num(b.R))}${tile('盗塁', num(b.SB))}
+    ${tile('四球', num(b.BB))}${tile('三振', num(b.SO))}${tile('二塁打', num(b.D))}${tile('三塁打', num(b.T))}
+    ${tile('死球', num(b.HBP))}${tile('犠飛', num(b.SF))}${tile('犠打', num(b.SH))}
+  </div></div>
+  <div class="card"><h3>⚾ 投手成績<span class="sub">${esc(sl)}</span></h3><div class="stats">
+    ${tile('登板', pt.registered ? pt.G : UNREG)}${tile('投球回', pt.registered ? C.outsToIPText(pt.outs) : UNREG)}${tile('勝利', num(pt.W))}${tile('敗戦', num(pt.L))}
+    ${tile('セーブ', num(pt.SV))}${tile('奪三振', num(pt.SO))}${tile('与四球', num(pt.BB))}${tile('被安打', num(pt.H))}
+    ${tile('失点', num(pt.R))}${tile('自責点', num(pt.ER))}${tile('防御率', rate(pt.ERA, pOk('ER', 'outs'), C.fmt2), true)}${tile('WHIP', rate(pt.WHIP, pOk('BB', 'H', 'outs'), C.fmt2))}
+  </div></div>
+  <div class="card"><h3>🧤 守備成績<span class="sub">${esc(sl)}</span></h3><div class="stats">
+    ${tile('守備試合', f.registered ? f.G : UNREG)}${tile('刺殺', num(f.PO))}${tile('補殺', num(f.A))}${tile('失策', num(f.E))}
+    ${tile('守備率', rate(f.FPCT, f.registered && C.isNum(f.PO) && C.isNum(f.A) && C.isNum(f.E), C.fmtRate3))}
+  </div></div>
+  <div class="card"><h3>📅 試合別成績<span class="sub">${esc(sl)}・タップで試合へ</span></h3>
+    ${gRows ? `<div class="tscroll"><table class="t"><tr><th class="l">日付</th><th class="l">相手</th><th>打数-安打</th><th>本</th><th>点</th><th>投球回</th><th>MVP</th></tr>${gRows}</table></div>` : '<div class="muted">このシーズンの出場記録は未登録です。</div>'}
+  </div>
+  <div class="card"><h3>🗂️ 過去の成績<span class="sub">${C.KIND_LABEL[S.kind]}</span></h3><div class="tscroll"><table class="t">
+    <tr><th class="l">年</th><th>試合</th><th>打率</th><th>本</th><th>打点</th><th>OPS</th><th>登板</th><th>勝-敗</th><th>防御率</th></tr>${pastRows}${totalRow}</table></div>
+    <div class="note">打率・出塁率・長打率は小数第3位、防御率は${d.rankings.settings.eraInnings}回換算で小数第2位まで表示。打数0などで計算できない場合は「—」です。</div></div>`;
+  return { title: `#${p.number} ${p.name}`, html };
+};
+
+// --- 個人成績（自分の選手）
+VIEWS.me = () => {
+  if (S.my && P(S.my)) return Object.assign(VIEWS.profile({ id: S.my }), { title: '📊 あなたの成績' });
+  const ps = activePlayers();
+  return {
+    title: '📊 個人成績',
+    html: `<div class="card"><h3>👋 あなたはどの選手？</h3><div class="muted">選ぶと次回から「個人成績」ですぐに自分の成績が開きます（この端末にだけ記憶されます）。</div></div>
+    ${ps.length ? ps.map(p => `<div class="list-item" data-pick="${esc(p.id)}">${avatar(p, 40)}<div class="grow"><div class="nm">${ptag(p)}${esc(p.name)}</div><div class="muted">${esc(p.position || '')}</div></div><span>›</span></div>`).join('') : emptyMsg('選手がまだ登録されていません。')}`
+  };
+};
+
+// --- 試合結果一覧
+VIEWS.games = () => {
+  const d = D(), s = SC(), sl = SL();
+  let gs = C.seasonGames(d, s);
+  if (S.gamesOrder === 'desc') gs = gs.slice().reverse();
+  const rec = C.teamRecord(d, s);
+  const head = `${kindChips()}<div class="card"><h3>📊 ${esc(sl)} チーム成績</h3><div class="stats">
+    <div class="stat hl"><div class="l">試合</div><div class="v">${rec.G}</div></div><div class="stat"><div class="l">勝</div><div class="v" style="color:var(--win)">${rec.W}</div></div>
+    <div class="stat"><div class="l">敗</div><div class="v" style="color:var(--lose)">${rec.L}</div></div><div class="stat"><div class="l">分</div><div class="v">${rec.D}</div></div>
+    <div class="stat"><div class="l">得点</div><div class="v">${rec.RF}</div></div><div class="stat"><div class="l">失点</div><div class="v">${rec.RA}</div></div></div></div>
+    <div class="row" style="margin-bottom:10px"><button class="chip ${S.gamesOrder === 'desc' ? 'on' : ''}" data-order="desc">新しい順</button><button class="chip ${S.gamesOrder === 'asc' ? 'on' : ''}" data-order="asc">古い順</button></div>`;
+  const list = gs.length ? gs.map(g => {
+    const r = C.gameResult(g);
+    return `<div class="list-item" data-game="${esc(g.id)}"><div style="text-align:center;min-width:52px"><div style="font-size:16px">${esc(g.date.slice(5).replace('-', '/'))}</div><div class="muted">${esc(g.date.slice(0, 4))}</div></div>
+      <div class="grow"><div class="nm">vs ${esc(g.opponent)}${(g.gameNo || 1) > 1 ? `（第${g.gameNo}試合）` : ''}</div><div class="muted">${kindTag(g)} ${esc(g.venue || '会場未登録')}${g.mvp ? '・MVP ' + pname(g.mvp) : ''}</div></div>
+      <div style="text-align:right"><div style="font-size:18px">${C.isNum(g.scoreFor) ? g.scoreFor : '?'} - ${C.isNum(g.scoreAgainst) ? g.scoreAgainst : '?'}</div>${r ? `<span class="res ${r}">${r}</span>` : '<span class="unreg">スコア未登録</span>'}</div></div>`;
+  }).join('') : emptyMsg('このシーズンの試合はまだ登録されていません。');
+  return { title: '📅 試合結果', html: head + list };
+};
+
+// --- 試合詳細
+VIEWS.game = ({ id }) => {
+  const d = D(), g = C.gameById(d, id);
+  if (!g) return { title: '試合', html: emptyMsg('試合が見つかりません。') };
+  const r = C.gameResult(g);
+  const bat = d.stats.batting.filter(x => x.gameId === id).sort((a, b) => (a.order || 99) - (b.order || 99) || (parseInt((P(a.playerId) || {}).number, 10) || 999) - (parseInt((P(b.playerId) || {}).number, 10) || 999));
+  const pit = d.stats.pitching.filter(x => x.gameId === id);
+  const hrs = bat.filter(x => C.isNum(x.HR) && x.HR > 0);
+  const players = [...new Set([...bat.map(x => x.playerId), ...pit.map(x => x.playerId)])];
+  const inn = g.innings && (g.innings.for || g.innings.against);
+  const line = inn ? (() => {
+    const n = Math.max((g.innings.for || []).length, (g.innings.against || []).length);
+    const cells = arr => Array.from({ length: n }, (_, i) => `<td>${arr && arr[i] != null && arr[i] !== '' ? esc(arr[i]) : '-'}</td>`).join('');
+    return `<div class="card"><h3>📋 スコアボード</h3><div class="tscroll"><table class="t"><tr><th class="l">チーム</th>${Array.from({ length: n }, (_, i) => `<th>${i + 1}</th>`).join('')}<th>計</th></tr>
+      <tr><td class="l">${esc(g.topBottom === 'bottom' ? g.opponent : 'ワイロバ')}</td>${cells(g.topBottom === 'bottom' ? g.innings.against : g.innings.for)}<td><b>${g.topBottom === 'bottom' ? num(g.scoreAgainst) : num(g.scoreFor)}</b></td></tr>
+      <tr><td class="l">${esc(g.topBottom === 'bottom' ? 'ワイロバ' : g.opponent)}</td>${cells(g.topBottom === 'bottom' ? g.innings.for : g.innings.against)}<td><b>${g.topBottom === 'bottom' ? num(g.scoreFor) : num(g.scoreAgainst)}</b></td></tr></table></div></div>`;
+  })() : '';
+  const html = `
+  <div class="score-big"><div class="tm">ワイルド<br>ローバーズ</div><div class="pt">${num(g.scoreFor)}</div><div style="text-align:center">${r ? `<span class="res ${r}" style="font-size:16px;height:32px;min-width:44px">${r}</span>` : ''}<div class="muted" style="color:#c8d2f0;margin-top:4px">${esc(g.date)}</div></div><div class="pt">${num(g.scoreAgainst)}</div><div class="tm">${esc(g.opponent)}</div></div>
+  <div class="card" style="margin-top:12px"><div class="row" style="justify-content:space-between"><div class="muted">🏟️ ${esc(g.venue || '会場未登録')}${(g.gameNo || 1) > 1 ? `・第${g.gameNo}試合` : ''}${g.start ? `・${esc(g.start)}〜${esc(g.end || '')}` : ''}</div><div class="muted">${kindTag(g)} ${esc(g.tourney || '')}</div></div>${g.memo ? `<div class="note">${esc(g.memo)}</div>` : ''}</div>
+  ${line}
+  ${g.mvp ? `<div class="mvp-card" data-player="${esc(g.mvp)}" style="margin-bottom:12px">${avatar(P(g.mvp), 58, true)}<div><div class="ttl">🏆 試合MVP</div><div class="nm">${pname(g.mvp)}</div></div></div>` : '<div class="card"><div class="muted">試合MVP：未登録</div></div>'}
+  ${g.mvp2 ? `<div class="mvp-card" data-player="${esc(g.mvp2)}" style="margin-bottom:12px;background:linear-gradient(135deg,#fbfcfe,#dfe6ee);border-color:#c3cdd8">${avatar(P(g.mvp2), 50)}<div><div class="ttl">🥈 準MVP</div><div class="nm">${pname(g.mvp2)}</div></div></div>` : ''}
+  <div class="card"><h3>💥 本塁打</h3>${hrs.length ? hrs.map(x => `<span class="badge gold" data-player="${esc(x.playerId)}">💥 ${pname(x.playerId)} ${x.HR > 1 ? x.HR + '本' : ''}</span>`).join('') : '<div class="muted">なし（または未登録）</div>'}</div>
+  <div class="card"><h3>👥 出場選手（${players.length}人）</h3>${players.length ? players.map(pid => `<span class="badge" data-player="${esc(pid)}">${P(pid) ? '#' + esc(P(pid).number) + ' ' : ''}${pname(pid)}</span>`).join('') : '<div class="muted">個人成績が未登録です</div>'}</div>
+  ${bat.length ? `<div class="card"><h3>🏏 打撃成績</h3><div class="tscroll"><table class="t"><tr><th class="l">選手</th><th>打席</th><th>打数</th><th>安打</th><th>本</th><th>打点</th><th>得点</th><th>盗塁</th><th>四球</th><th>三振</th></tr>
+    ${bat.map(x => `<tr data-player="${esc(x.playerId)}" style="cursor:pointer"><td class="l">${pname(x.playerId)}</td><td>${num(x.PA)}</td><td>${num(x.AB)}</td><td>${num(x.H)}</td><td>${num(x.HR)}</td><td>${num(x.RBI)}</td><td>${num(x.R)}</td><td>${num(x.SB)}</td><td>${num(x.BB)}</td><td>${num(x.SO)}</td></tr>`).join('')}</table></div></div>` : ''}
+  ${pit.length ? `<div class="card"><h3>⚾ 投手成績</h3><div class="tscroll"><table class="t"><tr><th class="l">投手</th><th>投球回</th><th>勝敗</th><th>奪三振</th><th>与四球</th><th>被安打</th><th>失点</th><th>自責</th></tr>
+    ${pit.map(x => `<tr data-player="${esc(x.playerId)}" style="cursor:pointer"><td class="l">${pname(x.playerId)}</td><td>${C.outsToIPText(x.outs)}</td><td>${x.W ? '勝' : x.L ? '負' : x.SV ? 'S' : '-'}</td><td>${num(x.SO)}</td><td>${num(x.BB)}</td><td>${num(x.H)}</td><td>${num(x.R)}</td><td>${num(x.ER)}</td></tr>`).join('')}</table></div></div>` : ''}
+  ${g.photo ? `<div class="card"><h3>📷 試合写真</h3><img src="${esc(g.photo)}" alt="試合写真" style="width:100%;border-radius:12px" onerror="this.parentNode.innerHTML='<div class=muted>写真を読み込めませんでした（${esc(g.photo)}）</div>'"></div>` : ''}`;
+  return { title: `vs ${g.opponent}`, html, after: el => { if (g.mvp) confetti(el.querySelector('.mvp-card'), 24); } };
+};
+
+// --- MVP表彰
+VIEWS.mvp = () => {
+  const d = D(), s = SC(), sl = SL();
+  const gs = C.seasonGames(d, s).filter(g => g.mvp).reverse();
+  const latest = gs[0];
+  const months = d.rankings.mvpAwards.filter(a => a.type === 'month' && String(a.season) === S.season).sort((a, b) => b.period.localeCompare(a.period));
+  const year = d.rankings.mvpAwards.filter(a => a.type === 'year' && String(a.season) === S.season);
+  const r = C.ranking(d, s, 'MVP');
+  const card = (ttl, pid, sub) => pid ? `<div class="mvp-card" data-player="${esc(pid)}" style="margin-bottom:10px">${avatar(P(pid), 62, true)}<div><div class="ttl">${ttl}</div><div class="nm">${pname(pid)}</div><div class="muted">${sub || ''}</div></div></div>`
+    : `<div class="card"><div class="muted">${ttl}：未登録</div></div>`;
+  return {
+    title: '🥇 MVP表彰台',
+    html: `${kindChips()}${card('🏆 最新試合MVP', latest && latest.mvp, latest ? `${esc(latest.date)} vs ${esc(latest.opponent)}` : '')}
+      ${latest && latest.mvp2 ? card('🥈 最新試合の準MVP', latest.mvp2, `${esc(latest.date)} vs ${esc(latest.opponent)}`) : ''}
+      ${months.length ? months.map(a => card(`📅 月間MVP（${esc(a.period.replace('-', '年'))}月）`, a.playerId, esc(a.memo || ''))).join('') : card('📅 月間MVP', null)}
+      ${year.length ? year.map(a => card(`👑 年間MVP（${esc(a.season)}年）`, a.playerId, esc(a.memo || ''))).join('') : card(`👑 年間MVP（${esc(S.season)}年）`, null)}
+      <div class="card"><h3>🏅 試合MVP 獲得回数ランキング</h3>${r.items.length ? r.items.map(it => `<div class="rk ${it.rank <= 3 ? 'r' + it.rank : ''}" data-player="${esc(it.playerId)}"><div class="no">${it.rank}</div>${avatar(it.player, 32, it.rank === 1)}<div style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${ptag(it.player)}${esc(it.player.name)}</div><div class="val">${it.value}<small>回</small></div></div>`).join('') : '<div class="muted">まだMVPは登録されていません。</div>'}</div>`,
+    after: el => { el.querySelectorAll('.mvp-card').forEach(c => confetti(c, 26)); }
+  };
+};
+
+// --- トロフィー
+VIEWS.trophy = () => {
+  const d = D();
+  const tr = d.rankings.trophies.slice().sort((a, b) => String(b.season).localeCompare(String(a.season)));
+  const rows = d.rankings.settings.seasons.slice().reverse().map(se => {
+    const r = C.teamRecord(d, se);
+    const pct = r.W + r.L > 0 ? C.fmtRate3(r.W / (r.W + r.L)) : '—';
+    return `<tr><td class="l">${esc(se)}年</td><td>${r.G}</td><td>${r.W}</td><td>${r.L}</td><td>${r.D}</td><td>${pct}</td><td>${r.RF}</td><td>${r.RA}</td></tr>`;
+  }).join('');
+  return {
+    title: '🏅 トロフィールーム',
+    html: `<div class="card"><h3>🏆 獲得タイトル</h3>${tr.length ? tr.map(t => `<div class="list-item" style="cursor:default"><span style="font-size:30px">🏆</span><div class="grow"><div class="nm">${esc(t.name)}</div><div class="muted">${esc(t.season)}年 ${esc(t.memo || '')}</div></div></div>`).join('') : '<div class="muted">トロフィーはまだ登録されていません。</div>'}</div>
+      <div class="card"><h3>📊 シーズン別チーム成績</h3><div class="tscroll"><table class="t"><tr><th class="l">年</th><th>試合</th><th>勝</th><th>敗</th><th>分</th><th>勝率</th><th>得点</th><th>失点</th></tr>${rows}</table></div><div class="note">勝率＝勝÷(勝＋敗)。引き分けは含めません。</div></div>`
+  };
+};
+
+function emptyMsg(t) {
+  return `<div class="card" style="text-align:center;padding:24px"><div style="font-size:40px">⚾</div><div style="margin:8px 0">${esc(t)}</div><div class="muted">代表者が管理画面（admin.html）から登録すると表示されます。</div></div>`;
+}
+
+/* ================= 2Dホーム ================= */
+function renderHome2D() {
+  const d = D(), s = SC(), sl = SL();
+  const rec = C.teamRecord(d, s);
+  const gs = C.seasonGames(d, s); const last = gs[gs.length - 1];
+  const wp = C.ranking(d, s, 'WP').items.slice(0, 3);
+  const me = S.my && P(S.my);
+  const meB = me ? C.aggregateBatting(d, me.id, s) : null;
+  const meW = me ? C.wpSummary(d, me.id, s) : null;
+  $('#home2dBody').innerHTML = `${kindChips()}
+    ${!d.players.players.length ? `<div class="card" style="text-align:center"><div style="font-size:40px">🏟️</div><b>まだ選手が登録されていません</b><div class="note">代表者は admin.html から選手・試合を登録してください。</div>${!TEST ? '<a class="btn y sm" href="?test=1" style="margin-top:8px">🧪 テストデータで試す</a>' : ''}</div>` : ''}
+    <div class="card" style="background:linear-gradient(135deg,#0b1433,var(--navy));color:#fff;border-color:var(--yellow);display:flex;align-items:center;gap:12px"><img src="icon-192.png" alt="" width="84" height="84" style="flex:none;border-radius:14px"><div><div class="muted" style="color:var(--yellow)">${esc(sl)}シーズン</div>
+      <div style="font-size:28px">${rec.W}勝 ${rec.L}敗 ${rec.D}分</div><div class="muted" style="color:#c8d2f0">得点 ${rec.RF}・失点 ${rec.RA}</div></div></div>
+    ${me ? `<div class="card" data-player="${esc(me.id)}" style="cursor:pointer"><h3>⭐ あなたの成績<span class="sub">タップで詳しく</span></h3><div class="row">${avatar(me, 54)}<div class="stats" style="flex:1">
+      <div class="stat hl"><div class="l">打率</div><div class="v">${rate(meB.AVG, C.isNum(meB.AB) && C.isNum(meB.H), C.fmtRate3)}</div></div><div class="stat"><div class="l">本塁打</div><div class="v">${num(meB.HR)}</div></div><div class="stat"><div class="l">今季WP</div><div class="v">${meW.current}</div></div></div></div></div>` : ''}
+    ${last ? `<div class="card" data-game="${esc(last.id)}" style="cursor:pointer"><h3>📋 最新の試合<span class="sub">${esc(last.date)}</span></h3><div class="row" style="justify-content:space-between"><div class="nm">vs ${esc(last.opponent)}</div><div style="font-size:22px">${num(last.scoreFor)} - ${num(last.scoreAgainst)} ${C.gameResult(last) ? `<span class="res ${C.gameResult(last)}">${C.gameResult(last)}</span>` : ''}</div></div>${last.mvp ? `<div class="muted" style="margin-top:6px">🏆 MVP：${pname(last.mvp)}</div>` : ''}</div>` : ''}
+    <div class="card"><h3>💎 WPランキング TOP3<span class="sub" data-go="ranking" data-key="WP" style="cursor:pointer;color:var(--navy)">すべて見る ›</span></h3>
+      ${wp.length ? wp.map(it => `<div class="rk r${it.rank <= 3 ? it.rank : ''}" data-player="${esc(it.playerId)}"><div class="no">${it.rank}</div>${avatar(it.player, 32, it.rank === 1)}<div style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${ptag(it.player)}${esc(it.player.name)}</div><div class="val">${it.value}<small>WP</small></div></div>`).join('') : '<div class="muted">WPはまだありません</div>'}</div>
+    <div class="row" style="gap:10px">
+      <button class="btn" data-go="mvp">🥇 MVP表彰台</button><button class="btn" data-go="trophy">🏅 トロフィー</button><button class="btn w" data-go="ranking">🏆 ランキング</button>
+    </div>
+    <div class="note" style="margin-top:14px">表示データ：${sourceLabel()}</div>`;
+}
+function sourceLabel() {
+  return { json: '公開サーバーの最新データ', embedded: '埋め込みデータ（data.js）', cache: 'この端末に保存された前回のデータ', preview: '管理画面の下書き', none: 'なし' }[S.source] || S.source;
+}
+
+/* ================= シート（画面の開閉） ================= */
+function openView(name, prm = {}, push = true) {
+  const v = VIEWS[name](prm);
+  if (push) S.stack.push({ name, prm }); else S.stack = [{ name, prm }];
+  $('#sheetTitle').textContent = v.title;
+  const body = $('#sheetBody'); body.innerHTML = v.html; body.scrollTop = 0;
+  $('#sheet').classList.add('open'); $('#sheet').setAttribute('aria-hidden', 'false');
+  $('#backBtn').classList.toggle('ghost', S.stack.length < 2);
+  if (v.after) v.after(body);
+  // 選択中のボタンが横スクロールの外にあれば見える位置へ
+  body.querySelectorAll('.chips .chip.on').forEach(c => { const box = c.parentNode; box.scrollLeft = c.offsetLeft - box.clientWidth / 2 + c.offsetWidth / 2; });
+  const navMap = { roster: 'roster', ranking: 'ranking', table: 'ranking', me: 'me', games: 'games', game: 'games', profile: S.stack[0].name === 'me' ? 'me' : null };
+  const nv = navMap[S.stack[0].name] || S.stack[0].name;
+  document.querySelectorAll('#nav button').forEach(b => b.classList.toggle('on', b.dataset.nav === nv));
+  const h = name === 'profile' ? `#player=${prm.id}` : name === 'game' ? `#game=${prm.id}` : name === 'ranking' ? `#ranking=${prm.key || S.boardCat}` : `#${name}`;
+  history.replaceState(null, '', location.pathname + location.search + h);
+  if (World) World.setPaused(true);
+}
+function closeSheet() {
+  $('#sheet').classList.remove('open'); $('#sheet').setAttribute('aria-hidden', 'true');
+  S.stack = [];
+  document.querySelectorAll('#nav button').forEach(b => b.classList.toggle('on', b.dataset.nav === 'home'));
+  history.replaceState(null, '', location.pathname + location.search);
+  if (World) World.setPaused(false);
+}
+function back() {
+  if (S.stack.length < 2) return closeSheet();
+  S.stack.pop(); const top = S.stack.pop(); openView(top.name, top.prm, true);
+}
+function refreshSheet() {
+  if (!S.stack.length) return;
+  const top = S.stack.pop(); openView(top.name, top.prm, true);
+}
+
+/* ================= イベント ================= */
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-zoomcard],[data-tsort],[data-kind],[data-player],[data-game],[data-rank],[data-nav],[data-go],[data-pick],[data-setmy],[data-share],[data-order],[data-spot]');
+  if (!t) return;
+  const ds = t.dataset;
+  if (ds.nav) { if (ds.nav === 'home') closeSheet(); else openView(ds.nav, {}, false); return; }
+  if (ds.spot) { World && World.flyTo(ds.spot); document.querySelectorAll('#spots .chip').forEach(c => c.classList.toggle('on', c === t)); toast('看板や選手をタップすると詳しく見られます'); return; }
+  if (ds.rank) { S.boardCat = ds.rank; World && World.setBoard(ds.rank); S.stack.pop(); openView('ranking', { key: ds.rank }); return; }
+if (ds.zoomcard) { const lb = document.createElement('div'); lb.id = 'lightbox'; lb.innerHTML = `<img src="${cardOf(P(ds.zoomcard))}" alt="">`; lb.onclick = () => lb.remove(); document.body.appendChild(lb); return; }
+if (ds.kind) { setScope(S.season, ds.kind); return; }
+  if (ds.tsort) { const st = S.tableSort[ds.ttype]; if (st.k === ds.tsort) st.dir *= -1; else { st.k = ds.tsort; st.dir = ['ERA', 'WHIP'].includes(ds.tsort) ? 1 : -1; } refreshSheet(); return; }
+  if (ds.order) { S.gamesOrder = ds.order; refreshSheet(); return; }
+  if (ds.go) { openView(ds.go, ds.key ? { key: ds.key } : {}, !$('#sheet').classList.contains('open') ? false : true); return; }
+  if (ds.pick) { setMy(ds.pick); openView('me', {}, false); return; }
+  if (ds.setmy) { setMy(ds.setmy); refreshSheet(); toast('この端末で「自分の選手」に設定しました'); return; }
+  if (ds.share) { share(); return; }
+  if (ds.player) { openView('profile', { id: ds.player }, $('#sheet').classList.contains('open')); return; }
+  if (ds.game) { openView('game', { id: ds.game }, $('#sheet').classList.contains('open')); return; }
+});
+function setMy(id) { S.my = id; try { localStorage.setItem('wr-my-player', id); } catch (e) {} if (S.mode === '2d') renderHome2D(); }
+async function share() {
+  const url = location.href;
+  try {
+    if (navigator.share) { await navigator.share({ title: 'ワイルドローバーズ', url }); return; }
+    await navigator.clipboard.writeText(url); toast('URLをコピーしました。LINEに貼り付けて共有できます');
+  } catch (e) { prompt('このURLをコピーしてください', url); }
+}
+$('#backBtn').onclick = back;
+$('#closeBtn').onclick = closeSheet;
+$('#seasonSel').onchange = e => { const [s, k] = e.target.value.split('|'); setScope(s, k || 'all'); };
+$('#modeBtn').onclick = () => setMode(S.mode === '3d' ? '2d' : '3d', true);
+
+/* ================= 3D / 2D 切り替え ================= */
+let World = null;
+function webglOK() { try { const c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch (e) { return false; } }
+async function setMode(mode, user) {
+  if (mode === '3d' && !webglOK()) { toast('この端末は3D表示に対応していないため2D表示にします'); mode = '2d'; }
+  if (mode === '3d' && !World) {
+    try { World = await createWorld(); }
+    catch (e) { console.error(e); toast('3Dを読み込めなかったため軽量2D表示にしました'); mode = '2d'; }
+  }
+  S.mode = mode;
+  try { if (user) localStorage.setItem('wr-mode', mode); } catch (e) {}
+  const is3d = mode === '3d';
+  $('#stage').classList.toggle('hidden', !is3d); $('#hud').classList.toggle('hidden', !is3d); $('#spots').classList.toggle('hidden', !is3d);
+  $('#tapHint').classList.toggle('hidden', !is3d);
+  $('#home2d').classList.toggle('hidden', is3d);
+  $('#modeBtn').textContent = is3d ? '2D表示' : '3D表示';
+  if (World) World.setActive(is3d);
+  if (!is3d) renderHome2D();
+  updateEmptyCard();
+}
+function updateEmptyCard() {
+  const el = $('#emptyCard');
+  const show = S.mode === '3d' && !D().players.players.length;
+  el.classList.toggle('hidden', !show);
+  if (show) el.innerHTML = `<div style="font-size:36px">🏟️</div><b>まだ選手が登録されていません</b><p>代表者が管理画面（admin.html）で選手と試合を登録すると、グラウンドに選手が登場します。</p>${!TEST ? '<a class="btn y" href="?test=1">🧪 テストデータで試す</a>' : ''}`;
+}
+
+/* =========================================================
+ *  3Dワールド（three.js）
+ * ========================================================= */
+async function createWorld() {
+  const THREE = await import('three');
+  const { OrbitControls } = await import('three/addons/controls/OrbitControls.js');
+
+  const lowEnd = (navigator.hardwareConcurrency || 4) <= 4 || (navigator.deviceMemory || 4) <= 3;
+  const stage = $('#stage');
+  const renderer = new THREE.WebGLRenderer({ antialias: !lowEnd && devicePixelRatio < 2, powerPreference: 'low-power' });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, lowEnd ? 1.25 : 1.75));
+  renderer.setSize(innerWidth, innerHeight);
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  stage.appendChild(renderer.domElement);
+
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color('#9fd8ff');
+  scene.fog = new THREE.Fog('#bfe6ff', 120, 220);
+  const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.5, 400);
+  const HOME_VIEW = { target: new THREE.Vector3(0, 0, -16), pos: new THREE.Vector3(0, 46, 52) };
+  camera.position.copy(HOME_VIEW.pos);
+  const controls = new OrbitControls(camera, renderer.domElement);
+  controls.target.copy(HOME_VIEW.target);
+  controls.enableDamping = true; controls.dampingFactor = 0.08;
+  controls.enablePan = false;
+  controls.minDistance = 10; controls.maxDistance = 120;
+  controls.maxPolarAngle = 1.38; controls.minPolarAngle = 0.25;
+  controls.autoRotate = true; controls.autoRotateSpeed = 0.45;
+  controls.rotateSpeed = 0.6;
+
+  scene.add(new THREE.HemisphereLight('#e8f6ff', '#4a8c3a', 1.4));
+  const sun = new THREE.DirectionalLight('#fff4dc', 1.6); sun.position.set(30, 60, 20); scene.add(sun);
+
+  // トゥーン調の陰影（3段階）
+  const grad = new THREE.DataTexture(new Uint8Array([90, 170, 255]), 3, 1, THREE.RedFormat);
+  grad.minFilter = grad.magFilter = THREE.NearestFilter; grad.needsUpdate = true;
+  const toon = (c, extra = {}) => new THREE.MeshToonMaterial(Object.assign({ color: c, gradientMap: grad }, extra));
+  const M = {
+    navy: toon('#1a2f73'), yellow: toon('#ffc928'), white: toon('#f6f7fb'), skin: toon('#ffd3ad'),
+    dirt: toon('#d9a066'), dirtDark: toon('#c58a52'), grass: null, black: new THREE.MeshBasicMaterial({ color: '#1d1d2b' }),
+    pink: new THREE.MeshBasicMaterial({ color: '#ff9e8f', transparent: true, opacity: .6 }), brown: toon('#8b5a2b'),
+    grey: toon('#9aa6b8'), gold: new THREE.MeshPhongMaterial({ color: '#f5c542', shininess: 90, specular: '#fff3c0', emissive: '#4a3500' }),
+    silver: new THREE.MeshPhongMaterial({ color: '#cfd8e3', shininess: 90 }), bronze: new THREE.MeshPhongMaterial({ color: '#d9935a', shininess: 70 }),
+    shadow: new THREE.MeshBasicMaterial({ color: '#000', transparent: true, opacity: .18, depthWrite: false }),
+    hit: new THREE.MeshBasicMaterial({ visible: false })
+  };
+  const clickables = [];
+  const tex = (canvas) => { const t = new THREE.CanvasTexture(canvas); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4; return t; };
+  const mkCanvas = (w, h) => { const c = document.createElement('canvas'); c.width = w; c.height = h; return [c, c.getContext('2d')]; };
+  const FONT = `"M PLUS Rounded 1c","Hiragino Maru Gothic ProN","Hiragino Sans",sans-serif`;
+  function rr(ctx, x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+  function fitText(ctx, text, maxW, size, weight = 800) {
+    let s = size; do { ctx.font = `${weight} ${s}px ${FONT}`; s -= 2; } while (ctx.measureText(text).width > maxW && s > 10);
+  }
+
+  /* ----- チームロゴ（紺の背景を透明に切り抜いて使う） ----- */
+  const logoImg = new Image();
+  const logoReady = new Promise(res => { logoImg.onload = res; logoImg.onerror = res; });
+  logoImg.src = window.WR_LOGO_DATA || 'logo-512.jpg';
+  let logoCut = null;
+  function logoCutout() {
+    if (logoCut) return logoCut;
+    if (!logoImg.naturalWidth) return null;
+    const N = 512, [c, ctx] = mkCanvas(N, N);
+    ctx.drawImage(logoImg, 0, 0, N, N);
+    let img; try { img = ctx.getImageData(0, 0, N, N); } catch (e) { return (logoCut = c); }
+    const px = img.data, bg = [px[0], px[1], px[2]], seen = new Uint8Array(N * N);
+    const near = i => Math.abs(px[i * 4] - bg[0]) + Math.abs(px[i * 4 + 1] - bg[1]) + Math.abs(px[i * 4 + 2] - bg[2]) < 70;
+    const stack = [0, N - 1, N * (N - 1), N * N - 1];
+    while (stack.length) { // 四隅から背景色の部分だけを塗りつぶして透明にする
+      const i = stack.pop(); if (seen[i]) continue; seen[i] = 1;
+      if (!near(i)) continue;
+      px[i * 4 + 3] = 0;
+      const x = i % N, y = (i / N) | 0;
+      if (x > 0) stack.push(i - 1); if (x < N - 1) stack.push(i + 1); if (y > 0) stack.push(i - N); if (y < N - 1) stack.push(i + N);
+    }
+    ctx.putImageData(img, 0, 0);
+    return (logoCut = c);
+  }
+
+  /* ----- グラウンド ----- */
+  const CZ = -12; // 外野フェンス円の中心(z)
+  {
+    const [c, ctx] = mkCanvas(256, 256);
+    for (let i = 0; i < 8; i++) { ctx.fillStyle = i % 2 ? '#5fc452' : '#53b447'; ctx.fillRect(0, i * 32, 256, 32); }
+    const gt = tex(c); gt.wrapS = gt.wrapT = THREE.RepeatWrapping; gt.repeat.set(6, 6);
+    M.grass = new THREE.MeshToonMaterial({ map: gt, gradientMap: grad });
+  }
+  const flat = (geo, mat, y, x = 0, z = 0) => { const m = new THREE.Mesh(geo, mat); m.rotation.x = -Math.PI / 2; m.position.set(x, y, z); scene.add(m); return m; };
+  flat(new THREE.CircleGeometry(70, 64), toon('#4aa63e'), -0.02, 0, CZ); // 外周
+  flat(new THREE.CircleGeometry(48, 72), M.grass, 0, 0, CZ);
+  flat(new THREE.RingGeometry(45, 48, 72), M.dirtDark, 0.01, 0, CZ); // ウォーニングトラック
+  { // 内野の土（扇形）
+    const sh = new THREE.Shape(); sh.moveTo(0, 0); sh.absarc(0, 0, 29, Math.PI / 4, Math.PI * 3 / 4, false); sh.lineTo(0, 0);
+    flat(new THREE.ShapeGeometry(sh, 24), M.dirt, 0.02);
+    const g2 = new THREE.Shape(); g2.moveTo(0, 2.3); g2.lineTo(10.4, 12.73); g2.lineTo(0, 23.1); g2.lineTo(-10.4, 12.73); g2.closePath();
+    flat(new THREE.ShapeGeometry(g2), M.grass, 0.03);
+    flat(new THREE.CircleGeometry(3.6, 24), M.dirt, 0.025, 0, 0);
+  }
+  { // ベース・マウンド・ファウルライン
+    const base = new THREE.BoxGeometry(0.9, 0.18, 0.9);
+    [[12.73, -12.73], [0, -25.46], [-12.73, -12.73]].forEach(([x, z]) => { const b = new THREE.Mesh(base, M.white); b.position.set(x, 0.09, z); b.rotation.y = Math.PI / 4; scene.add(b); });
+    const hp = new THREE.Shape(); hp.moveTo(-0.45, 0); hp.lineTo(0.45, 0); hp.lineTo(0.45, -0.45); hp.lineTo(0, -0.9); hp.lineTo(-0.45, -0.45); hp.closePath();
+    const hpm = flat(new THREE.ShapeGeometry(hp), M.white, 0.05, 0, 0); hpm.rotation.z = Math.PI; hpm.position.z = -0.2;
+    const mound = new THREE.Mesh(new THREE.CylinderGeometry(2.2, 2.7, 0.45, 24), M.dirt); mound.position.set(0, 0.2, -11.5); scene.add(mound);
+    const rub = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.08, 0.22), M.white); rub.position.set(0, 0.46, -11.5); scene.add(rub);
+    const L = 55.7;
+    [1, -1].forEach(sx => {
+      const ln = new THREE.Mesh(new THREE.PlaneGeometry(0.22, L), M.white); ln.rotation.x = -Math.PI / 2; ln.rotation.z = sx * Math.PI / 4;
+      ln.position.set(sx * L / 2 * Math.SQRT1_2, 0.04, -L / 2 * Math.SQRT1_2); scene.add(ln);
+      const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.25, 15, 8), M.yellow); pole.position.set(sx * L * Math.SQRT1_2, 7.5, -L * Math.SQRT1_2); scene.add(pole);
+    });
+    [-1, 1].forEach(sx => { // バッターボックス
+      const bx = new THREE.Mesh(new THREE.RingGeometry(0.95, 1.05, 4, 1), M.white); bx.rotation.x = -Math.PI / 2; bx.rotation.z = Math.PI / 4; bx.scale.set(1, 1.6, 1); bx.position.set(sx * 1.5, 0.045, -0.3); scene.add(bx);
+    });
+    // チームロゴをグラウンドに描く（ホーム後方とセンターの芝）
+    logoReady.then(() => {
+      const cut = logoCutout(); if (!cut) return;
+      const lt = tex(cut);
+      const lm = new THREE.MeshBasicMaterial({ map: lt, transparent: true, depthWrite: false });
+      flat(new THREE.PlaneGeometry(6.4, 6.4), lm, 0.03, 0, 5.6);
+      const big = flat(new THREE.PlaneGeometry(13, 13), new THREE.MeshBasicMaterial({ map: lt, transparent: true, opacity: .9, depthWrite: false }), 0.04, 0, -35);
+      big.renderOrder = 1;
+    });
+  }
+
+  /* ----- フェンス（チーム看板入り） ----- */
+  {
+    const [c, ctx] = mkCanvas(512, 64);
+    ctx.fillStyle = '#12235a'; ctx.fillRect(0, 0, 512, 64);
+    ctx.fillStyle = '#ffc928'; ctx.fillRect(0, 0, 512, 6);
+    ctx.font = `900 34px Arial Black,Arial`; ctx.textBaseline = 'middle'; ctx.fillText('★ WILD ROVERS', 30, 36);
+    ctx.fillStyle = '#fff'; ctx.font = `800 26px ${FONT}`; ctx.fillText('ワイルドローバーズ', 320, 36);
+    const ft = tex(c); ft.wrapS = THREE.RepeatWrapping; ft.repeat.set(-14, 1); // 内側から見るため左右反転
+    const fence = new THREE.Mesh(new THREE.CylinderGeometry(48, 48, 3, 96, 1, true), new THREE.MeshBasicMaterial({ map: ft, side: THREE.BackSide }));
+    fence.position.set(0, 1.5, CZ); scene.add(fence);
+    const top = new THREE.Mesh(new THREE.TorusGeometry(48, 0.22, 6, 96), M.yellow); top.rotation.x = Math.PI / 2; top.position.set(0, 3, CZ); scene.add(top);
+  }
+
+  /* ----- 観客席（段々）＋観客（インスタンス描画で軽量） ----- */
+  {
+    const gap = 0.26, a0 = Math.PI / 2 + gap, a1 = Math.PI / 2 + Math.PI * 2 - gap; // 中堅後方はスコアボード用に空ける
+    const tiers = 4, seatCols = ['#1a2f73', '#ffc928', '#1a2f73', '#f6f7fb'];
+    for (let i = 0; i < tiers; i++) {
+      const r0 = 50 + i * 3.4, r1 = 64;
+      const sh = new THREE.Shape();
+      sh.moveTo(Math.cos(a0) * r1, Math.sin(a0) * r1); sh.absarc(0, 0, r1, a0, a1, false);
+      sh.lineTo(Math.cos(a1) * r0, Math.sin(a1) * r0); sh.absarc(0, 0, r0, a1, a0, true);
+      const g = new THREE.ExtrudeGeometry(sh, { depth: 2.2 * (i + 1), bevelEnabled: false, curveSegments: 48 });
+      g.rotateX(-Math.PI / 2);
+      const m = new THREE.Mesh(g, toon(seatCols[i])); m.position.set(0, 0, CZ); scene.add(m);
+    }
+    const count = lowEnd ? 180 : 420;
+    const crowd = new THREE.InstancedMesh(new THREE.SphereGeometry(0.55, 8, 6), new THREE.MeshLambertMaterial(), count);
+    const dummy = new THREE.Object3D(), col = new THREE.Color();
+    const pal = ['#ffc928', '#1a2f73', '#ffffff', '#ff6b6b', '#4cc3ff', '#ffd3ad'];
+    for (let k = 0; k < count; k++) {
+      const i = k % tiers, ang = a0 + Math.random() * (a1 - a0), r = 50 + i * 3.4 + 1.6;
+      dummy.position.set(Math.cos(ang) * r, 2.2 * (i + 1) + 0.5, CZ - Math.sin(ang) * r);
+      dummy.scale.setScalar(0.8 + Math.random() * .4); dummy.updateMatrix();
+      crowd.setMatrixAt(k, dummy.matrix); crowd.setColorAt(k, col.set(pal[k % pal.length]));
+    }
+    scene.add(crowd);
+    W.crowd = crowd;
+    // 応援フラッグ
+    const fg = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 1.6, 0), new THREE.Vector3(1.6, 0.8, 0)]);
+    fg.setIndex([0, 1, 2]); fg.computeVertexNormals();
+    const fm = [new THREE.MeshBasicMaterial({ color: '#ffc928', side: THREE.DoubleSide }), new THREE.MeshBasicMaterial({ color: '#1a2f73', side: THREE.DoubleSide })];
+    for (let k = 0; k < 28; k++) {
+      const ang = a0 + (k + .5) / 28 * (a1 - a0);
+      const fl = new THREE.Mesh(fg, fm[k % 2]); fl.position.set(Math.cos(ang) * 64, 8.8, CZ - Math.sin(ang) * 64); fl.rotation.y = ang; scene.add(fl);
+      const pole = new THREE.Mesh(new THREE.CylinderGeometry(.06, .06, 2.2, 4), M.grey); pole.position.copy(fl.position); pole.position.y -= .2; scene.add(pole);
+      W.flags.push(fl);
+    }
+  }
+
+  /* ----- 照明塔 ----- */
+  {
+    const [c, ctx] = mkCanvas(128, 64);
+    ctx.fillStyle = '#2b3550'; ctx.fillRect(0, 0, 128, 64);
+    for (let y = 0; y < 3; y++) for (let x = 0; x < 6; x++) { ctx.fillStyle = '#fffbe0'; ctx.beginPath(); ctx.arc(12 + x * 21, 12 + y * 20, 8, 0, 7); ctx.fill(); }
+    const lm = new THREE.MeshBasicMaterial({ map: tex(c) });
+    [40, 140, 220, 320].forEach(deg => {
+      const a = deg * Math.PI / 180, x = Math.cos(a) * 67, z = CZ - Math.sin(a) * 67;
+      const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.7, 28, 8), M.grey); pole.position.set(x, 14, z); scene.add(pole);
+      const panel = new THREE.Mesh(new THREE.BoxGeometry(7, 3.5, 0.5), [M.navy, M.navy, M.navy, M.navy, lm, M.navy]);
+      panel.position.set(x, 29, z); panel.lookAt(0, 6, CZ); scene.add(panel);
+    });
+  }
+
+  /* ----- 雲 ----- */
+  for (let i = 0; i < 6; i++) {
+    const g = new THREE.Group();
+    for (let j = 0; j < 4; j++) { const s = new THREE.Mesh(new THREE.SphereGeometry(4 + Math.random() * 3, 10, 8), toon('#ffffff')); s.position.set(j * 5 - 7, Math.random() * 2, Math.random() * 3); g.add(s); }
+    const a = Math.random() * Math.PI * 2; g.position.set(Math.cos(a) * 120, 45 + Math.random() * 20, Math.sin(a) * 120 + CZ); g.lookAt(0, 45, CZ);
+    scene.add(g); W.clouds.push(g);
+  }
+
+  /* ----- 看板パネル（スコアボード・ランキング板・チーム看板） ----- */
+  function panel(w, h, cw, ch, pos, lookAt, frameColor = '#ffc928', legs = true) {
+    const [c, ctx] = mkCanvas(cw, ch);
+    const t = tex(c);
+    const g = new THREE.Group();
+    const face = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ map: t }));
+    face.position.z = 0.31;
+    const box = new THREE.Mesh(new THREE.BoxGeometry(w + 1, h + 1, 0.6), toon(frameColor)); g.add(box, face);
+    if (legs) [-w / 3, w / 3].forEach(x => { const l = new THREE.Mesh(new THREE.CylinderGeometry(.4, .4, pos.y, 8), M.navy); l.position.set(x, -pos.y / 2, 0); g.add(l); });
+    g.position.copy(pos); g.lookAt(lookAt); scene.add(g);
+    return { g, face, box, c, ctx, t };
+  }
+  const scoreboard = panel(30, 13, 1024, 444, new THREE.Vector3(0, 13, CZ - 57), new THREE.Vector3(0, 8, 0));
+  scoreboard.face.userData = scoreboard.box.userData = { type: 'score' }; clickables.push(scoreboard.face, scoreboard.box);
+  const angB = (-125) * Math.PI / 180;
+  const board = panel(17, 12, 768, 540, new THREE.Vector3(Math.cos(angB) * 44, 9.5, CZ + Math.sin(angB) * 44), new THREE.Vector3(0, 6, CZ + 8));
+  board.face.userData = board.box.userData = { type: 'board' }; clickables.push(board.face, board.box);
+  const angT = (-55) * Math.PI / 180;
+  const sign = panel(17, 8, 768, 360, new THREE.Vector3(Math.cos(angT) * 44, 8.5, CZ + Math.sin(angT) * 44), new THREE.Vector3(0, 6, CZ + 8), '#1a2f73');
+  function drawSign() {
+    const { ctx, c } = sign;
+    const g = ctx.createLinearGradient(0, 0, 0, c.height); g.addColorStop(0, '#1d3580'); g.addColorStop(1, '#0a1638');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, c.width, c.height);
+    ctx.fillStyle = '#ffc928'; ctx.fillRect(0, c.height - 30, c.width, 30);
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    const cut = logoCutout();
+    if (cut) { // ロゴを大きく、横にチーム名
+      ctx.drawImage(cut, 6, 0, 330, 330);
+      ctx.font = `800 54px ${FONT}`; ctx.fillStyle = '#fff'; ctx.fillText('ワイルド', 550, 110); ctx.fillText('ローバーズ', 550, 180);
+      ctx.font = `900 34px Arial Black,Arial`; ctx.fillStyle = '#ffc928'; ctx.fillText('GO! ROVERS!', 550, 255);
+    } else {
+      ctx.font = `900 112px Arial Black,Arial`; ctx.fillStyle = '#ffc928'; ctx.fillText('WILD ROVERS', c.width / 2, 130);
+      ctx.font = `800 60px ${FONT}`; ctx.fillStyle = '#fff'; ctx.fillText('ワイルドローバーズ', c.width / 2, 240);
+    }
+    ctx.font = `800 26px ${FONT}`; ctx.fillStyle = '#12235a'; ctx.fillText('GO! GO! ROVERS ★ ONE TEAM', c.width / 2, c.height - 15);
+    sign.t.needsUpdate = true;
+  }
+
+  function drawScoreboard() {
+    const { ctx, c } = scoreboard, d = D(), s = SC(), sl = SL();
+    ctx.fillStyle = '#0b2a1f'; ctx.fillRect(0, 0, c.width, c.height);
+    ctx.fillStyle = '#12235a'; ctx.fillRect(0, 0, c.width, 92);
+    ctx.fillStyle = '#ffc928'; ctx.fillRect(0, 88, c.width, 6);
+    ctx.textBaseline = 'middle'; ctx.textAlign = 'center';
+    ctx.font = `900 58px Arial Black,Arial`; ctx.fillStyle = '#ffc928'; ctx.fillText('WILD ROVERS', c.width / 2, 48);
+    const lc = logoCutout(); if (lc) { ctx.drawImage(lc, 120, -4, 100, 100); ctx.drawImage(lc, c.width - 220, -4, 100, 100); }
+    const rec = C.teamRecord(d, s); const gs = C.seasonGames(d, s); const last = gs[gs.length - 1];
+    ctx.font = `800 40px ${FONT}`; ctx.fillStyle = '#fff';
+    ctx.fillText(`${sl}  ${rec.W}勝 ${rec.L}敗 ${rec.D}分`, c.width / 2, 140);
+    if (last) {
+      ctx.fillStyle = '#9fffb0'; fitText(ctx, `最新 ${last.date.slice(5).replace('-', '/')}  vs ${last.opponent}`, 940, 38); ctx.fillText(`最新 ${last.date.slice(5).replace('-', '/')}  vs ${last.opponent}`, c.width / 2, 205);
+      ctx.font = `900 110px Arial Black,Arial`; ctx.fillStyle = '#ffc928';
+      ctx.fillText(`${C.isNum(last.scoreFor) ? last.scoreFor : '-'}  -  ${C.isNum(last.scoreAgainst) ? last.scoreAgainst : '-'}`, c.width / 2, 290);
+      const r = C.gameResult(last);
+      if (r) { ctx.font = `800 40px ${FONT}`; ctx.fillStyle = r === '勝' ? '#5cff8a' : r === '負' ? '#ff8080' : '#ddd'; ctx.fillText(r === '勝' ? 'WIN!' : r === '負' ? 'LOSE' : 'DRAW', c.width - 120, 290); }
+      if (last.mvp && P(last.mvp)) { ctx.font = `800 34px ${FONT}`; ctx.fillStyle = '#fff'; ctx.fillText(`MVP  ${P(last.mvp).name}`, c.width / 2, 368); }
+    } else { ctx.fillStyle = '#9fffb0'; ctx.font = `800 40px ${FONT}`; ctx.fillText('試合データ 未登録', c.width / 2, 260); }
+    ctx.font = `500 26px ${FONT}`; ctx.fillStyle = '#aab'; ctx.fillText('▶ タップで試合結果を見る', c.width / 2, 420);
+    scoreboard.t.needsUpdate = true;
+  }
+
+  function drawBoard() {
+    const { ctx, c } = board, key = S.boardCat;
+    const r = C.ranking(D(), SC(), key);
+    const g = ctx.createLinearGradient(0, 0, 0, c.height); g.addColorStop(0, '#1d3580'); g.addColorStop(1, '#0a1638');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, c.width, c.height);
+    ctx.fillStyle = '#ffc928'; ctx.fillRect(0, 0, c.width, 86);
+    ctx.textBaseline = 'middle'; ctx.textAlign = 'center';
+    ctx.fillStyle = '#12235a'; fitText(ctx, `🏆 ${S.kind === 'all' ? '' : C.KIND_LABEL[S.kind] + ' '}${r.category.label}ランキング`, c.width - 40, 50); ctx.fillText(`🏆 ${S.kind === 'all' ? '' : C.KIND_LABEL[S.kind] + ' '}${r.category.label}ランキング`, c.width / 2, 45);
+    const medal = ['#f5c542', '#c3cdd8', '#d9935a'];
+    const top = r.items.slice(0, 5);
+    if (!top.length) { ctx.fillStyle = '#fff'; ctx.font = `800 40px ${FONT}`; ctx.fillText('データ未登録', c.width / 2, 280); }
+    top.forEach((it, i) => {
+      const y = 130 + i * 76;
+      if (it.rank <= 3) { ctx.fillStyle = 'rgba(255,255,255,.08)'; rr(ctx, 20, y - 33, c.width - 40, 66, 18); ctx.fill(); }
+      ctx.fillStyle = medal[it.rank - 1] || '#3a4d8f'; ctx.beginPath(); ctx.arc(66, y, 28, 0, 7); ctx.fill();
+      ctx.fillStyle = it.rank <= 3 ? '#12235a' : '#fff'; ctx.font = `900 34px Arial Black,Arial`; ctx.fillText(it.rank, 66, y + 2);
+      if (it.rank === 1) { ctx.font = `40px serif`; ctx.fillText('👑', 66, y - 42); }
+      ctx.textAlign = 'left'; ctx.fillStyle = '#fff'; fitText(ctx, `#${it.player.number} ${it.player.name}`, 420, 38); ctx.fillText(`#${it.player.number} ${it.player.name}`, 112, y);
+      ctx.textAlign = 'right'; ctx.fillStyle = '#ffc928'; ctx.font = `900 46px Arial Black,Arial`; ctx.fillText(it.display + (r.category.unit === 'WP' ? '' : ''), c.width - 44, y + 2);
+      ctx.textAlign = 'center';
+    });
+    ctx.font = `500 24px ${FONT}`; ctx.fillStyle = '#aab'; ctx.fillText('▶ タップで全ランキング', c.width / 2, c.height - 24);
+    board.t.needsUpdate = true;
+    // 1位の選手に王冠とスポットライト
+    W.leaderId = r.items[0] && r.items[0].rank === 1 ? r.items[0].playerId : null;
+  }
+
+  /* ----- キャラクター（丸っこいトゥーン調・オリジナル） ----- */
+  const G = {
+    leg: new THREE.CylinderGeometry(0.16, 0.14, 0.5, 10), shoe: new THREE.SphereGeometry(0.17, 10, 8),
+    body: new THREE.SphereGeometry(0.56, 18, 14), belt: new THREE.CylinderGeometry(0.47, 0.47, 0.1, 18),
+    head: new THREE.SphereGeometry(0.64, 20, 16), cap: new THREE.SphereGeometry(0.67, 20, 10, 0, Math.PI * 2, 0, Math.PI / 2),
+    brim: new THREE.CylinderGeometry(0.45, 0.45, 0.06, 18), eye: new THREE.SphereGeometry(0.085, 10, 8), cheek: new THREE.CircleGeometry(0.09, 12),
+    arm: new THREE.CylinderGeometry(0.12, 0.11, 0.42, 8), hand: new THREE.SphereGeometry(0.15, 10, 8), glove: new THREE.SphereGeometry(0.22, 10, 8),
+    bat: new THREE.CylinderGeometry(0.09, 0.045, 1.35, 8), plate: new THREE.PlaneGeometry(0.62, 0.62), emb: new THREE.PlaneGeometry(0.34, 0.34),
+    hitbox: new THREE.CylinderGeometry(1.0, 1.0, 3.4, 8), blob: new THREE.CircleGeometry(0.75, 16), ball: new THREE.SphereGeometry(0.16, 10, 8),
+    mouth: new THREE.TorusGeometry(0.08, 0.025, 6, 10, Math.PI)
+  };
+  let embTex;
+  { const [c, ctx] = mkCanvas(64, 64); ctx.fillStyle = '#ffc928'; ctx.font = '900 40px Arial Black,Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('W', 32, 34); embTex = tex(c); }
+  const embMat = new THREE.MeshBasicMaterial({ map: embTex, transparent: true });
+
+  function numberTexture(n) {
+    const [c, ctx] = mkCanvas(128, 128);
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.font = `900 ${String(n).length > 2 ? 54 : 78}px Arial Black,Arial`;
+    ctx.lineWidth = 10; ctx.strokeStyle = '#ffffff'; ctx.strokeText(n, 64, 68);
+    ctx.fillStyle = '#ffc928'; ctx.fillText(n, 64, 68);
+    return tex(c);
+  }
+  function labelTexture(p) {
+    const [c, ctx] = mkCanvas(512, 120);
+    ctx.fillStyle = 'rgba(18,35,90,.92)'; rr(ctx, 6, 6, 500, 108, 54); ctx.fill();
+    ctx.lineWidth = 6; ctx.strokeStyle = '#ffc928'; ctx.stroke();
+    ctx.fillStyle = '#ffc928'; ctx.beginPath(); ctx.arc(62, 60, 42, 0, 7); ctx.fill();
+    const no = p.number || '-';
+    ctx.fillStyle = '#12235a'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = `900 ${String(no).length > 2 ? 30 : 40}px Arial Black,Arial`; ctx.fillText(no, 62, 62);
+    ctx.fillStyle = '#fff'; ctx.textAlign = 'left'; fitText(ctx, p.name, 380, 50); ctx.fillText(p.name, 118, 62);
+    return tex(c);
+  }
+
+  // 色ごとのマテリアルを使い回す（軽量化）
+  const colorMats = {};
+  const matOf = c => colorMats[c] || (colorMats[c] = toon(c));
+  const G2 = {
+    hair: new THREE.SphereGeometry(0.67, 18, 12), curl: new THREE.SphereGeometry(0.13, 8, 6), spike: new THREE.ConeGeometry(0.13, 0.34, 6),
+    longHair: new THREE.CapsuleGeometry(0.3, 0.35, 4, 10), helmet: new THREE.SphereGeometry(0.71, 20, 12, 0, Math.PI * 2, 0, Math.PI * 0.47),
+    flap: new THREE.CylinderGeometry(0.2, 0.2, 0.1, 14), ring: new THREE.TorusGeometry(0.15, 0.03, 6, 16),
+    shades: new THREE.CylinderGeometry(0.665, 0.665, 0.17, 24, 1, true, -0.95, 1.9), brow: new THREE.BoxGeometry(0.2, 0.05, 0.04),
+    grin: new THREE.CircleGeometry(0.12, 12, Math.PI, Math.PI), flatMouth: new THREE.BoxGeometry(0.14, 0.03, 0.02),
+    protector: new THREE.SphereGeometry(0.5, 14, 10, Math.PI / 2 - 1.1, 2.2, 0.5, 1.7), shin: new THREE.CylinderGeometry(0.17, 0.17, 0.4, 10)
+  };
+  const BUILD = { slim: [0.86, 0.9], normal: [1, 1], sturdy: [1.13, 1.1], chubby: [1.27, 1.2], muscle: [1.16, 1.15] }; // [胴の太さ, 腕の太さ]
+  const shadesMat = new THREE.MeshPhongMaterial({ color: '#ff5a1f', emissive: '#5a1300', shininess: 120, specular: '#ffe0a0', side: THREE.DoubleSide });
+  const helmetMat = new THREE.MeshPhongMaterial({ color: '#13225a', shininess: 110, specular: '#8fa6ff' });
+  const gearMat = toon('#c8323c');
+
+  function makeChar(p, { label = true, glove = true } = {}) {
+    const L = lookOf(p), [bw, aw] = BUILD[L.build] || BUILD.normal;
+    const root = new THREE.Group(), inner = new THREE.Group(), torso = new THREE.Group();
+    root.add(inner); inner.add(torso);
+    [-0.2, 0.2].forEach(x => {
+      const leg = new THREE.Mesh(G.leg, M.white); leg.position.set(x * bw, 0.3, 0); leg.scale.set(aw, 1, aw); inner.add(leg);
+      const shoe = new THREE.Mesh(G.shoe, M.navy); shoe.position.set(x * bw, 0.08, 0.06); shoe.scale.set(1, .6, 1.35); inner.add(shoe);
+      if (L.gear === 'catcher') { const sh = new THREE.Mesh(G2.shin, gearMat); sh.position.set(x * bw, 0.3, 0.06); inner.add(sh); }
+    });
+    const body = new THREE.Mesh(G.body, M.navy); body.position.y = 0.97; body.scale.set(bw, 1.05, .85 * bw); torso.add(body);
+    if (L.build === 'muscle') [-1, 1].forEach(sx => { const s = new THREE.Mesh(G.body, M.navy); s.scale.setScalar(0.42); s.position.set(sx * 0.42, 1.28, 0); torso.add(s); });
+    const belt = new THREE.Mesh(G.belt, M.yellow); belt.position.y = 0.62; belt.scale.set(bw, 1, .85 * bw); torso.add(belt);
+    if (L.gear === 'catcher') { const pr = new THREE.Mesh(G2.protector, gearMat); pr.position.set(0, 0.98, 0.04); pr.scale.set(bw * 1.12, 1.1, 1.0 * bw); torso.add(pr); }
+    const headS = L.face === 'round' || L.build === 'chubby' ? 1.07 : 1;
+    const head = new THREE.Mesh(G.head, M.skin); head.position.y = 1.9; head.scale.setScalar(headS); torso.add(head);
+    // 髪
+    const hm = matOf(L.hairColor);
+    if (L.hair !== 'none') { const h = new THREE.Mesh(G2.hair, hm); h.position.set(0, 1.97, -0.08); h.scale.set(headS, 0.95 * headS, headS); torso.add(h); }
+    if (L.hair === 'long') { const lh = new THREE.Mesh(G2.longHair, hm); lh.position.set(0, 1.6, -0.36); lh.scale.set(1.5, 1, 0.8); torso.add(lh); }
+    if (L.hair === 'wavy') for (let i = 0; i < 9; i++) { const a = Math.PI * 0.35 + i / 8 * Math.PI * 1.3, c = new THREE.Mesh(G2.curl, hm); c.position.set(Math.sin(a) * 0.66, 1.86 + (i % 2) * 0.08, Math.cos(a) * 0.66); torso.add(c); }
+    if (L.hair === 'spiky' && L.cap === 'none') for (let i = 0; i < 7; i++) { const a = i / 7 * Math.PI * 2, s = new THREE.Mesh(G2.spike, hm); s.position.set(Math.sin(a) * 0.32, 2.5, Math.cos(a) * 0.32 - 0.05); s.rotation.set(Math.cos(a) * 0.5, 0, -Math.sin(a) * 0.5); torso.add(s); }
+    // 帽子
+    if (L.cap === 'helmet') {
+      const hel = new THREE.Mesh(G2.helmet, helmetMat); hel.position.y = 1.95; hel.scale.setScalar(headS); torso.add(hel);
+      const fl = new THREE.Mesh(G2.flap, helmetMat); fl.rotation.z = Math.PI / 2; fl.position.set(-0.68 * headS, 1.88, 0); torso.add(fl);
+      const br = new THREE.Mesh(G.brim, helmetMat); br.position.set(0, 1.98, 0.5); br.scale.set(.8, 1, .5); torso.add(br);
+      const emb = new THREE.Mesh(G.emb, embMat); emb.position.set(0, 2.3, 0.6); emb.rotation.x = -0.45; torso.add(emb);
+    } else if (L.cap !== 'none') {
+      const cap = new THREE.Mesh(G.cap, M.navy); cap.position.y = 1.97; cap.scale.setScalar(headS); torso.add(cap);
+      const back = L.cap === 'backward';
+      const brim = new THREE.Mesh(G.brim, M.yellow); brim.position.set(0, 1.98, back ? -0.5 : 0.5); brim.scale.set(1, 1, .75); torso.add(brim);
+      if (!back) { const emb = new THREE.Mesh(G.emb, embMat); emb.position.set(0, 2.32, 0.55); emb.rotation.x = -0.45; torso.add(emb); }
+    }
+    // 顔
+    const eyes = new THREE.Group(); eyes.position.set(0, 1.84, 0.57 * headS); torso.add(eyes);
+    const eyeY = L.face === 'cool' ? 1.0 : L.face === 'grin' ? 0.55 : 1.45;
+    [-0.21, 0.21].forEach(x => { const e = new THREE.Mesh(G.eye, M.black); e.position.x = x; e.scale.set(1, eyeY, .6); eyes.add(e); });
+    if (L.brows === 'thick') [-0.21, 0.21].forEach(x => { const b = new THREE.Mesh(G2.brow, M.black); b.position.set(x, 2.0, 0.58 * headS); b.rotation.z = x > 0 ? 0.12 : -0.12; torso.add(b); });
+    [-0.38, 0.38].forEach(x => { const ch = new THREE.Mesh(G.cheek, M.pink); ch.position.set(x, 1.7, 0.53 * headS); ch.rotation.y = x * 0.9; torso.add(ch); });
+    let mouth;
+    if (L.face === 'grin') { mouth = new THREE.Mesh(G2.grin, new THREE.MeshBasicMaterial({ color: '#8a2b2b' })); mouth.position.set(0, 1.68, 0.62 * headS); }
+    else if (L.face === 'cool') { mouth = new THREE.Mesh(G2.flatMouth, M.black); mouth.position.set(0, 1.66, 0.61 * headS); }
+    else { mouth = new THREE.Mesh(G.mouth, M.black); mouth.position.set(0, 1.66, 0.6 * headS); mouth.rotation.z = Math.PI; if (L.face === 'smile') mouth.scale.set(1.4, 1.4, 1); }
+    torso.add(mouth);
+    if (L.glasses === 'round') {
+      [-0.21, 0.21].forEach(x => { const g = new THREE.Mesh(G2.ring, M.black); g.position.set(x, 1.84, 0.6 * headS); torso.add(g); });
+      const br = new THREE.Mesh(G2.brow, M.black); br.scale.set(0.5, 0.6, 1); br.position.set(0, 1.86, 0.62 * headS); torso.add(br);
+    }
+    if (L.glasses === 'sport') { const s = new THREE.Mesh(G2.shades, shadesMat); s.position.y = 1.86; s.scale.setScalar(headS); torso.add(s); }
+    const plate = new THREE.Mesh(G.plate, new THREE.MeshBasicMaterial({ map: numberTexture(p.number || ''), transparent: true })); plate.position.set(0, 1.02, -0.5 * bw); plate.rotation.y = Math.PI; torso.add(plate);
+    const chest = new THREE.Mesh(G.emb, embMat); chest.position.set(0, 1.12, 0.49 * bw + (L.gear === 'catcher' ? 0.06 : 0)); if (L.gear !== 'catcher') torso.add(chest);
+    const arms = [-1, 1].map(sx => { // sx=-1 右腕, +1 左腕
+      const pv = new THREE.Group(); pv.position.set(sx * 0.52 * bw, 1.24, 0); pv.rotation.z = sx * 0.28;
+      const a = new THREE.Mesh(G.arm, matOf(sx < 0 ? L.sleeveR : L.sleeveL)); a.position.y = -0.2; a.scale.set(aw, 1, aw); pv.add(a);
+      const h = new THREE.Mesh(sx > 0 && glove ? G.glove : G.hand, sx > 0 && glove ? M.brown : M.skin); h.position.y = -0.46; pv.add(h);
+      torso.add(pv); return pv;
+    });
+    const lefty = p.bats === '左';
+    const bat = new THREE.Mesh(G.bat, M.brown); bat.position.set(lefty ? 0.35 : -0.35, 1.6, -0.35); bat.rotation.set(-0.5, 0, lefty ? -0.5 : 0.5); bat.visible = false; torso.add(bat);
+    const blob = new THREE.Mesh(G.blob, M.shadow); blob.rotation.x = -Math.PI / 2; blob.position.y = 0.02; blob.scale.setScalar(bw); root.add(blob);
+    let sprite = null;
+    if (label) {
+      sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: labelTexture(p), depthTest: false, transparent: true }));
+      sprite.scale.set(3.2, 0.75, 1); sprite.position.y = 3.35; sprite.renderOrder = 10; root.add(sprite);
+    }
+    const hit = new THREE.Mesh(G.hitbox, M.hit); hit.position.y = 1.7; hit.userData = { type: 'player', id: p.id }; root.add(hit);
+    root.scale.setScalar(1.3);
+    if (L.tall) inner.scale.y = 1.1;
+    return { root, inner, torso, eyes, arms, bat, sprite, hit, id: p.id, ph: Math.random() * 10, nextBlink: Math.random() * 3, act: null, side: L.throwStyle === 'side', lefty };
+  }
+  function disposeChar(ch) {
+    ch.root.traverse(o => { if (o.material && o.material.map && o.material.map !== embTex) { o.material.map.dispose(); o.material.dispose(); } });
+    ch.root.parent && ch.root.parent.remove(ch.root);
+  }
+
+  const SPOTS = {
+    '投手': [0, -11.5], '捕手': [0, 2.0], '一塁手': [15, -17], '二塁手': [6.5, -24], '遊撃手': [-6.5, -24], '三塁手': [-15, -17],
+    '左翼手': [-22, -40], '中堅手': [0, -46], '右翼手': [22, -40], '指名打者': [-1.7, 0.1]
+  };
+  // ベンチ：一塁側・三塁側に交互に並べ、7人ごとに前の列へ
+  const benchSpot = i => { const side = i % 2 ? -1 : 1, j = Math.floor(i / 2), row = Math.floor(j / 7), k = j % 7, t = 10 + k * 2.3 + row * 1.1; return [side * (t + 6 - row * 1.7), -t + 6 - row * 1.7]; };
+  const ball = new THREE.Mesh(G.ball, M.white); ball.visible = false; scene.add(ball);
+  let ballFlight = null;
+
+  function rebuildPlayers() {
+    W.chars.forEach(disposeChar); W.chars = [];
+    const used = {}; let bench = 0;
+    // 出場試合の多い選手から守備位置に配置（同じ位置の2人目以降はベンチ）
+    const apps = {}; D().stats.batting.concat(D().stats.pitching).forEach(r => { apps[r.playerId] = (apps[r.playerId] || 0) + 1; });
+    activePlayers().slice().sort((a, b) => (apps[b.id] || 0) - (apps[a.id] || 0)).forEach(p => {
+      const ch = makeChar(p, { glove: p.position !== '指名打者' });
+      let spot = SPOTS[p.position], role = 'field';
+      if (!spot || used[p.position]) { spot = benchSpot(bench++); role = 'bench'; }
+      else used[p.position] = true;
+      if (p.position === '投手' && role === 'field') role = 'pitcher';
+      if (p.position === '指名打者' && role === 'field') role = 'batter';
+      ch.role = role;
+      ch.root.position.set(spot[0], role === 'pitcher' ? 0.42 : 0, spot[1]);
+      let look = [0, 0];
+      if (p.position === '捕手' && role === 'field') look = [0, -11.5];
+      if (role === 'bench') look = [ch.root.position.x - Math.sign(ch.root.position.x) * 10, ch.root.position.z - 10];
+      if (role === 'batter') { look = [0, -0.3]; if (p.bats === '左') ch.root.position.x = 1.7; }
+      ch.root.rotation.y = Math.atan2(look[0] - ch.root.position.x, look[1] - ch.root.position.z);
+      scene.add(ch.root); W.chars.push(ch); clickables.push(ch.hit);
+    });
+    // 不要になった当たり判定を整理
+    for (let i = clickables.length - 1; i >= 0; i--) if (clickables[i].userData.type === 'player' && !clickables[i].parent?.parent) clickables.splice(i, 1);
+  }
+
+  // ベンチ（ダグアウト）
+  {
+    const g = new THREE.Group();
+    const seat = new THREE.Mesh(new THREE.BoxGeometry(22, 0.8, 1.6), M.navy); seat.position.set(0, 0.4, -1.6); g.add(seat);
+    const back = new THREE.Mesh(new THREE.BoxGeometry(22, 3.2, 0.4), M.navy); back.position.set(0, 1.6, -2.6); g.add(back);
+    const roof = new THREE.Mesh(new THREE.BoxGeometry(23, 0.4, 3.6), M.yellow); roof.position.set(0, 3.4, -1.4); g.add(roof);
+    g.position.set(23.5, 0, -10.5); g.rotation.y = Math.PI * 5 / 4; scene.add(g);
+    const g3 = g.clone(); g3.position.set(-23.5, 0, -10.5); g3.rotation.y = -Math.PI * 5 / 4; scene.add(g3); // 三塁側ベンチ
+    const net = new THREE.Mesh(new THREE.PlaneGeometry(18, 6), new THREE.MeshBasicMaterial({ color: '#2b3550', transparent: true, opacity: .25, side: THREE.DoubleSide }));
+    net.position.set(0, 3, 9); scene.add(net);
+    [-9, 9].forEach(x => { const p = new THREE.Mesh(new THREE.CylinderGeometry(.15, .15, 6, 6), M.grey); p.position.set(x, 3, 9); scene.add(p); });
+  }
+
+  /* ----- MVP表彰台 ----- */
+  const PODIUM = new THREE.Vector3(-19, 0, 12);
+  const podium = new THREE.Group(); podium.position.copy(PODIUM); podium.rotation.y = Math.atan2(-PODIUM.x, 52 - PODIUM.z); scene.add(podium);
+  const steps = [[0, 2.4, M.gold, '最新MVP'], [-3.2, 1.6, M.silver, '準MVP'], [3.2, 1.1, M.bronze, '月間/年間']];
+  steps.forEach(([x, h, m, t]) => {
+    const st = new THREE.Mesh(new THREE.BoxGeometry(3, h, 3), m); st.position.set(x, h / 2, 0); st.userData = { type: 'mvp' }; podium.add(st); clickables.push(st);
+    const [c, ctx] = mkCanvas(256, 96); ctx.fillStyle = '#12235a'; rr(ctx, 4, 4, 248, 88, 20); ctx.fill(); ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = `800 40px ${FONT}`; ctx.fillText(t, 128, 50);
+    const lb = new THREE.Mesh(new THREE.PlaneGeometry(2.6, 1), new THREE.MeshBasicMaterial({ map: tex(c), transparent: true })); lb.position.set(x, h / 2, 1.52); podium.add(lb);
+  });
+  {
+    const [c, ctx] = mkCanvas(512, 200);
+    ctx.fillStyle = '#ffc928'; rr(ctx, 6, 6, 500, 188, 40); ctx.fill(); ctx.lineWidth = 10; ctx.strokeStyle = '#12235a'; ctx.stroke();
+    ctx.fillStyle = '#12235a'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = '900 110px Arial Black,Arial'; ctx.fillText('MVP', 256, 104);
+    const s = new THREE.Mesh(new THREE.PlaneGeometry(6, 2.35), new THREE.MeshBasicMaterial({ map: tex(c), transparent: true, side: THREE.DoubleSide }));
+    s.position.set(0, 8.4, -1.2); s.userData = { type: 'mvp' }; podium.add(s); clickables.push(s);
+  }
+  function makeTrophy(scale = 1) {
+    const g = new THREE.Group();
+    const base = new THREE.Mesh(new THREE.BoxGeometry(.8, .3, .8), M.navy); base.position.y = .15; g.add(base);
+    const stem = new THREE.Mesh(new THREE.CylinderGeometry(.08, .14, .5, 8), M.gold); stem.position.y = .55; g.add(stem);
+    const cup = new THREE.Mesh(new THREE.CylinderGeometry(.42, .16, .6, 14), M.gold); cup.position.y = 1.08; g.add(cup);
+    [-1, 1].forEach(sx => { const h = new THREE.Mesh(new THREE.TorusGeometry(.17, .045, 6, 12), M.gold); h.position.set(sx * .45, 1.1, 0); h.rotation.y = Math.PI / 2; g.add(h); });
+    const star = new THREE.Mesh(new THREE.OctahedronGeometry(.16), M.gold); star.position.y = 1.55; g.add(star);
+    g.scale.setScalar(scale); return g;
+  }
+  const bigTrophy = makeTrophy(1.6); bigTrophy.position.set(5.6, 0, 0.5); podium.add(bigTrophy);
+  // 紙吹雪（軽量なPoints）
+  const CONF = lowEnd ? 70 : 140;
+  const confGeo = new THREE.BufferGeometry();
+  const cp = new Float32Array(CONF * 3), cc = new Float32Array(CONF * 3), cv = new Float32Array(CONF);
+  const cpal = ['#ffc928', '#1a2f73', '#ff6b6b', '#4cc3ff', '#ffffff', '#5cbf4f'].map(x => new THREE.Color(x));
+  for (let i = 0; i < CONF; i++) { cp[i * 3] = (Math.random() - .5) * 10; cp[i * 3 + 1] = Math.random() * 10 + 2; cp[i * 3 + 2] = (Math.random() - .5) * 6; const k = cpal[i % cpal.length]; cc.set([k.r, k.g, k.b], i * 3); cv[i] = 0.8 + Math.random(); }
+  confGeo.setAttribute('position', new THREE.BufferAttribute(cp, 3)); confGeo.setAttribute('color', new THREE.BufferAttribute(cc, 3));
+  const confPts = new THREE.Points(confGeo, new THREE.PointsMaterial({ size: 0.32, vertexColors: true }));
+  podium.add(confPts);
+  let confBoost = 0;
+
+  function rebuildPodium() {
+    W.podiumChars.forEach(disposeChar); W.podiumChars = [];
+    for (let i = clickables.length - 1; i >= 0; i--) if (clickables[i].userData.podium) clickables.splice(i, 1);
+    const d = D(), s = SC(), sl = SL();
+    const last = C.seasonGames(d, s).filter(g => g.mvp).pop();
+    const month = d.rankings.mvpAwards.filter(a => a.type === 'month' && String(a.season) === S.season).sort((a, b) => b.period.localeCompare(a.period))[0];
+    const year = d.rankings.mvpAwards.filter(a => a.type === 'year' && String(a.season) === S.season)[0];
+    [[last && last.mvp, 0], [last && last.mvp2, 1], [(year || month) && (year || month).playerId, 2]].forEach(([pid, i]) => {
+      const p = pid && P(pid); if (!p) return;
+      const ch = makeChar(p, { glove: false });
+      ch.root.position.set(steps[i][0], steps[i][1], 0); ch.root.scale.setScalar(1.05);
+      ch.hit.userData = { type: 'player', id: p.id, podium: true };
+      if (i === 0) { const cr = crown(); cr.position.y = 2.75; ch.torso.add(cr); }
+      ch.role = 'podium'; podium.add(ch.root); W.podiumChars.push(ch); clickables.push(ch.hit);
+    });
+  }
+  function crown() {
+    const g = new THREE.Group();
+    const band = new THREE.Mesh(new THREE.CylinderGeometry(.36, .32, .28, 12, 1, true), M.gold); g.add(band);
+    for (let i = 0; i < 5; i++) { const a = i / 5 * Math.PI * 2; const sp = new THREE.Mesh(new THREE.ConeGeometry(.09, .26, 6), M.gold); sp.position.set(Math.cos(a) * .33, .25, Math.sin(a) * .33); g.add(sp); const j = new THREE.Mesh(new THREE.SphereGeometry(.05, 6, 4), new THREE.MeshBasicMaterial({ color: i % 2 ? '#ff4b6e' : '#4cc3ff' })); j.position.copy(sp.position); j.position.y = .1; g.add(j); }
+    return g;
+  }
+  // 1位の選手用：王冠＋スポットライト
+  const leaderCrown = crown(); leaderCrown.visible = false;
+  const spot = new THREE.Mesh(new THREE.ConeGeometry(2.4, 16, 24, 1, true), new THREE.MeshBasicMaterial({ color: '#fff4b0', transparent: true, opacity: .2, depthWrite: false, side: THREE.DoubleSide, blending: THREE.AdditiveBlending }));
+  spot.visible = false; scene.add(spot);
+  const spotRing = new THREE.Mesh(new THREE.RingGeometry(1.2, 1.9, 24), new THREE.MeshBasicMaterial({ color: '#ffc928', transparent: true, opacity: .7, depthWrite: false }));
+  spotRing.rotation.x = -Math.PI / 2; spotRing.visible = false; scene.add(spotRing);
+  function placeLeader() {
+    const ch = W.chars.find(c => c.id === W.leaderId);
+    leaderCrown.parent && leaderCrown.parent.remove(leaderCrown);
+    if (!ch) { spot.visible = spotRing.visible = leaderCrown.visible = false; return; }
+    leaderCrown.position.y = 2.75; ch.torso.add(leaderCrown); leaderCrown.visible = true;
+    spot.position.set(ch.root.position.x, 8 + ch.root.position.y, ch.root.position.z); spot.visible = true;
+    spotRing.position.set(ch.root.position.x, 0.06 + ch.root.position.y, ch.root.position.z); spotRing.visible = true;
+  }
+
+  /* ----- トロフィー展示ケース ----- */
+  const CASE = new THREE.Vector3(19, 0, 12);
+  const trophyCase = new THREE.Group(); trophyCase.position.copy(CASE); trophyCase.rotation.y = Math.atan2(-CASE.x, 52 - CASE.z); scene.add(trophyCase);
+  {
+    const ped = new THREE.Mesh(new THREE.BoxGeometry(8, 1.2, 3), M.navy); ped.position.y = .6; trophyCase.add(ped);
+    const glass = new THREE.Mesh(new THREE.BoxGeometry(8, 3.6, 3), new THREE.MeshPhongMaterial({ color: '#cfefff', transparent: true, opacity: .22, shininess: 100, depthWrite: false }));
+    glass.position.y = 3; trophyCase.add(glass);
+    const cap = new THREE.Mesh(new THREE.BoxGeometry(8.3, .35, 3.3), M.yellow); cap.position.y = 4.95; trophyCase.add(cap);
+    const [c, ctx] = mkCanvas(512, 120); ctx.fillStyle = '#ffc928'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = `800 60px ${FONT}`; ctx.fillText('🏆 TROPHY ROOM', 256, 64);
+    const lb = new THREE.Mesh(new THREE.PlaneGeometry(6.4, 1.5), new THREE.MeshBasicMaterial({ map: tex(c), transparent: true })); lb.position.set(0, .6, 1.52); trophyCase.add(lb);
+    const hb = new THREE.Mesh(new THREE.BoxGeometry(8.4, 5.4, 3.4), M.hit); hb.position.y = 2.6; hb.userData = { type: 'trophy' }; trophyCase.add(hb); clickables.push(hb);
+  }
+  const trophySlot = new THREE.Group(); trophyCase.add(trophySlot);
+  function rebuildTrophies() {
+    while (trophySlot.children.length) trophySlot.remove(trophySlot.children[0]);
+    const n = Math.min(D().rankings.trophies.length, 6);
+    for (let i = 0; i < n; i++) { const t = makeTrophy(1.1); t.position.set((i - (n - 1) / 2) * 1.25, 1.2, 0); trophySlot.add(t); }
+    if (!n) { const t = makeTrophy(1.1); t.traverse(o => { if (o.isMesh) o.material = new THREE.MeshBasicMaterial({ color: '#8a93a6', transparent: true, opacity: .35 }); }); t.position.y = 1.2; trophySlot.add(t); }
+  }
+
+  /* ----- アニメーション ----- */
+  const ease = x => x < .5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2;
+  let nextAction = 2, last = performance.now() / 1000, raf = 0, active = true, paused = false, frameGap = 0;
+  let idleT = 0, fly = null;
+  function startAction(t) {
+    const field = W.chars.filter(c => c.role !== 'podium');
+    if (!field.length) return;
+    const pitcher = field.find(c => c.role === 'pitcher');
+    const r = Math.random();
+    if (pitcher && r < .45 && !ballFlight) {
+      pitcher.act = { type: 'throw', t0: t };
+      const batter = field.find(c => c.role === 'batter');
+      setTimeout(() => {
+        ballFlight = { t0: performance.now() / 1000, from: new THREE.Vector3(pitcher.root.position.x - .5, 2.6, pitcher.root.position.z + .5), to: new THREE.Vector3(0, 1.4, 1.6) };
+        if (batter) setTimeout(() => { batter.act = { type: 'swing', t0: performance.now() / 1000 }; }, 260);
+      }, 420);
+    } else {
+      const c = field[Math.floor(Math.random() * field.length)];
+      c.act = { type: c.role === 'bench' && Math.random() < .6 ? 'cheer' : 'swing', t0: t };
+    }
+  }
+  function animateChar(ch, t, dt) {
+    ch.inner.position.y = Math.abs(Math.sin(t * 2.2 + ch.ph)) * 0.06;
+    ch.torso.rotation.z = Math.sin(t * 1.3 + ch.ph) * 0.05;
+    ch.torso.rotation.y = 0; ch.bat.visible = false;
+    ch.arms[0].rotation.set(Math.sin(t * 2 + ch.ph) * .12, 0, -0.28);
+    ch.arms[1].rotation.set(-Math.sin(t * 2 + ch.ph) * .12, 0, 0.28);
+    // まばたき
+    ch.nextBlink -= dt;
+    if (ch.nextBlink < 0) { ch.eyes.scale.y = 0.12; if (ch.nextBlink < -0.12) { ch.eyes.scale.y = 1; ch.nextBlink = 2 + Math.random() * 4; } }
+    if (ch.role === 'podium') { ch.arms[0].rotation.z = -2.5 - Math.sin(t * 4 + ch.ph) * .3; ch.arms[1].rotation.z = 2.5 + Math.sin(t * 4 + ch.ph) * .3; ch.inner.position.y = Math.abs(Math.sin(t * 3 + ch.ph)) * .25; return; }
+    const a = ch.act; if (!a) return;
+    const p = (t - a.t0);
+    if (a.type === 'swing') {
+      const d = .9, x = p / d; ch.bat.visible = true;
+      ch.arms[0].rotation.x = -1.0; ch.arms[1].rotation.x = -1.0; ch.arms[0].rotation.z = .3; ch.arms[1].rotation.z = -.3;
+      const dir = ch.lefty ? -1 : 1; // 左打ちは逆向きにスイング
+      if (x < .35) ch.torso.rotation.y = dir * ease(x / .35) * 0.8;
+      else if (x < .55) ch.torso.rotation.y = dir * (0.8 - ease((x - .35) / .2) * 2.6);
+      else ch.torso.rotation.y = dir * (-1.8 + ease((x - .55) / .45) * 1.8);
+      if (x >= 1) ch.act = null;
+    } else if (a.type === 'throw') {
+      const x = p / 1.0, arm = ch.arms[0];
+      if (ch.side) { // サイドスロー：腕を横から振る
+        arm.rotation.x = -0.2;
+        if (x < .4) { arm.rotation.z = -0.28 - ease(x / .4) * 1.3; ch.torso.rotation.y = ease(x / .4) * 0.7; }
+        else if (x < .55) { arm.rotation.z = -1.58; ch.torso.rotation.y = 0.7 - ease((x - .4) / .15) * 1.6; }
+        else { arm.rotation.z = -1.58 + ease((x - .55) / .45) * 1.3; ch.torso.rotation.y = -0.9 + ease((x - .55) / .45) * 0.9; }
+      } else if (x < .4) arm.rotation.x = ease(x / .4) * 2.7;
+      else if (x < .55) arm.rotation.x = 2.7 - ease((x - .4) / .15) * 4.0;
+      else arm.rotation.x = -1.3 + ease((x - .55) / .45) * 1.3;
+      ch.torso.rotation.x = x > .4 && x < .7 ? .25 : 0;
+      ch.arms[1].rotation.x = x < .5 ? -1.2 : 0;
+      if (x >= 1) { ch.act = null; ch.torso.rotation.x = 0; }
+    } else if (a.type === 'cheer') {
+      const x = p / 1.4;
+      ch.arms[0].rotation.z = -2.6; ch.arms[1].rotation.z = 2.6;
+      ch.inner.position.y = Math.abs(Math.sin(x * Math.PI * 3)) * .5;
+      if (x >= 1) ch.act = null;
+    }
+  }
+  function loop() {
+    raf = requestAnimationFrame(loop);
+    const now = performance.now() / 1000; let dt = Math.min(now - last, .1);
+    // パネル表示中・省電力端末は描画回数を減らして軽くする
+    const cap = paused ? 1 / 20 : (lowEnd ? 1 / 30 : 0);
+    frameGap += dt; if (cap && frameGap < cap) return; dt = frameGap; frameGap = 0; last = now;
+    const t = now;
+    if (fly) {
+      const x = Math.min((now - fly.t0) / fly.d, 1), e = ease(x);
+      controls.target.lerpVectors(fly.ft, fly.tt, e); camera.position.lerpVectors(fly.fp, fly.tp, e);
+      if (x >= 1) fly = null;
+    }
+    idleT += dt;
+    if (!controls.autoRotate && W.autoWanted && idleT > 6 && !fly) controls.autoRotate = true;
+    controls.update();
+    nextAction -= dt; if (nextAction < 0) { startAction(t); nextAction = 1.6 + Math.random() * 1.6; }
+    W.chars.forEach(c => animateChar(c, t, dt)); W.podiumChars.forEach(c => animateChar(c, t, dt));
+    if (ballFlight) {
+      const x = (now - ballFlight.t0) / .45;
+      if (x >= 1) { ball.visible = false; ballFlight = null; }
+      else { ball.visible = true; ball.position.lerpVectors(ballFlight.from, ballFlight.to, x); ball.position.y += Math.sin(x * Math.PI) * .8; }
+    }
+    // 紙吹雪
+    const pos = confGeo.attributes.position.array; const sp = 1 + confBoost;
+    for (let i = 0; i < CONF; i++) { pos[i * 3 + 1] -= dt * 1.4 * cv[i] * sp; pos[i * 3] += Math.sin(t * 2 + i) * dt * .4; if (pos[i * 3 + 1] < 0) pos[i * 3 + 1] = 10 + Math.random() * 2; }
+    confGeo.attributes.position.needsUpdate = true; confBoost = Math.max(0, confBoost - dt);
+    leaderCrown.rotation.y += dt * 1.5;
+    if (spot.visible) { spot.material.opacity = .16 + Math.sin(t * 3) * .05; spotRing.scale.setScalar(1 + Math.sin(t * 4) * .1); }
+    bigTrophy.rotation.y += dt * .8; trophySlot.children.forEach((c, i) => c.rotation.y = t * .6 + i);
+    W.flags.forEach((f, i) => f.rotation.z = Math.sin(t * 3 + i) * .15);
+    renderer.render(scene, camera);
+  }
+
+  /* ----- タップ判定（ドラッグと区別） ----- */
+  const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
+  let down = null;
+  renderer.domElement.addEventListener('pointerdown', e => { down = { x: e.clientX, y: e.clientY, t: performance.now() }; idleT = 0; fly = null; });
+  controls.addEventListener('start', () => { controls.autoRotate = false; idleT = 0; });
+  renderer.domElement.addEventListener('pointerup', e => {
+    if (!down) return;
+    const moved = Math.hypot(e.clientX - down.x, e.clientY - down.y), dur = performance.now() - down.t; down = null;
+    if (moved > 10 || dur > 600) return;
+    const rect = renderer.domElement.getBoundingClientRect();
+    ndc.set((e.clientX - rect.left) / rect.width * 2 - 1, -(e.clientY - rect.top) / rect.height * 2 + 1);
+    ray.setFromCamera(ndc, camera);
+    const hit = ray.intersectObjects(clickables, false)[0];
+    if (!hit) return;
+    const u = hit.object.userData;
+    if (u.type === 'player') { const ch = [...W.chars, ...W.podiumChars].find(c => c.id === u.id); if (ch) ch.act = { type: 'cheer', t0: performance.now() / 1000 }; openView('profile', { id: u.id }, false); }
+    else if (u.type === 'score') openView('games', {}, false);
+    else if (u.type === 'board') openView('ranking', { key: S.boardCat }, false);
+    else if (u.type === 'mvp') { confBoost = 3; openView('mvp', {}, false); }
+    else if (u.type === 'trophy') openView('trophy', {}, false);
+  });
+  $('#tapHint').style.opacity = 1; setTimeout(() => $('#tapHint').style.opacity = 0, 6000);
+
+  addEventListener('resize', () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); });
+  document.addEventListener('visibilitychange', () => { if (document.hidden) cancelAnimationFrame(raf); else if (active) { last = performance.now() / 1000; cancelAnimationFrame(raf); loop(); } });
+
+  const VIEWPOINTS = {
+    home: () => [HOME_VIEW.target.clone(), HOME_VIEW.pos.clone()],
+    board: () => { const p = board.g.position; return [new THREE.Vector3(p.x, 6, p.z), new THREE.Vector3(p.x * .45, 14, p.z * .45 + 4)]; },
+    score: () => [new THREE.Vector3(0, 9, CZ - 52), new THREE.Vector3(0, 16, CZ - 20)],
+    mvp: () => [new THREE.Vector3(PODIUM.x, 3.5, PODIUM.z), new THREE.Vector3(PODIUM.x + 7.3, 9, PODIUM.z + 15.3)],
+    trophy: () => [new THREE.Vector3(CASE.x, 2.5, CASE.z), new THREE.Vector3(CASE.x - 7.3, 8, CASE.z + 15.3)],
+    bench: () => [new THREE.Vector3(24, 1.5, -4), new THREE.Vector3(8, 10, -18)]
+  };
+  // 1位交代のランキング板は7秒ごとに種目を切り替え
+  let boardTimer = setInterval(() => {
+    if (!active || paused) return;
+    const keys = C.CATEGORIES.filter(c => c.main).map(c => c.key); S.boardCat = keys[(keys.indexOf(S.boardCat) + 1) % keys.length];
+    drawBoard(); placeLeader();
+  }, 7000);
+
+  function refresh() { rebuildPlayers(); rebuildPodium(); rebuildTrophies(); drawScoreboard(); drawBoard(); placeLeader(); drawSign(); }
+  logoReady.then(() => { drawSign(); drawScoreboard(); });
+  refresh();
+  if (document.fonts) document.fonts.ready.then(() => { drawScoreboard(); drawBoard(); drawSign(); rebuildPlayers(); rebuildPodium(); placeLeader(); });
+  loop();
+  W.autoWanted = true;
+  $('#rotBtn').onclick = () => { W.autoWanted = !W.autoWanted; controls.autoRotate = W.autoWanted; $('#rotBtn').classList.toggle('on', W.autoWanted); toast(W.autoWanted ? '自動回転オン' : '自動回転オフ'); };
+  $('#resetBtn').onclick = () => api.flyTo('home');
+
+  const api = {
+    refresh,
+    setActive(on) { active = on; cancelAnimationFrame(raf); if (on) { last = performance.now() / 1000; loop(); } },
+    setPaused(on) { paused = on; },
+    setBoard(k) { S.boardCat = k; drawBoard(); placeLeader(); },
+    flyTo(name) {
+      const [tt, tp] = VIEWPOINTS[name](); controls.autoRotate = false; idleT = -6;
+      fly = { t0: performance.now() / 1000, d: 1.1, ft: controls.target.clone(), fp: camera.position.clone(), tt, tp };
+    },
+    __debug: { scene, camera, controls, renderer, clickables, chars: () => W.chars }
+  };
+  return api;
+}
+const W = { chars: [], podiumChars: [], flags: [], clouds: [], leaderId: null, autoWanted: true, crowd: null };
+
+/* ================= 起動 ================= */
+(async function start() {
+  await load();
+  let mode = '3d';
+  try { mode = localStorage.getItem('wr-mode') || '3d'; } catch (e) {}
+  await setMode(mode, false);
+  // URLの「#player=…」などから直接画面を開く（LINEで特定の選手を共有できる）
+  const h = location.hash.slice(1);
+  if (h) {
+    const [k, v] = h.split('=');
+    if (k === 'player' && P(v)) openView('profile', { id: v }, false);
+    else if (k === 'game' && C.gameById(D(), v)) openView('game', { id: v }, false);
+    else if (k === 'ranking') openView('ranking', { key: C.categoryByKey(v) ? v : 'AVG' }, false);
+    else if (VIEWS[k] && !['profile', 'game'].includes(k)) openView(k, {}, false);
+  }
+loadCards();
+const ld = $('#loading'); ld.style.opacity = 0; setTimeout(() => ld.remove(), 500);
+  window.__WR = { S, World: () => World, openView };
+  // オフライン対応（公開サーバー上のみ）
+  if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
+})();
+</script>
+</body>
+</html>

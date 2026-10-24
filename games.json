@@ -1,0 +1,965 @@
+{
+  "_説明": "試合結果（草野球スコアブックから取り込み）。",
+  "games": [
+    {
+      "id": "g2026p01",
+      "season": "2026",
+      "date": "2026-02-01",
+      "gameNo": 1,
+      "opponent": "サムライ",
+      "venue": "和歌山市東市民球場",
+      "kind": "prac",
+      "tourney": "",
+      "topBottom": "bottom",
+      "scoreFor": 2,
+      "scoreAgainst": 3,
+      "innings": {
+        "for": [
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "against": [
+          1,
+          0,
+          0,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "mvp": "",
+      "mvp2": "",
+      "start": "17:00",
+      "end": "23:00",
+      "photo": "",
+      "memo": "",
+      "source": "scorebook"
+    },
+    {
+      "id": "g2026p02",
+      "season": "2026",
+      "date": "2026-02-22",
+      "gameNo": 1,
+      "opponent": "CTYホークス",
+      "venue": "大宮緑地総合運動公園",
+      "kind": "prac",
+      "tourney": "",
+      "topBottom": "top",
+      "scoreFor": 4,
+      "scoreAgainst": 4,
+      "innings": {
+        "for": [
+          2,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        "against": [
+          0,
+          1,
+          0,
+          0,
+          2,
+          0,
+          1,
+          0,
+          0,
+          0
+        ]
+      },
+      "mvp": "",
+      "mvp2": "",
+      "start": "09:00",
+      "end": "",
+      "photo": "",
+      "memo": "",
+      "source": "scorebook"
+    },
+    {
+      "id": "g2026t01",
+      "season": "2026",
+      "date": "2026-03-10",
+      "gameNo": 1,
+      "opponent": "中西自動車",
+      "venue": "せせらぎ西第1グラウンド",
+      "kind": "tour",
+      "tourney": "軟式連盟大会2026",
+      "topBottom": "bottom",
+      "scoreFor": 7,
+      "scoreAgainst": 0,
+      "innings": {
+        "for": [
+          3,
+          0,
+          0,
+          4,
+          "X"
+        ],
+        "against": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "mvp": "pl-masaki",
+      "mvp2": "pl-taniguchi",
+      "start": "15:00",
+      "end": "",
+      "photo": "",
+      "memo": "",
+      "source": "scorebook"
+    },
+    {
+      "id": "g2026p03",
+      "season": "2026",
+      "date": "2026-03-15",
+      "gameNo": 1,
+      "opponent": "Nexus",
+      "venue": "",
+      "kind": "prac",
+      "tourney": "",
+      "topBottom": "top",
+      "scoreFor": 9,
+      "scoreAgainst": 1,
+      "innings": {
+        "for": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          5,
+          3,
+          0,
+          1
+        ],
+        "against": [
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "mvp": "pl-taniguchi",
+      "mvp2": "pl-hirooka",
+      "start": "09:00",
+      "end": "12:00",
+      "photo": "",
+      "memo": "",
+      "source": "scorebook"
+    },
+    {
+      "id": "g2026t02",
+      "season": "2026",
+      "date": "2026-03-29",
+      "gameNo": 1,
+      "opponent": "ブーイング",
+      "venue": "",
+      "kind": "tour",
+      "tourney": "軟式連盟大会2026",
+      "topBottom": "top",
+      "scoreFor": 13,
+      "scoreAgainst": 5,
+      "innings": {
+        "for": [
+          6,
+          3,
+          0,
+          0,
+          0,
+          4
+        ],
+        "against": [
+          3,
+          0,
+          1,
+          0,
+          1,
+          0
+        ]
+      },
+      "mvp": "7lrk29vxyuof6dbsccob",
+      "mvp2": "pl-taniguchi",
+      "start": "",
+      "end": "",
+      "photo": "",
+      "memo": "",
+      "source": "scorebook"
+    },
+    {
+      "id": "g2026t03",
+      "season": "2026",
+      "date": "2026-04-05",
+      "gameNo": 1,
+      "opponent": "新中村化学",
+      "venue": "せせらぎ西第1グラウンド",
+      "kind": "tour",
+      "tourney": "軟式連盟大会2026",
+      "topBottom": "bottom",
+      "scoreFor": 8,
+      "scoreAgainst": 1,
+      "innings": {
+        "for": [
+          1,
+          2,
+          5,
+          0,
+          "X"
+        ],
+        "against": [
+          1,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "mvp": "pl-hirooka",
+      "mvp2": "7lrk29vxyuof6dbsccob",
+      "start": "13:00",
+      "end": "",
+      "photo": "",
+      "memo": "",
+      "source": "scorebook"
+    },
+    {
+      "id": "g2026t04",
+      "season": "2026",
+      "date": "2026-04-12",
+      "gameNo": 1,
+      "opponent": "パーテックス",
+      "venue": "せせらぎ西第1グラウンド",
+      "kind": "tour",
+      "tourney": "軟式連盟大会2026",
+      "topBottom": "bottom",
+      "scoreFor": 13,
+      "scoreAgainst": 6,
+      "innings": {
+        "for": [
+          0,
+          0,
+          3,
+          3,
+          3,
+          4
+        ],
+        "against": [
+          5,
+          0,
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "mvp": "pl-hiura",
+      "mvp2": "pl-taniguchi",
+      "start": "",
+      "end": "",
+      "photo": "",
+      "memo": "",
+      "source": "scorebook"
+    },
+    {
+      "id": "g2026t05",
+      "season": "2026",
+      "date": "2026-05-10",
+      "gameNo": 1,
+      "opponent": "せせらぎBC",
+      "venue": "せせらぎ東2",
+      "kind": "tour",
+      "tourney": "軟式連盟大会2026",
+      "topBottom": "bottom",
+      "scoreFor": 8,
+      "scoreAgainst": 3,
+      "innings": {
+        "for": [
+          4,
+          2,
+          2,
+          0,
+          0,
+          0,
+          "X"
+        ],
+        "against": [
+          2,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0
+        ]
+      },
+      "mvp": "7lrk29vxyuof6dbsccob",
+      "mvp2": "pl-masaki",
+      "start": "11:00",
+      "end": "",
+      "photo": "",
+      "memo": "",
+      "source": "scorebook"
+    },
+    {
+      "id": "g2026t06",
+      "season": "2026",
+      "date": "2026-05-17",
+      "gameNo": 1,
+      "opponent": "ブーイング",
+      "venue": "せせらぎ公園東3",
+      "kind": "tour",
+      "tourney": "軟式連盟大会2026",
+      "topBottom": "bottom",
+      "scoreFor": 7,
+      "scoreAgainst": 5,
+      "innings": {
+        "for": [
+          0,
+          2,
+          1,
+          0,
+          4,
+          "X"
+        ],
+        "against": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          4
+        ]
+      },
+      "mvp": "pl-taniguchi",
+      "mvp2": "7lrk29vxyuof6dbsccob",
+      "start": "11:00",
+      "end": "",
+      "photo": "",
+      "memo": "",
+      "source": "scorebook"
+    },
+    {
+      "id": "g2026t07",
+      "season": "2026",
+      "date": "2026-05-24",
+      "gameNo": 1,
+      "opponent": "ホエールズ",
+      "venue": "",
+      "kind": "tour",
+      "tourney": "軟式連盟大会2026",
+      "topBottom": "bottom",
+      "scoreFor": 6,
+      "scoreAgainst": 2,
+      "innings": {
+        "for": [
+          2,
+          2,
+          0,
+          0,
+          2,
+          "X"
+        ],
+        "against": [
+          0,
+          0,
+          0,
+          2,
+          0,
+          0
+        ]
+      },
+      "mvp": "7lrk29vxyuof6dbsccob",
+      "mvp2": "pl-hiura",
+      "start": "11:00",
+      "end": "",
+      "photo": "",
+      "memo": "",
+      "source": "scorebook"
+    },
+    {
+      "id": "g2026t08",
+      "season": "2026",
+      "date": "2026-05-31",
+      "gameNo": 1,
+      "opponent": "近大",
+      "venue": "せせらぎ東2",
+      "kind": "tour",
+      "tourney": "軟式連盟大会2026",
+      "topBottom": "bottom",
+      "scoreFor": 9,
+      "scoreAgainst": 9,
+      "innings": {
+        "for": [
+          2,
+          0,
+          2,
+          0,
+          3,
+          2
+        ],
+        "against": [
+          8,
+          1,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "mvp": "pl-taniguchi",
+      "mvp2": "pl-nakagawa",
+      "start": "11:00",
+      "end": "",
+      "photo": "",
+      "memo": "",
+      "source": "scorebook"
+    },
+    {
+      "id": "g2026t-0614",
+      "season": "2026",
+      "date": "2026-06-14",
+      "gameNo": 1,
+      "opponent": "スタッカーズ",
+      "venue": "",
+      "kind": "tour",
+      "tourney": "軟式連盟大会2026",
+      "topBottom": "bottom",
+      "scoreFor": 3,
+      "scoreAgainst": 5,
+      "innings": {
+        "for": [
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1
+        ],
+        "against": [
+          1,
+          0,
+          0,
+          2,
+          1,
+          1,
+          0
+        ]
+      },
+      "mvp": "pl-nakao",
+      "mvp2": "",
+      "start": "13:00",
+      "end": "17:00",
+      "photo": "",
+      "memo": "",
+      "source": "scorebook"
+    },
+    {
+      "id": "g2026t09",
+      "season": "2026",
+      "date": "2026-06-21",
+      "gameNo": 1,
+      "opponent": "リップスターズ",
+      "venue": "",
+      "kind": "tour",
+      "tourney": "軟式連盟大会2026",
+      "topBottom": "bottom",
+      "scoreFor": 9,
+      "scoreAgainst": 1,
+      "innings": {
+        "for": [
+          3,
+          0,
+          1,
+          5,
+          "X"
+        ],
+        "against": [
+          1,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "mvp": "pl-tsujimoto-kaito",
+      "mvp2": "pl-nakanishi",
+      "start": "09:00",
+      "end": "",
+      "photo": "",
+      "memo": "",
+      "source": "scorebook"
+    },
+    {
+      "id": "g2026t10",
+      "season": "2026",
+      "date": "2026-07-12",
+      "gameNo": 1,
+      "opponent": "バッカス",
+      "venue": "",
+      "kind": "tour",
+      "tourney": "軟式連盟大会2026",
+      "topBottom": "bottom",
+      "scoreFor": 14,
+      "scoreAgainst": 0,
+      "innings": {
+        "for": [
+          1,
+          0,
+          8,
+          5,
+          "X"
+        ],
+        "against": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "mvp": "pl-nakao",
+      "mvp2": "pl-kuromatsu",
+      "start": "09:00",
+      "end": "",
+      "photo": "",
+      "memo": "",
+      "source": "scorebook"
+    },
+    {
+      "id": "g2026p04",
+      "season": "2026",
+      "date": "2026-07-19",
+      "gameNo": 1,
+      "opponent": "せせらぎBC",
+      "venue": "",
+      "kind": "prac",
+      "tourney": "",
+      "topBottom": "bottom",
+      "scoreFor": 9,
+      "scoreAgainst": 4,
+      "innings": {
+        "for": [
+          1,
+          0,
+          0,
+          1,
+          1,
+          3,
+          3,
+          0,
+          "X"
+        ],
+        "against": [
+          0,
+          0,
+          0,
+          0,
+          1,
+          3,
+          0,
+          0,
+          0
+        ]
+      },
+      "mvp": "7lrk29vxyuof6dbsccob",
+      "mvp2": "pl-taniguchi",
+      "start": "16:00",
+      "end": "17:00",
+      "photo": "",
+      "memo": "",
+      "source": "scorebook"
+    },
+    {
+      "id": "g2026p05",
+      "season": "2026",
+      "date": "2026-08-02",
+      "gameNo": 1,
+      "opponent": "イクイノックス",
+      "venue": "河西緩衝緑地 西松江野球場",
+      "kind": "prac",
+      "tourney": "",
+      "topBottom": "bottom",
+      "scoreFor": 5,
+      "scoreAgainst": 5,
+      "innings": {
+        "for": [
+          2,
+          0,
+          0,
+          3,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "against": [
+          0,
+          0,
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "mvp": "pl-taniguchi",
+      "mvp2": "__guest",
+      "start": "09:00",
+      "end": "12:00",
+      "photo": "",
+      "memo": "",
+      "source": "scorebook"
+    },
+    {
+      "id": "g2026p06",
+      "season": "2026",
+      "date": "2026-08-09",
+      "gameNo": 1,
+      "opponent": "ネクサス",
+      "venue": "大宮緑地総合運動公園",
+      "kind": "prac",
+      "tourney": "",
+      "topBottom": "bottom",
+      "scoreFor": 14,
+      "scoreAgainst": 1,
+      "innings": {
+        "for": [
+          0,
+          0,
+          5,
+          4,
+          1,
+          0,
+          3,
+          1,
+          "X"
+        ],
+        "against": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "mvp": "7lrk29vxyuof6dbsccob",
+      "mvp2": "pl-taniguchi",
+      "start": "09:00",
+      "end": "12:00",
+      "photo": "",
+      "memo": "",
+      "source": "scorebook"
+    },
+    {
+      "id": "g2026p07",
+      "season": "2026",
+      "date": "2026-08-16",
+      "gameNo": 1,
+      "opponent": "ハイライト",
+      "venue": "河西緩衝緑地 西松江野球場",
+      "kind": "prac",
+      "tourney": "",
+      "topBottom": "bottom",
+      "scoreFor": 3,
+      "scoreAgainst": 7,
+      "innings": {
+        "for": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          3,
+          0,
+          0,
+          0
+        ],
+        "against": [
+          0,
+          0,
+          2,
+          3,
+          1,
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "mvp": "__guest",
+      "mvp2": "pl-taniguchi",
+      "start": "09:00",
+      "end": "",
+      "photo": "",
+      "memo": "",
+      "source": "scorebook"
+    },
+    {
+      "id": "g2026t11",
+      "season": "2026",
+      "date": "2026-09-12",
+      "gameNo": 1,
+      "opponent": "ユナイト",
+      "venue": "",
+      "kind": "tour",
+      "tourney": "軟式連盟大会2026",
+      "topBottom": "top",
+      "scoreFor": 11,
+      "scoreAgainst": 4,
+      "innings": {
+        "for": [
+          0,
+          0,
+          3,
+          0,
+          8,
+          0
+        ],
+        "against": [
+          0,
+          0,
+          1,
+          3,
+          0,
+          0
+        ]
+      },
+      "mvp": "pl-tsujimoto-kaito",
+      "mvp2": "pl-hirooka",
+      "start": "",
+      "end": "",
+      "photo": "",
+      "memo": "",
+      "source": "scorebook"
+    },
+    {
+      "id": "g2026t12",
+      "season": "2026",
+      "date": "2026-09-13",
+      "gameNo": 1,
+      "opponent": "アサヒ",
+      "venue": "田井ノ瀬第1グラウンド",
+      "kind": "tour",
+      "tourney": "軟式連盟大会2026",
+      "topBottom": "bottom",
+      "scoreFor": 5,
+      "scoreAgainst": 1,
+      "innings": {
+        "for": [
+          0,
+          3,
+          0,
+          1,
+          1,
+          0,
+          "X"
+        ],
+        "against": [
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "mvp": "pl-tsujimoto-kaito",
+      "mvp2": "pl-hirooka",
+      "start": "15:00",
+      "end": "17:00",
+      "photo": "",
+      "memo": "",
+      "source": "scorebook"
+    },
+    {
+      "id": "g2026p08",
+      "season": "2026",
+      "date": "2026-09-20",
+      "gameNo": 1,
+      "opponent": "YOZAKURA",
+      "venue": "",
+      "kind": "prac",
+      "tourney": "",
+      "topBottom": "top",
+      "scoreFor": 11,
+      "scoreAgainst": 17,
+      "innings": {
+        "for": [
+          1,
+          0,
+          3,
+          0,
+          0,
+          1,
+          2,
+          4
+        ],
+        "against": [
+          0,
+          4,
+          3,
+          1,
+          2,
+          0,
+          2,
+          5
+        ]
+      },
+      "mvp": "pl-nakao",
+      "mvp2": "7lrk29vxyuof6dbsccob",
+      "start": "15:00",
+      "end": "18:00",
+      "photo": "",
+      "memo": "",
+      "source": "scorebook"
+    },
+    {
+      "id": "g2026t13",
+      "season": "2026",
+      "date": "2026-10-04",
+      "gameNo": 1,
+      "opponent": "Earth dream",
+      "venue": "せせらぎ西第1グラウンド",
+      "kind": "tour",
+      "tourney": "軟式連盟大会2026",
+      "topBottom": "bottom",
+      "scoreFor": 10,
+      "scoreAgainst": 11,
+      "innings": {
+        "for": [
+          2,
+          0,
+          1,
+          1,
+          3,
+          0,
+          3
+        ],
+        "against": [
+          2,
+          3,
+          0,
+          3,
+          2,
+          1,
+          0
+        ]
+      },
+      "mvp": "pl-masaki",
+      "mvp2": "pl-nakayama",
+      "start": "09:00",
+      "end": "11:00",
+      "photo": "",
+      "memo": "",
+      "source": "scorebook"
+    },
+    {
+      "id": "g2026t14",
+      "season": "2026",
+      "date": "2026-10-11",
+      "gameNo": 1,
+      "opponent": "ハルシオン",
+      "venue": "",
+      "kind": "tour",
+      "tourney": "軟式連盟大会2026",
+      "topBottom": "bottom",
+      "scoreFor": 3,
+      "scoreAgainst": 8,
+      "innings": {
+        "for": [
+          3,
+          0,
+          0,
+          0,
+          0
+        ],
+        "against": [
+          0,
+          0,
+          5,
+          3,
+          0
+        ]
+      },
+      "mvp": "__guest",
+      "mvp2": "7lrk29vxyuof6dbsccob",
+      "start": "12:00",
+      "end": "14:00",
+      "photo": "",
+      "memo": "",
+      "source": "scorebook"
+    },
+    {
+      "id": "g2026t15",
+      "season": "2026",
+      "date": "2026-10-18",
+      "gameNo": 1,
+      "opponent": "新中村化学",
+      "venue": "",
+      "kind": "tour",
+      "tourney": "軟式連盟大会2026",
+      "topBottom": "bottom",
+      "scoreFor": 6,
+      "scoreAgainst": 0,
+      "innings": {
+        "for": [
+          4,
+          2,
+          0,
+          0,
+          0,
+          0,
+          "X"
+        ],
+        "against": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "mvp": "7lrk29vxyuof6dbsccob",
+      "mvp2": "pl-nakanishi",
+      "start": "13:00",
+      "end": "15:00",
+      "photo": "",
+      "memo": "",
+      "source": "scorebook"
+    }
+  ]
+}
