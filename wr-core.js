@@ -289,7 +289,19 @@
     };
   }
 
-  /* ---------- MVP ---------- */
+/* ---------- 出席率 ----------
+ * 出席率 = 出席した試合数 ÷ チームの試合数（集計範囲＝シーズン・大会/練習試合 に合わせる）
+ * 出席した試合 = その試合に打撃・投手・守備の成績がある、または試合の participants（ベンチ入りなど成績のない出席者）に入っている
+ */
+function attendance(data, playerId, season) {
+  var gs = seasonGames(data, season), ids = {};
+  ['batting', 'pitching', 'fielding'].forEach(function (t) { data.stats[t].forEach(function (r) { if (r.playerId === playerId) ids[r.gameId] = 1; }); });
+  var att = gs.filter(function (g) { return ids[g.id] || (g.participants || []).indexOf(playerId) >= 0; }).length;
+  return { games: gs.length, attended: att, absent: gs.length - att, rate: gs.length ? att / gs.length : null };
+}
+function fmtPct(v) { return isNum(v) ? Math.round(v * 100) + '%' : '—'; }
+
+/* ---------- MVP ---------- */
   function mvpCounts(data, playerId, season) {
     var ids = seasonGameIdSet(data, season);
     var game = data.games.games.filter(function (g) { return ids[g.id] && g.mvp === playerId; }).length;
@@ -407,7 +419,8 @@
     { key: 'ERN', label: '自責点', unit: '', higher: true, pit: 'ER', group: 'pit' },
     { key: 'MVP', label: 'MVP獲得', unit: '回', higher: true, group: 'etc', main: true },
     { key: 'MVP2', label: '準MVP', unit: '回', higher: true, group: 'etc' },
-    { key: 'WP', label: 'WPポイント', unit: 'WP', higher: true, group: 'etc', main: true }
+    { key: 'WP', label: 'WPポイント', unit: 'WP', higher: true, group: 'etc', main: true },
+    { key: 'ATT', label: '出席率', unit: '', higher: true, fmt: fmtPct, group: 'etc' }
   ];
   function categoryByKey(k) {
     for (var i = 0; i < CATEGORIES.length; i++) if (CATEGORIES[i].key === k) return CATEGORIES[i];
@@ -451,6 +464,10 @@
         var m = mvpCounts(data, p.id, season);
         value = key === 'MVP' ? m.game : m.game2;
         if (value === 0 && (key === 'MVP2' || (m.game2 === 0 && m.month === 0 && m.year === 0))) return;
+      } else if (key === 'ATT') {
+        var at = attendance(data, p.id, season);
+        if (!at.attended) return;
+        value = at.rate; sub = at.attended + '/' + at.games + '試合';
       } else if (key === 'WP') {
         if (p.active === false && !wpNow[p.id]) return;
         value = wpNow[p.id] || 0;
@@ -668,7 +685,7 @@
     gameResult: gameResult, gameKind: gameKind, GUEST: GUEST, scopeOf: scopeOf, wpEntries: wpEntries,
     KIND_LABEL: { all: "全試合", tour: "大会", prac: "練習試合" }, teamRecord: teamRecord,
     aggregateBatting: aggregateBatting, aggregatePitching: aggregatePitching, aggregateFielding: aggregateFielding,
-    qualifiers: qualifiers, mvpCounts: mvpCounts, wpSummary: wpSummary, wpTotals: wpTotals,
+    qualifiers: qualifiers, attendance: attendance, fmtPct: fmtPct, mvpCounts: mvpCounts, wpSummary: wpSummary, wpTotals: wpTotals,
     categoryByKey: categoryByKey, ranking: ranking, playerRanks: playerRanks,
     playerTitles: playerTitles, playerBadges: playerBadges,
     upsertGame: upsertGame, setGameStats: setGameStats, deleteGame: deleteGame,

@@ -269,7 +269,7 @@ table.t td.l,table.t th.l{text-align:left}
 </nav>
 <div id="toast"></div>
 
-<script src="wr-core.js"></script>
+<script src="wr-core.js?v=20261024202446"></script>
 <script src="logo-data.js"></script>
 <script type="module">
 const C = window.WRCore;
@@ -574,13 +574,18 @@ VIEWS.profile = ({ id }) => {
   // 大会・練習試合別（このシーズン）
   const splitRow = k => {
     const sco = { season: S.season, kind: k }, bk = C.aggregateBatting(d, id, sco), pk = C.aggregatePitching(d, id, sco), mk = C.mvpCounts(d, id, sco);
-    const ok = bk.registered && C.isNum(bk.AB);
+    const ok = bk.registered && C.isNum(bk.AB), ak = C.attendance(d, id, sco);
     return `<tr${S.kind === k ? ' style="background:#fff6d3"' : ''}><td class="l">${k === 'tour' ? '🏆 ' : k === 'prac' ? '⚾ ' : ''}${C.KIND_LABEL[k]}</td>
-      <td>${bk.registered ? bk.G : UNREG}</td><td>${rate(bk.AVG, ok, C.fmtRate3)}</td><td>${bk.registered ? num(bk.H) : UNREG}</td><td>${bk.registered ? num(bk.HR) : UNREG}</td><td>${bk.registered ? num(bk.RBI) : UNREG}</td><td>${bk.registered ? num(bk.SB) : UNREG}</td><td>${rate(bk.OPS, ok, C.fmtRate3)}</td>
+      <td>${ak.games ? `${ak.attended}/${ak.games}<br><small>${C.fmtPct(ak.rate)}</small>` : '—'}</td><td>${bk.registered ? bk.G : UNREG}</td><td>${rate(bk.AVG, ok, C.fmtRate3)}</td><td>${bk.registered ? num(bk.H) : UNREG}</td><td>${bk.registered ? num(bk.HR) : UNREG}</td><td>${bk.registered ? num(bk.RBI) : UNREG}</td><td>${bk.registered ? num(bk.SB) : UNREG}</td><td>${rate(bk.OPS, ok, C.fmtRate3)}</td>
       <td>${pk.registered ? pk.G : UNREG}</td><td>${pk.registered ? C.outsToIPText(pk.outs) : UNREG}</td><td>${pk.registered ? `${num(pk.W)}-${num(pk.L)}` : UNREG}</td><td>${rate(pk.ERA, pk.registered && C.isNum(pk.outs), C.fmt2)}</td><td>${pk.registered ? num(pk.SO) : UNREG}</td><td>${mk.game}</td></tr>`;
   };
-  const splitCard = `<div class="card"><h3>🏆 大会・練習試合別<span class="sub">${esc(S.season)}年</span></h3><div class="tscroll"><table class="t">
-    <tr><th class="l"></th><th>試合</th><th>打率</th><th>安打</th><th>本</th><th>打点</th><th>盗塁</th><th>OPS</th><th>登板</th><th>投球回</th><th>勝-敗</th><th>防御率</th><th>奪三振</th><th>MVP</th></tr>
+const at = C.attendance(d, id, s);
+const attCard = `<div class="card"><h3>📅 出席<span class="sub">${esc(sl)}</span></h3>${at.games ? `<div class="stats">
+  ${tile('出席率', C.fmtPct(at.rate), true)}${tile('出席', at.attended + '試合')}${tile('欠席', at.absent + '試合')}${tile('チーム試合数', at.games + '試合')}</div>
+  <div style="margin-top:10px;height:12px;border-radius:999px;background:#e8ecf6;overflow:hidden"><div style="height:100%;width:${Math.round(at.rate * 100)}%;background:linear-gradient(90deg,var(--yellow),#ffb300)"></div></div>
+  <div class="note">出席率＝出席した試合数÷チームの試合数。打席・登板などの成績がある試合と、管理画面で「出席」にした試合（ベンチ入りなど）を数えます。</div>` : '<div class="muted">この期間の試合はまだありません。</div>'}</div>`;
+const splitCard = `<div class="card"><h3>🏆 大会・練習試合別<span class="sub">${esc(S.season)}年</span></h3><div class="tscroll"><table class="t">
+    <tr><th class="l"></th><th>出席</th><th>試合</th><th>打率</th><th>安打</th><th>本</th><th>打点</th><th>盗塁</th><th>OPS</th><th>登板</th><th>投球回</th><th>勝-敗</th><th>防御率</th><th>奪三振</th><th>MVP</th></tr>
     ${['all', 'tour', 'prac'].map(splitRow).join('')}</table></div></div>`;
   const totalRow = `<tr style="background:#fff6d3"><td class="l">通算</td><td>${tb.registered ? tb.G : UNREG}</td><td>${rate(tb.AVG, tb.registered && C.isNum(tb.AB), C.fmtRate3)}</td><td>${tb.registered ? num(tb.HR) : UNREG}</td><td>${tb.registered ? num(tb.RBI) : UNREG}</td><td>${rate(tb.OPS, tb.registered && C.isNum(tb.AB), C.fmtRate3)}</td><td>${tp.registered ? tp.G : UNREG}</td><td>${tp.registered ? `${num(tp.W)}-${num(tp.L)}` : UNREG}</td><td>${rate(tp.ERA, tp.registered && C.isNum(tp.outs), C.fmt2)}</td></tr>`;
 
@@ -608,6 +613,7 @@ VIEWS.profile = ({ id }) => {
     <button class="btn y sm" data-setmy="${esc(p.id)}">${S.my === p.id ? '⭐ 自分の選手に設定済み' : '☆ 自分の選手にする'}</button>
     <button class="btn w sm" data-share>🔗 この画面を共有</button>
   </div>
+  ${attCard}
   ${splitCard}
   <div class="card"><h3>🏅 称号・タイトル<span class="sub">${esc(sl)}</span></h3>
     ${titles.length ? titles.map(t => `<span class="badge gold">👑 ${esc(t)}</span>`).join('') : ''}
