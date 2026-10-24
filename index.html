@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="ワイロバ">
 <meta property="og:title" content="ワイルドローバーズ ボールパーク">
 <meta property="og:description" content="ワイルドローバーズの成績・ランキング・試合結果をチェック！">
-<meta property="og:image" content="logo-512.png">
+<meta property="og:image" content="https://wildrovers.github.io/wr-stccus1r/logo-512.png">
 <link rel="icon" type="image/png" href="favicon-32.png">
 <link rel="apple-touch-icon" href="icon-180.png">
 <title>ワイロバ ボールパーク</title>
@@ -53,6 +53,9 @@ select{font-family:inherit;font-weight:800}
 .pill-select{appearance:none;-webkit-appearance:none;border:2px solid var(--yellow);background:var(--navy2);color:#fff;border-radius:999px;padding:6px 26px 6px 12px;font-size:14px;
   background-image:linear-gradient(45deg,transparent 50%,var(--yellow) 50%),linear-gradient(135deg,var(--yellow) 50%,transparent 50%);background-position:calc(100% - 14px) 52%,calc(100% - 9px) 52%;background-size:5px 5px;background-repeat:no-repeat}
 .mode-btn{border:none;border-radius:999px;background:var(--yellow);color:var(--navy);padding:8px 12px;font-size:13px;box-shadow:0 3px 0 #c99a10;min-height:36px}
+.bgm-btn{flex:none;width:38px;height:38px;border-radius:50%;border:2px solid var(--yellow);background:var(--navy2);color:#fff;font-size:17px;display:grid;place-items:center;padding:0}
+.bgm-btn.on{background:var(--yellow);animation:bgmPulse 1s ease-in-out infinite}
+@keyframes bgmPulse{50%{transform:scale(1.08)}}
 .mode-btn:active{transform:translateY(2px);box-shadow:0 1px 0 #c99a10}
 
 /* ---------- バナー ---------- */
@@ -222,6 +225,7 @@ table.t td.l,table.t th.l{text-align:left}
     <div><b>ワイルドローバーズ</b><small>WILD ROVERS BALLPARK</small></div>
   </div>
   <select id="seasonSel" class="pill-select" aria-label="シーズン"></select>
+  <button id="bgmBtn" class="bgm-btn" aria-label="BGMのオン・オフ" title="BGM">🔇</button>
   <button id="modeBtn" class="mode-btn" aria-label="表示切替">2D</button>
 </header>
 <div id="banner" class="hidden"></div>
@@ -839,6 +843,93 @@ $('#backBtn').onclick = back;
 $('#closeBtn').onclick = closeSheet;
 $('#seasonSel').onchange = e => { const [s, k] = e.target.value.split('|'); setScope(s, k || 'all'); };
 $('#modeBtn').onclick = () => setMode(S.mode === '3d' ? '2d' : '3d', true);
+
+/* ================= BGM =================
+ * ・ブラウザの決まりで、最初は音を出せません。🔇ボタンを押すと流れます
+ * ・サイトのフォルダに bgm.mp3 があればそれを流し、なければオリジナル曲をその場で演奏します（著作権の心配なし）
+ * ・ONにした人は次回、最初に画面をタップしたときに自動で流れ始めます
+ */
+const BGM = (() => {
+  let ctx = null, master = null, timer = null, step = 0, nextTime = 0, playing = false, audio = null, useFile = null;
+  const TEMPO = 132, EIGHTH = 60 / TEMPO / 2;
+  const hz = n => 440 * Math.pow(2, (n - 69) / 12);
+  // コード（1小節ずつ）：C → G → Am → F → C → G → F → G
+  const BARS = [[48, 60, 64, 67], [43, 59, 62, 67], [45, 60, 64, 69], [41, 60, 65, 69], [48, 60, 64, 67], [43, 59, 62, 67], [41, 60, 65, 69], [43, 59, 62, 65]];
+  // オリジナルのメロディ（8分音符×8×8小節、0は休み）
+  const MEL = [
+    72, 0, 76, 0, 79, 0, 76, 74, 74, 0, 71, 0, 67, 0, 71, 74, 72, 0, 76, 0, 81, 0, 79, 76, 77, 0, 76, 74, 72, 0, 0, 0,
+    79, 0, 79, 81, 79, 0, 76, 0, 74, 0, 74, 76, 74, 0, 71, 0, 72, 74, 76, 77, 79, 0, 77, 76, 74, 0, 0, 0, 79, 0, 0, 0];
+  function tone(freq, t, dur, type, vol) {
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = type; o.frequency.value = freq;
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.012); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g).connect(master); o.start(t); o.stop(t + dur + 0.03);
+  }
+  let noiseBuf = null;
+  function noise(t, dur, vol, freq) {
+    if (!noiseBuf) { noiseBuf = ctx.createBuffer(1, ctx.sampleRate * 0.3, ctx.sampleRate); const d = noiseBuf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; }
+    const src = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain();
+    src.buffer = noiseBuf; f.type = 'highpass'; f.frequency.value = freq;
+    g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    src.connect(f).connect(g).connect(master); src.start(t); src.stop(t + dur + 0.02);
+  }
+  function kick(t) {
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.frequency.setValueAtTime(140, t); o.frequency.exponentialRampToValueAtTime(42, t + 0.12);
+    g.gain.setValueAtTime(0.5, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.18);
+    o.connect(g).connect(master); o.start(t); o.stop(t + 0.2);
+  }
+  function play(s, t) {
+    const bar = Math.floor(s / 8), b = s % 8, ch = BARS[bar];
+    tone(hz(ch[0] + (b % 2 ? 12 : 0)), t, EIGHTH * 0.9, 'triangle', 0.16);          // ベース
+    if (b % 2 === 1) ch.slice(1).forEach(n => tone(hz(n), t, EIGHTH * 0.7, 'square', 0.018)); // 裏拍のオルガン
+    if (MEL[s]) tone(hz(MEL[s]), t, EIGHTH * 1.7, 'square', 0.05);                   // メロディ
+    if (b % 4 === 0) kick(t);
+    if (b % 4 === 2) noise(t, 0.12, 0.18, 1200);                                     // スネア
+    noise(t, 0.03, 0.05, 7000);                                                      // ハイハット
+    if (s === 63) noise(t, 0.5, 0.08, 3000);                                         // 1周ごとのシンバル
+  }
+  function schedule() {
+    while (nextTime < ctx.currentTime + 0.2) { play(step, nextTime); nextTime += EIGHTH; step = (step + 1) % MEL.length; }
+  }
+  function startSynth() {
+    ctx = ctx || new (window.AudioContext || window.webkitAudioContext)();
+    if (!master) { master = ctx.createGain(); master.gain.value = 0.55; const comp = ctx.createDynamicsCompressor(); master.connect(comp).connect(ctx.destination); }
+    ctx.resume(); step = 0; nextTime = ctx.currentTime + 0.05;
+    clearInterval(timer); timer = setInterval(schedule, 50); schedule();
+  }
+  function stopSynth() { clearInterval(timer); timer = null; if (ctx) ctx.suspend(); }
+  async function start() {
+    playing = true;
+    // iPhoneのSafariはタップした瞬間でないと音の準備ができないので、先に準備しておく
+    ctx = ctx || new (window.AudioContext || window.webkitAudioContext)(); ctx.resume();
+    if (useFile !== false) {
+      audio = audio || Object.assign(new Audio('bgm.mp3'), { loop: true, volume: 0.45 });
+      try { await audio.play(); useFile = true; return; } catch (e) { useFile = false; }
+    }
+    startSynth();
+  }
+  function stop() { playing = false; if (audio) audio.pause(); stopSynth(); }
+  document.addEventListener('visibilitychange', () => {
+    if (!playing) return;
+    if (document.hidden) { if (audio && useFile) audio.pause(); if (ctx) ctx.suspend(); }
+    else if (useFile) audio.play().catch(() => {}); else if (ctx) { ctx.resume(); nextTime = ctx.currentTime + 0.05; }
+  });
+  return { start, stop, get playing() { return playing; }, state: () => ({ file: useFile, ctx: ctx && ctx.state, step }) };
+})();
+function setBgmButton() { const b = $('#bgmBtn'); b.textContent = BGM.playing ? '🔊' : '🔇'; b.classList.toggle('on', BGM.playing); }
+$('#bgmBtn').onclick = async () => {
+  if (BGM.playing) { BGM.stop(); try { localStorage.setItem('wr-bgm', '0'); } catch (e) {} toast('BGMをオフにしました'); }
+  else { await BGM.start(); try { localStorage.setItem('wr-bgm', '1'); } catch (e) {} toast('🎵 BGMをオンにしました'); }
+  setBgmButton();
+};
+// 前回ONにしていた人は、最初に画面をタップしたときに流す（ブラウザの決まりで、タップ前には鳴らせない）
+try {
+  if (localStorage.getItem('wr-bgm') === '1') {
+    const kick = async e => { if (e.target.closest('#bgmBtn')) return; document.removeEventListener('pointerdown', kick, true); if (!BGM.playing) { await BGM.start(); setBgmButton(); } };
+    document.addEventListener('pointerdown', kick, true);
+  }
+} catch (e) {}
 
 /* ================= 3D / 2D 切り替え ================= */
 let World = null;
@@ -1595,7 +1686,7 @@ const W = { chars: [], podiumChars: [], flags: [], clouds: [], leaderId: null, a
   }
 loadCards();
 const ld = $('#loading'); ld.style.opacity = 0; setTimeout(() => ld.remove(), 500);
-  window.__WR = { S, World: () => World, openView };
+  window.__WR = { S, World: () => World, openView, bgm: () => BGM.state() };
   // オフライン対応（公開サーバー上のみ）
   if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
 })();
