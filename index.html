@@ -54,6 +54,10 @@ select{font-family:inherit;font-weight:800}
   background-image:linear-gradient(45deg,transparent 50%,var(--yellow) 50%),linear-gradient(135deg,var(--yellow) 50%,transparent 50%);background-position:calc(100% - 14px) 52%,calc(100% - 9px) 52%;background-size:5px 5px;background-repeat:no-repeat}
 .mode-btn{border:none;border-radius:999px;background:var(--yellow);color:var(--navy);padding:8px 12px;font-size:13px;box-shadow:0 3px 0 #c99a10;min-height:36px}
 .bgm-btn{flex:none;width:38px;height:38px;border-radius:50%;border:2px solid var(--yellow);background:var(--navy2);color:#fff;font-size:17px;display:grid;place-items:center;padding:0}
+#soundMenu{position:fixed;z-index:50;top:calc(var(--header-h) + var(--safe-t) + 6px);right:12px;background:#fff;border:3px solid var(--navy);border-radius:16px;padding:6px;box-shadow:0 8px 24px rgba(0,0,0,.25);display:flex;flex-direction:column;gap:4px;min-width:170px}
+#soundMenu button{display:flex;align-items:center;justify-content:space-between;gap:12px;border:none;background:#f4f6fb;border-radius:10px;padding:10px 12px;font-size:15px;color:var(--navy);min-height:44px}
+#soundMenu b{font-size:12px;border-radius:999px;padding:2px 10px;background:#dfe4ee;color:#5b6788}
+#soundMenu b.on{background:var(--yellow);color:var(--navy)}
 .bgm-btn.on{background:var(--yellow);animation:bgmPulse 1s ease-in-out infinite}
 @keyframes bgmPulse{50%{transform:scale(1.08)}}
 .mode-btn:active{transform:translateY(2px);box-shadow:0 1px 0 #c99a10}
@@ -779,8 +783,9 @@ function sourceLabel() {
 }
 
 /* ================= シート（画面の開閉） ================= */
-function openView(name, prm = {}, push = true) {
+function openView(name, prm = {}, push = true, quiet = false) {
   const v = VIEWS[name](prm);
+  if (!quiet) SFX.play(name === 'mvp' ? 'fanfare' : name === 'profile' ? 'hit' : !push ? 'nav' : 'open');
   if (push) S.stack.push({ name, prm }); else S.stack = [{ name, prm }];
   $('#sheetTitle').textContent = v.title;
   const body = $('#sheetBody'); body.innerHTML = v.html; body.scrollTop = 0;
@@ -797,6 +802,7 @@ function openView(name, prm = {}, push = true) {
   if (World) World.setPaused(true);
 }
 function closeSheet() {
+  if ($('#sheet').classList.contains('open')) SFX.play('close');
   $('#sheet').classList.remove('open'); $('#sheet').setAttribute('aria-hidden', 'true');
   S.stack = [];
   document.querySelectorAll('#nav button').forEach(b => b.classList.toggle('on', b.dataset.nav === 'home'));
@@ -805,11 +811,11 @@ function closeSheet() {
 }
 function back() {
   if (S.stack.length < 2) return closeSheet();
-  S.stack.pop(); const top = S.stack.pop(); openView(top.name, top.prm, true);
+  S.stack.pop(); const top = S.stack.pop(); SFX.play('close'); openView(top.name, top.prm, true, true);
 }
 function refreshSheet() {
   if (!S.stack.length) return;
-  const top = S.stack.pop(); openView(top.name, top.prm, true);
+  const top = S.stack.pop(); openView(top.name, top.prm, true, true);
 }
 
 /* ================= イベント ================= */
@@ -819,7 +825,7 @@ document.addEventListener('click', e => {
   const ds = t.dataset;
   if (ds.nav) { if (ds.nav === 'home') closeSheet(); else openView(ds.nav, {}, false); return; }
   if (ds.spot) { World && World.flyTo(ds.spot); document.querySelectorAll('#spots .chip').forEach(c => c.classList.toggle('on', c === t)); toast('看板や選手をタップすると詳しく見られます'); return; }
-  if (ds.rank) { S.boardCat = ds.rank; World && World.setBoard(ds.rank); S.stack.pop(); openView('ranking', { key: ds.rank }); return; }
+  if (ds.rank) { S.boardCat = ds.rank; World && World.setBoard(ds.rank); S.stack.pop(); openView('ranking', { key: ds.rank }, true, true); return; }
 if (ds.zoomcard) { const lb = document.createElement('div'); lb.id = 'lightbox'; lb.innerHTML = `<img src="${cardOf(P(ds.zoomcard))}" alt="">`; lb.onclick = () => lb.remove(); document.body.appendChild(lb); return; }
 if (ds.kind) { setScope(S.season, ds.kind); return; }
   if (ds.tsort) { const st = S.tableSort[ds.ttype]; if (st.k === ds.tsort) st.dir *= -1; else { st.k = ds.tsort; st.dir = ['ERA', 'WHIP'].includes(ds.tsort) ? 1 : -1; } refreshSheet(); return; }
@@ -917,12 +923,95 @@ const BGM = (() => {
   });
   return { start, stop, get playing() { return playing; }, state: () => ({ file: useFile, ctx: ctx && ctx.state, step }) };
 })();
-function setBgmButton() { const b = $('#bgmBtn'); b.textContent = BGM.playing ? '🔊' : '🔇'; b.classList.toggle('on', BGM.playing); }
-$('#bgmBtn').onclick = async () => {
-  if (BGM.playing) { BGM.stop(); try { localStorage.setItem('wr-bgm', '0'); } catch (e) {} toast('BGMをオフにしました'); }
-  else { await BGM.start(); try { localStorage.setItem('wr-bgm', '1'); } catch (e) {} toast('🎵 BGMをオンにしました'); }
-  setBgmButton();
+/* ================= 効果音 =================
+ * BGMと同じく、音声ファイルを使わずプログラムで鳴らす。初期設定はオン（「wr-se」で記憶）
+ */
+const SFX = (() => {
+  let ctx = null, master = null;
+  let on = true; try { on = localStorage.getItem('wr-se') !== '0'; } catch (e) {}
+  function ready() {
+    if (!on) return false;
+    try {
+      ctx = ctx || new (window.AudioContext || window.webkitAudioContext)();
+      if (!master) { master = ctx.createGain(); master.gain.value = 0.5; master.connect(ctx.destination); }
+      if (ctx.state !== 'running') ctx.resume();
+      return true;
+    } catch (e) { return false; }
+  }
+  const hz = n => 440 * Math.pow(2, (n - 69) / 12);
+  function tone(freq, t, dur, type, vol, slideTo) {
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = type; o.frequency.setValueAtTime(freq, t);
+    if (slideTo) o.frequency.exponentialRampToValueAtTime(slideTo, t + dur);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.006); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g).connect(master); o.start(t); o.stop(t + dur + 0.02);
+  }
+  let buf = null;
+  function noise(t, dur, vol, type, f0, f1) {
+    if (!buf) { buf = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate); const d = buf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; }
+    const src = ctx.createBufferSource(), fl = ctx.createBiquadFilter(), g = ctx.createGain();
+    src.buffer = buf; fl.type = type; fl.Q.value = 1.2; fl.frequency.setValueAtTime(f0, t); if (f1) fl.frequency.exponentialRampToValueAtTime(f1, t + dur);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + dur * 0.3); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    src.connect(fl).connect(g).connect(master); src.start(t); src.stop(t + dur + 0.02);
+  }
+  const play = {
+    pop() { const t = ctx.currentTime; tone(900, t, 0.07, 'sine', 0.25, 1500); },                       // ボタン「ポンッ」
+    nav() { const t = ctx.currentTime; tone(hz(84), t, 0.06, 'square', 0.06); tone(hz(91), t + 0.06, 0.08, 'square', 0.06); }, // 「ピロッ」
+    open() { const t = ctx.currentTime; noise(t, 0.22, 0.18, 'bandpass', 500, 3500); },                  // 「シュッ」（開く）
+    close() { const t = ctx.currentTime; noise(t, 0.2, 0.15, 'bandpass', 3000, 400); },                  // 「シュッ」（閉じる）
+    hit() {                                                                                              // 「カキーン！」
+      const t = ctx.currentTime;
+      noise(t, 0.05, 0.5, 'highpass', 2500);
+      [1780, 2620, 3950].forEach((f, i) => tone(f, t, 0.5 - i * 0.1, 'sine', 0.16 - i * 0.04));
+      tone(220, t, 0.08, 'triangle', 0.25, 110);
+    },
+    fanfare() {                                                                                          // MVPのファンファーレ＋歓声
+      const t = ctx.currentTime;
+      [[72, 0], [76, 0.11], [79, 0.22], [84, 0.33]].forEach(([n, d]) => tone(hz(n), t + d, d === 0.33 ? 0.6 : 0.13, 'square', 0.08));
+      [72, 76, 79].forEach(n => tone(hz(n - 12), t + 0.33, 0.6, 'triangle', 0.08));
+      noise(t + 0.3, 1.4, 0.12, 'bandpass', 1200, 900);
+    },
+    tick() { const t = ctx.currentTime; tone(1800, t, 0.03, 'square', 0.04); }                           // 切り替え「カチッ」
+  };
+  return {
+    play(name) { const L = (window.__sfxLog = window.__sfxLog || []); L.push(name); if (L.length > 30) L.shift(); if (ready() && play[name]) try { play[name](); } catch (e) {} },
+    get on() { return on; },
+    set(v) { on = v; try { localStorage.setItem('wr-se', v ? '1' : '0'); } catch (e) {} }
+  };
+})();
+
+// 右上の音ボタン：押すと「BGM」「効果音」を切り替えるメニュー
+function setBgmButton() {
+  const b = $('#bgmBtn');
+  b.textContent = BGM.playing ? '🔊' : SFX.on ? '🔈' : '🔇';
+  b.classList.toggle('on', BGM.playing);
+  const m = $('#soundMenu');
+  if (m) m.innerHTML = `<button data-snd="bgm">🎵 BGM<b class="${BGM.playing ? 'on' : ''}">${BGM.playing ? 'ON' : 'OFF'}</b></button><button data-snd="se">🔔 効果音<b class="${SFX.on ? 'on' : ''}">${SFX.on ? 'ON' : 'OFF'}</b></button>`;
+}
+$('#bgmBtn').onclick = e => {
+  e.stopPropagation();
+  let m = $('#soundMenu');
+  if (m) { m.remove(); return; }
+  m = document.createElement('div'); m.id = 'soundMenu'; document.body.appendChild(m); setBgmButton();
+  m.onclick = async ev => {
+    ev.stopPropagation();
+    const k = ev.target.closest('[data-snd]'); if (!k) return;
+    if (k.dataset.snd === 'bgm') {
+      if (BGM.playing) { BGM.stop(); try { localStorage.setItem('wr-bgm', '0'); } catch (er) {} }
+      else { await BGM.start(); try { localStorage.setItem('wr-bgm', '1'); } catch (er) {} }
+    } else { SFX.set(!SFX.on); SFX.play('pop'); }
+    setBgmButton();
+  };
 };
+document.addEventListener('click', e => { const m = $('#soundMenu'); if (m && !e.target.closest('#soundMenu')) m.remove(); });
+// ボタンなどを押したときの効果音（画面が開く操作は openView 側で鳴らす）
+document.addEventListener('click', e => {
+  const t = e.target.closest('button, .chip, [data-zoomcard], [data-tsort], summary');
+  if (!t || t.closest('#soundMenu') || ['bgmBtn', 'backBtn', 'closeBtn'].includes(t.id)) return;
+  if (t.closest('[data-player],[data-game],[data-go],[data-pick],[data-nav]')) return;
+  if (t.matches('[data-rank],[data-kind],[data-order],[data-tsort]')) SFX.play('tick'); else SFX.play('pop');
+}, true);
+setBgmButton();
 // 前回ONにしていた人は、最初に画面をタップしたときに流す（ブラウザの決まりで、タップ前には鳴らせない）
 try {
   if (localStorage.getItem('wr-bgm') === '1') {
