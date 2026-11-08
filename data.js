@@ -24,7 +24,23 @@ window.WR_DATA = {
           "sleeveR": "#1d1d24"
         },
         "source": "scorebook",
-        "photo": "pp-e399e23fe0fdbc2c0e6ea5badc05c02b.jpg"
+        "photo": "pp-af3e0788dd2eef9c46a9a4456c306930.jpg"
+      },
+      {
+        "id": "gjkpyp6u7gxs3vmgj8ya",
+        "name": "田崎 しょうご",
+        "kana": "",
+        "number": "",
+        "position": "控え",
+        "positionSource": "",
+        "bats": "",
+        "throws": "",
+        "active": true,
+        "comment": "",
+        "look": {
+        },
+        "source": "scorebook",
+        "photo": ""
       },
       {
         "id": "pl-fukimoto",
@@ -40,23 +56,7 @@ window.WR_DATA = {
         "look": {
         },
         "source": "scorebook",
-        "photo": ""
-      },
-      {
-        "id": "pl-funai",
-        "name": "船井",
-        "kana": "",
-        "number": "",
-        "position": "二塁手",
-        "positionSource": "スコアブックの打順表から推定",
-        "bats": "",
-        "throws": "",
-        "active": true,
-        "comment": "",
-        "look": {
-        },
-        "source": "scorebook",
-        "photo": ""
+        "photo": "pp-813bff1a60d5c48c1b68475d5b7014c8.jpg"
       },
       {
         "id": "pl-hirohashi",
@@ -72,7 +72,7 @@ window.WR_DATA = {
         "look": {
         },
         "source": "scorebook",
-        "photo": ""
+        "photo": "pp-1f6b4b0def3f3b72563699659bbad27f.jpg"
       },
       {
         "id": "pl-hirooka",
@@ -93,7 +93,7 @@ window.WR_DATA = {
           "face": "cool"
         },
         "source": "scorebook",
-        "photo": "pp-56262f08976fd7ec288892155601f561.jpg"
+        "photo": "pp-905c4fc6d9c69d72655b4b0e0e4037f0.jpg"
       },
       {
         "id": "pl-hiura",
@@ -116,7 +116,7 @@ window.WR_DATA = {
           "face": "cool"
         },
         "source": "scorebook",
-        "photo": "pp-76ba06a3c67335e6eb478078cd66f425.jpg"
+        "photo": "pp-075dbabc40a59d3b91e23e7b5299939e.jpg"
       },
       {
         "id": "pl-kuromatsu",
@@ -138,7 +138,7 @@ window.WR_DATA = {
           "face": "cool"
         },
         "source": "scorebook",
-        "photo": "pp-b846ebd4823a7e34616f3c5ada4c5ff7.jpg"
+        "photo": "pp-e5ba9fe0b11761504ae0b1bcf7e84f5e.jpg"
       },
       {
         "id": "pl-maeyama",
@@ -177,7 +177,7 @@ window.WR_DATA = {
           "face": "cool"
         },
         "source": "scorebook",
-        "photo": "pp-f49f54c685f7f498f20ebf7e78487db1.jpg"
+        "photo": "pp-5471c4c2752de41d3b21a7c4a4af4235.jpg"
       },
       {
         "id": "pl-matsutani",
@@ -190,22 +190,6 @@ window.WR_DATA = {
         "throws": "",
         "active": true,
         "comment": "期待の新人",
-        "look": {
-        },
-        "source": "scorebook",
-        "photo": ""
-      },
-      {
-        "id": "pl-mori",
-        "name": "森 陽友真",
-        "kana": "",
-        "number": "7",
-        "position": "控え",
-        "positionSource": "",
-        "bats": "",
-        "throws": "",
-        "active": true,
-        "comment": "覚醒間近の打者",
         "look": {
         },
         "source": "scorebook",
@@ -232,7 +216,7 @@ window.WR_DATA = {
           "face": "cool"
         },
         "source": "scorebook",
-        "photo": "pp-b8a599497aaadeb69c34e1fd602a5db3.jpg"
+        "photo": "pp-50dfb298cc04c01c852bac7cce4bcc2d.jpg"
       },
       {
         "id": "pl-nakanishi",
@@ -256,7 +240,7 @@ window.WR_DATA = {
           "face": "cool"
         },
         "source": "scorebook",
-        "photo": "pp-7d3c3a6e255b1c1859b459e3cc7ff90a.jpg"
+        "photo": "pp-d60004eaa391da7b738317d5d758f5e9.jpg"
       },
       {
         "id": "pl-nakao",
@@ -279,30 +263,14 @@ window.WR_DATA = {
           "sleeveR": "#1d1d24"
         },
         "source": "scorebook",
-        "photo": "pp-a4ebad68158015fae18c92c46b88b31e.jpg"
+        "photo": "pp-6f31a824275b4ca603d16e4c0b1b861d.jpg"
       },
       {
         "id": "pl-nakayama",
-        "name": "中山",
+        "name": "中山 愛郷",
         "kana": "",
         "number": "",
         "position": "二塁手",
-        "positionSource": "スコアブックの打順表から推定",
-        "bats": "",
-        "throws": "",
-        "active": true,
-        "comment": "",
-        "look": {
-        },
-        "source": "scorebook",
-        "photo": ""
-      },
-      {
-        "id": "pl-nishimoto",
-        "name": "西本",
-        "kana": "",
-        "number": "",
-        "position": "遊撃手",
         "positionSource": "スコアブックの打順表から推定",
         "bats": "",
         "throws": "",
@@ -334,7 +302,7 @@ window.WR_DATA = {
           "sleeveR": "#ff9fc6"
         },
         "source": "scorebook",
-        "photo": "pp-6cdf1bc9feebe51ef5e0862b9d7b1322.jpg"
+        "photo": "pp-fb229bb3223657c19031d74f56c28792.jpg"
       },
       {
         "id": "pl-oka",
@@ -350,7 +318,7 @@ window.WR_DATA = {
         "look": {
         },
         "source": "scorebook",
-        "photo": ""
+        "photo": "pp-165d1220ee405ad0993e53ad74da6ab6.jpg"
       },
       {
         "id": "pl-oku",
@@ -363,22 +331,6 @@ window.WR_DATA = {
         "throws": "",
         "active": true,
         "comment": "期待値高き若手野手",
-        "look": {
-        },
-        "source": "scorebook",
-        "photo": ""
-      },
-      {
-        "id": "pl-suzuki",
-        "name": "鈴木",
-        "kana": "",
-        "number": "",
-        "position": "一塁手",
-        "positionSource": "スコアブックの打順表から推定",
-        "bats": "",
-        "throws": "",
-        "active": true,
-        "comment": "",
         "look": {
         },
         "source": "scorebook",
@@ -406,7 +358,7 @@ window.WR_DATA = {
           "sleeveR": "#1d1d24"
         },
         "source": "scorebook",
-        "photo": "pp-bae3512b85929fe8769ab904aa20bf89.jpg"
+        "photo": "pp-65e1a5b05354f61895a6debfaa951ea2.jpg"
       },
       {
         "id": "pl-tsuge",
@@ -422,7 +374,7 @@ window.WR_DATA = {
         "look": {
         },
         "source": "scorebook",
-        "photo": ""
+        "photo": "pp-8d5d8c2c513d962a7d5996843a5b4dcb.jpg"
       },
       {
         "id": "pl-tsujimoto-kaito",
@@ -444,7 +396,7 @@ window.WR_DATA = {
           "sleeveR": "#c6f03c"
         },
         "source": "scorebook",
-        "photo": "pp-2946b04c34d4d2eb0d68a449f48afa0c.jpg"
+        "photo": "pp-d1da7575a863dbfa7994bcf8cb158c35.jpg"
       },
       {
         "id": "pl-tsujimoto-kodai",
@@ -460,7 +412,7 @@ window.WR_DATA = {
         "look": {
         },
         "source": "scorebook",
-        "photo": ""
+        "photo": "pp-22195aa51119308911cfd6591735ad9a.jpg"
       },
       {
         "id": "pl-tsujimoto",
@@ -483,7 +435,7 @@ window.WR_DATA = {
           "sleeveR": "#1a2f73"
         },
         "source": "scorebook",
-        "photo": "pp-bef102feb2ff8a8d0cc20e8734b20948.jpg"
+        "photo": "pp-5cf51bfd026149a12b60ca5e0a50aca7.jpg"
       },
       {
         "id": "pl-tsunemi",
@@ -520,7 +472,7 @@ window.WR_DATA = {
           "face": "round"
         },
         "source": "scorebook",
-        "photo": "pp-36d074d1f3befffd9617c94c92e4d6d1.jpg"
+        "photo": "pp-34e9e6828e4faf7bcb87617ad20120b9.jpg"
       },
       {
         "id": "pl-tsunoda",
@@ -545,7 +497,7 @@ window.WR_DATA = {
           "face": "cool"
         },
         "source": "scorebook",
-        "photo": "pp-e7eb73790ac6d6b78173a17c7aef1606.jpg"
+        "photo": "pp-031aaaa910f10c3a11c073bf6c530959.jpg"
       },
       {
         "id": "pl-uehara",
@@ -558,22 +510,6 @@ window.WR_DATA = {
         "throws": "",
         "active": true,
         "comment": "沖縄の甲斐野央",
-        "look": {
-        },
-        "source": "scorebook",
-        "photo": ""
-      },
-      {
-        "id": "pl-uemae",
-        "name": "ウエマエ",
-        "kana": "",
-        "number": "",
-        "position": "遊撃手",
-        "positionSource": "スコアブックの打順表から推定",
-        "bats": "",
-        "throws": "",
-        "active": true,
-        "comment": "",
         "look": {
         },
         "source": "scorebook",
@@ -596,7 +532,7 @@ window.WR_DATA = {
         "photo": ""
       }
     ],
-    "updatedAt": "2026-11-08T07:41:05Z"
+    "updatedAt": "2026-11-08T12:05:36Z"
   },
   "stats": {
     "_説明": "試合ごとの打撃・投手成績（草野球スコアブックの打順別合計から取り込み）。守備成績はスコアブックにないため未登録。",
@@ -1742,25 +1678,6 @@ window.WR_DATA = {
       },
       {
         "gameId": "g2026t03",
-        "playerId": "pl-nishimoto",
-        "order": 7,
-        "PA": 2,
-        "AB": 2,
-        "H": 1,
-        "D": 0,
-        "T": 0,
-        "HR": 0,
-        "RBI": 0,
-        "R": 0,
-        "SB": 0,
-        "BB": 0,
-        "HBP": 0,
-        "SF": 0,
-        "SH": 0,
-        "SO": 0
-      },
-      {
-        "gameId": "g2026t03",
         "playerId": "pl-tsunoda",
         "order": 8,
         "PA": 2,
@@ -2349,25 +2266,6 @@ window.WR_DATA = {
         "SO": 0
       },
       {
-        "gameId": "g2026t06",
-        "playerId": "pl-uemae",
-        "order": 9,
-        "PA": 3,
-        "AB": 2,
-        "H": 1,
-        "D": 0,
-        "T": 0,
-        "HR": 0,
-        "RBI": 1,
-        "R": 0,
-        "SB": 0,
-        "BB": 1,
-        "HBP": 0,
-        "SF": 0,
-        "SH": 0,
-        "SO": 0
-      },
-      {
         "gameId": "g2026t07",
         "playerId": "pl-hirooka",
         "order": 1,
@@ -2730,25 +2628,6 @@ window.WR_DATA = {
       },
       {
         "gameId": "g2026t-0614",
-        "playerId": "pl-suzuki",
-        "order": 10,
-        "PA": 3,
-        "AB": 1,
-        "H": 0,
-        "D": 0,
-        "T": 0,
-        "HR": 0,
-        "RBI": 0,
-        "R": 0,
-        "SB": 0,
-        "BB": 1,
-        "HBP": 1,
-        "SF": 0,
-        "SH": 0,
-        "SO": 0
-      },
-      {
-        "gameId": "g2026t-0614",
         "playerId": "pl-tsunoda",
         "order": 2,
         "PA": 4,
@@ -3043,25 +2922,6 @@ window.WR_DATA = {
         "T": 0,
         "HR": 0,
         "RBI": 3,
-        "R": 0,
-        "SB": 0,
-        "BB": 0,
-        "HBP": 0,
-        "SF": 0,
-        "SH": 0,
-        "SO": 0
-      },
-      {
-        "gameId": "g2026t09",
-        "playerId": "pl-funai",
-        "order": 9,
-        "PA": 2,
-        "AB": 2,
-        "H": 0,
-        "D": 0,
-        "T": 0,
-        "HR": 0,
-        "RBI": 0,
         "R": 0,
         "SB": 0,
         "BB": 0,
@@ -6922,5 +6782,5 @@ window.WR_DATA = {
 
     ]
   },
-  "exportedAt": "2026-11-08T07:41:05Z"
+  "exportedAt": "2026-11-08T12:05:36Z"
 };
