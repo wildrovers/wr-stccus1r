@@ -92,7 +92,7 @@ window.WR_DATA = {
       },
       {
         "id": "pl-hiura",
-        "name": "日浦総",
+        "name": "日裏 総",
         "kana": "",
         "number": "",
         "position": "遊撃手",
@@ -565,7 +565,7 @@ window.WR_DATA = {
         "source": "scorebook"
       }
     ],
-    "updatedAt": "2026-10-22T05:44:52Z"
+    "updatedAt": "2026-11-08T07:12:07Z"
   },
   "stats": {
     "_説明": "試合ごとの打撃・投手成績（草野球スコアブックの打順別合計から取り込み）。守備成績はスコアブックにないため未登録。",
@@ -4596,6 +4596,101 @@ window.WR_DATA = {
         "SF": 0,
         "SH": 0,
         "SO": 0
+      },
+      {
+        "gameId": "4i7tvjsp7kub1afghlct",
+        "playerId": "pl-taniguchi",
+        "order": 5,
+        "PA": 4,
+        "AB": 4,
+        "H": 0,
+        "D": 0,
+        "T": 0,
+        "HR": 0,
+        "RBI": 0,
+        "R": 0,
+        "SB": 0,
+        "BB": 0,
+        "HBP": 0,
+        "SF": 0,
+        "SH": 0,
+        "SO": 2
+      },
+      {
+        "gameId": "4i7tvjsp7kub1afghlct",
+        "playerId": "pl-nakanishi",
+        "order": 6,
+        "PA": 4,
+        "AB": 4,
+        "H": 1,
+        "D": 0,
+        "T": 0,
+        "HR": 0,
+        "RBI": 0,
+        "R": 0,
+        "SB": 0,
+        "BB": 0,
+        "HBP": 0,
+        "SF": 0,
+        "SH": 0,
+        "SO": 1
+      },
+      {
+        "gameId": "4i7tvjsp7kub1afghlct",
+        "playerId": "pl-tsunoda",
+        "order": 9,
+        "PA": 4,
+        "AB": 3,
+        "H": 0,
+        "D": 0,
+        "T": 0,
+        "HR": 0,
+        "RBI": 0,
+        "R": 0,
+        "SB": 0,
+        "BB": 1,
+        "HBP": 0,
+        "SF": 0,
+        "SH": 0,
+        "SO": 1
+      },
+      {
+        "gameId": "4i7tvjsp7kub1afghlct",
+        "playerId": "pl-hirooka",
+        "order": 1,
+        "PA": 5,
+        "AB": 4,
+        "H": 1,
+        "D": 0,
+        "T": 0,
+        "HR": 0,
+        "RBI": 0,
+        "R": 2,
+        "SB": 4,
+        "BB": 0,
+        "HBP": 1,
+        "SF": 0,
+        "SH": 0,
+        "SO": 0
+      },
+      {
+        "gameId": "4i7tvjsp7kub1afghlct",
+        "playerId": "pl-masaki",
+        "order": 3,
+        "PA": 5,
+        "AB": 5,
+        "H": 2,
+        "D": 0,
+        "T": 0,
+        "HR": 0,
+        "RBI": 2,
+        "R": 0,
+        "SB": 0,
+        "BB": 0,
+        "HBP": 0,
+        "SF": 0,
+        "SH": 0,
+        "SO": 1
       }
     ],
     "pitching": [
@@ -5209,6 +5304,19 @@ window.WR_DATA = {
         "H": 3,
         "R": 0,
         "ER": 0
+      },
+      {
+        "gameId": "4i7tvjsp7kub1afghlct",
+        "playerId": "pl-masaki",
+        "outs": 27,
+        "W": 1,
+        "L": 0,
+        "SV": 0,
+        "SO": 8,
+        "BB": 0,
+        "H": 5,
+        "R": 2,
+        "ER": 2
       }
     ],
     "fielding": [
@@ -6177,6 +6285,50 @@ window.WR_DATA = {
         "photo": "",
         "memo": "",
         "source": "scorebook"
+      },
+      {
+        "id": "4i7tvjsp7kub1afghlct",
+        "season": "2026",
+        "date": "2026-11-08",
+        "gameNo": 1,
+        "opponent": "CTYホークス",
+        "venue": "",
+        "kind": "tour",
+        "tourney": "軟式連盟大会2026",
+        "topBottom": "bottom",
+        "scoreFor": 3,
+        "scoreAgainst": 2,
+        "innings": {
+          "for": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "against": [
+            0,
+            0,
+            2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "mvp": "pl-masaki",
+        "mvp2": "pl-hirooka",
+        "start": "",
+        "end": "",
+        "photo": "",
+        "memo": "",
+        "source": "scorebook"
       }
     ]
   },
@@ -6604,6 +6756,26 @@ window.WR_DATA = {
         "reason": "大会準MVP（2026-10-18 vs 新中村化学）"
       },
       {
+        "id": "wp-mvp-4i7tvjsp7kub1afghlct",
+        "autoGame": "4i7tvjsp7kub1afghlct",
+        "autoType": "mvp",
+        "playerId": "pl-masaki",
+        "season": "2026",
+        "date": "2026-11-08",
+        "points": 2000,
+        "reason": "大会試合MVP（2026-11-08 vs CTYホークス）"
+      },
+      {
+        "id": "wp-mvp2-4i7tvjsp7kub1afghlct",
+        "autoGame": "4i7tvjsp7kub1afghlct",
+        "autoType": "mvp2",
+        "playerId": "pl-hirooka",
+        "season": "2026",
+        "date": "2026-11-08",
+        "points": 1000,
+        "reason": "大会準MVP（2026-11-08 vs CTYホークス）"
+      },
+      {
         "id": "sb-18fyqq4f244wvkrp6jhv",
         "playerId": "pl-tsunoda-atsuki",
         "season": "2026",
@@ -6719,5 +6891,5 @@ window.WR_DATA = {
 
     ]
   },
-  "exportedAt": "2026-10-22T05:44:52Z"
+  "exportedAt": "2026-11-08T07:12:07Z"
 };

@@ -422,6 +422,26 @@
       "reason": "大会準MVP（2026-10-18 vs 新中村化学）"
     },
     {
+      "id": "wp-mvp-4i7tvjsp7kub1afghlct",
+      "autoGame": "4i7tvjsp7kub1afghlct",
+      "autoType": "mvp",
+      "playerId": "pl-masaki",
+      "season": "2026",
+      "date": "2026-11-08",
+      "points": 2000,
+      "reason": "大会試合MVP（2026-11-08 vs CTYホークス）"
+    },
+    {
+      "id": "wp-mvp2-4i7tvjsp7kub1afghlct",
+      "autoGame": "4i7tvjsp7kub1afghlct",
+      "autoType": "mvp2",
+      "playerId": "pl-hirooka",
+      "season": "2026",
+      "date": "2026-11-08",
+      "points": 1000,
+      "reason": "大会準MVP（2026-11-08 vs CTYホークス）"
+    },
+    {
       "id": "sb-18fyqq4f244wvkrp6jhv",
       "playerId": "pl-tsunoda-atsuki",
       "season": "2026",

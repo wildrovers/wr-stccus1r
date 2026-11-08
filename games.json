@@ -960,6 +960,50 @@
       "photo": "",
       "memo": "",
       "source": "scorebook"
+    },
+    {
+      "id": "4i7tvjsp7kub1afghlct",
+      "season": "2026",
+      "date": "2026-11-08",
+      "gameNo": 1,
+      "opponent": "CTYホークス",
+      "venue": "",
+      "kind": "tour",
+      "tourney": "軟式連盟大会2026",
+      "topBottom": "bottom",
+      "scoreFor": 3,
+      "scoreAgainst": 2,
+      "innings": {
+        "for": [
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "against": [
+          0,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "mvp": "pl-masaki",
+      "mvp2": "pl-hirooka",
+      "start": "",
+      "end": "",
+      "photo": "",
+      "memo": "",
+      "source": "scorebook"
     }
   ]
 }
