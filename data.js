@@ -23,7 +23,8 @@ window.WR_DATA = {
           "sleeveL": "#ff7a1a",
           "sleeveR": "#1d1d24"
         },
-        "source": "scorebook"
+        "source": "scorebook",
+        "photo": "pp-e399e23fe0fdbc2c0e6ea5badc05c02b.jpg"
       },
       {
         "id": "pl-fukimoto",
@@ -38,7 +39,8 @@ window.WR_DATA = {
         "comment": "初代エース",
         "look": {
         },
-        "source": "scorebook"
+        "source": "scorebook",
+        "photo": ""
       },
       {
         "id": "pl-funai",
@@ -53,7 +55,8 @@ window.WR_DATA = {
         "comment": "",
         "look": {
         },
-        "source": "scorebook"
+        "source": "scorebook",
+        "photo": ""
       },
       {
         "id": "pl-hirohashi",
@@ -68,7 +71,8 @@ window.WR_DATA = {
         "comment": "新婚ヒットマン",
         "look": {
         },
-        "source": "scorebook"
+        "source": "scorebook",
+        "photo": ""
       },
       {
         "id": "pl-hirooka",
@@ -88,7 +92,8 @@ window.WR_DATA = {
           "hairColor": "#1c1714",
           "face": "cool"
         },
-        "source": "scorebook"
+        "source": "scorebook",
+        "photo": "pp-56262f08976fd7ec288892155601f561.jpg"
       },
       {
         "id": "pl-hiura",
@@ -110,7 +115,8 @@ window.WR_DATA = {
           "brows": "thick",
           "face": "cool"
         },
-        "source": "scorebook"
+        "source": "scorebook",
+        "photo": "pp-76ba06a3c67335e6eb478078cd66f425.jpg"
       },
       {
         "id": "pl-kuromatsu",
@@ -131,7 +137,8 @@ window.WR_DATA = {
           "cap": "backward",
           "face": "cool"
         },
-        "source": "scorebook"
+        "source": "scorebook",
+        "photo": "pp-b846ebd4823a7e34616f3c5ada4c5ff7.jpg"
       },
       {
         "id": "pl-maeyama",
@@ -146,7 +153,8 @@ window.WR_DATA = {
         "comment": "",
         "look": {
         },
-        "source": "scorebook"
+        "source": "scorebook",
+        "photo": ""
       },
       {
         "id": "pl-masaki",
@@ -168,7 +176,8 @@ window.WR_DATA = {
           "gear": "catcher",
           "face": "cool"
         },
-        "source": "scorebook"
+        "source": "scorebook",
+        "photo": "pp-f49f54c685f7f498f20ebf7e78487db1.jpg"
       },
       {
         "id": "pl-matsutani",
@@ -183,7 +192,8 @@ window.WR_DATA = {
         "comment": "期待の新人",
         "look": {
         },
-        "source": "scorebook"
+        "source": "scorebook",
+        "photo": ""
       },
       {
         "id": "pl-mori",
@@ -198,7 +208,8 @@ window.WR_DATA = {
         "comment": "覚醒間近の打者",
         "look": {
         },
-        "source": "scorebook"
+        "source": "scorebook",
+        "photo": ""
       },
       {
         "id": "pl-nakagawa",
@@ -220,7 +231,8 @@ window.WR_DATA = {
           "brows": "thick",
           "face": "cool"
         },
-        "source": "scorebook"
+        "source": "scorebook",
+        "photo": "pp-b8a599497aaadeb69c34e1fd602a5db3.jpg"
       },
       {
         "id": "pl-nakanishi",
@@ -243,7 +255,8 @@ window.WR_DATA = {
           "sleeveR": "#1d1d24",
           "face": "cool"
         },
-        "source": "scorebook"
+        "source": "scorebook",
+        "photo": "pp-7d3c3a6e255b1c1859b459e3cc7ff90a.jpg"
       },
       {
         "id": "pl-nakao",
@@ -265,7 +278,8 @@ window.WR_DATA = {
           "sleeveL": "#1d1d24",
           "sleeveR": "#1d1d24"
         },
-        "source": "scorebook"
+        "source": "scorebook",
+        "photo": "pp-a4ebad68158015fae18c92c46b88b31e.jpg"
       },
       {
         "id": "pl-nakayama",
@@ -280,7 +294,8 @@ window.WR_DATA = {
         "comment": "",
         "look": {
         },
-        "source": "scorebook"
+        "source": "scorebook",
+        "photo": ""
       },
       {
         "id": "pl-nishimoto",
@@ -295,7 +310,8 @@ window.WR_DATA = {
         "comment": "",
         "look": {
         },
-        "source": "scorebook"
+        "source": "scorebook",
+        "photo": ""
       },
       {
         "id": "pl-ogura",
@@ -317,7 +333,8 @@ window.WR_DATA = {
           "sleeveL": "#ff9fc6",
           "sleeveR": "#ff9fc6"
         },
-        "source": "scorebook"
+        "source": "scorebook",
+        "photo": "pp-6cdf1bc9feebe51ef5e0862b9d7b1322.jpg"
       },
       {
         "id": "pl-oka",
@@ -332,7 +349,8 @@ window.WR_DATA = {
         "comment": "復帰したツッコミ打法",
         "look": {
         },
-        "source": "scorebook"
+        "source": "scorebook",
+        "photo": ""
       },
       {
         "id": "pl-oku",
@@ -347,7 +365,8 @@ window.WR_DATA = {
         "comment": "期待値高き若手野手",
         "look": {
         },
-        "source": "scorebook"
+        "source": "scorebook",
+        "photo": ""
       },
       {
         "id": "pl-suzuki",
@@ -362,7 +381,8 @@ window.WR_DATA = {
         "comment": "",
         "look": {
         },
-        "source": "scorebook"
+        "source": "scorebook",
+        "photo": ""
       },
       {
         "id": "pl-taniguchi",
@@ -385,7 +405,8 @@ window.WR_DATA = {
           "sleeveL": "#1d1d24",
           "sleeveR": "#1d1d24"
         },
-        "source": "scorebook"
+        "source": "scorebook",
+        "photo": "pp-bae3512b85929fe8769ab904aa20bf89.jpg"
       },
       {
         "id": "pl-tsuge",
@@ -400,7 +421,8 @@ window.WR_DATA = {
         "comment": "縦カーブの使い手",
         "look": {
         },
-        "source": "scorebook"
+        "source": "scorebook",
+        "photo": ""
       },
       {
         "id": "pl-tsujimoto-kaito",
@@ -421,7 +443,8 @@ window.WR_DATA = {
           "sleeveL": "#c6f03c",
           "sleeveR": "#c6f03c"
         },
-        "source": "scorebook"
+        "source": "scorebook",
+        "photo": "pp-2946b04c34d4d2eb0d68a449f48afa0c.jpg"
       },
       {
         "id": "pl-tsujimoto-kodai",
@@ -436,7 +459,8 @@ window.WR_DATA = {
         "comment": "真二刀流",
         "look": {
         },
-        "source": "scorebook"
+        "source": "scorebook",
+        "photo": ""
       },
       {
         "id": "pl-tsujimoto",
@@ -458,7 +482,8 @@ window.WR_DATA = {
           "sleeveL": "#1a2f73",
           "sleeveR": "#1a2f73"
         },
-        "source": "scorebook"
+        "source": "scorebook",
+        "photo": "pp-bef102feb2ff8a8d0cc20e8734b20948.jpg"
       },
       {
         "id": "pl-tsunemi",
@@ -473,7 +498,8 @@ window.WR_DATA = {
         "comment": "本気マン",
         "look": {
         },
-        "source": "scorebook"
+        "source": "scorebook",
+        "photo": ""
       },
       {
         "id": "pl-tsunoda-atsuki",
@@ -493,7 +519,8 @@ window.WR_DATA = {
           "hairColor": "#1c1714",
           "face": "round"
         },
-        "source": "scorebook"
+        "source": "scorebook",
+        "photo": "pp-36d074d1f3befffd9617c94c92e4d6d1.jpg"
       },
       {
         "id": "pl-tsunoda",
@@ -517,7 +544,8 @@ window.WR_DATA = {
           "sleeveR": "#1d1d24",
           "face": "cool"
         },
-        "source": "scorebook"
+        "source": "scorebook",
+        "photo": "pp-e7eb73790ac6d6b78173a17c7aef1606.jpg"
       },
       {
         "id": "pl-uehara",
@@ -532,7 +560,8 @@ window.WR_DATA = {
         "comment": "沖縄の甲斐野央",
         "look": {
         },
-        "source": "scorebook"
+        "source": "scorebook",
+        "photo": ""
       },
       {
         "id": "pl-uemae",
@@ -547,7 +576,8 @@ window.WR_DATA = {
         "comment": "",
         "look": {
         },
-        "source": "scorebook"
+        "source": "scorebook",
+        "photo": ""
       },
       {
         "id": "pl-yoshida",
@@ -562,10 +592,11 @@ window.WR_DATA = {
         "comment": "フルスインガー",
         "look": {
         },
-        "source": "scorebook"
+        "source": "scorebook",
+        "photo": ""
       }
     ],
-    "updatedAt": "2026-11-08T07:12:07Z"
+    "updatedAt": "2026-11-08T07:41:05Z"
   },
   "stats": {
     "_説明": "試合ごとの打撃・投手成績（草野球スコアブックの打順別合計から取り込み）。守備成績はスコアブックにないため未登録。",
@@ -6891,5 +6922,5 @@ window.WR_DATA = {
 
     ]
   },
-  "exportedAt": "2026-11-08T07:12:07Z"
+  "exportedAt": "2026-11-08T07:41:05Z"
 };

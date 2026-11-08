@@ -200,6 +200,11 @@ table.t td.l,table.t th.l{text-align:left}
 .card-ava{position:relative;flex:none;display:inline-block}
 .card-ava img{width:100%;height:100%;object-fit:cover;object-position:50% 18%;border-radius:7px;border:2px solid var(--yellow);box-shadow:0 3px 8px rgba(0,0,0,.25);display:block;background:#0b1433}
 .card-crown{position:absolute;top:-15px;left:50%;transform:translateX(-50%);font-style:normal;font-size:18px;z-index:1;animation:bob 1.6s ease-in-out infinite}
+.photo-ava{position:relative;flex:none;display:inline-block;border-radius:50%;background:#000;border:3px solid var(--yellow);box-shadow:0 3px 8px rgba(0,0,0,.25)}
+.photo-ava img{width:100%;height:100%;object-fit:cover;object-position:50% 30%;border-radius:50%;display:block}
+.photo-ava.noimg img{display:none}
+.photo-ava.noimg::after{content:'⚾';position:absolute;inset:0;display:grid;place-items:center;font-size:60%}
+#lightbox img.lb-photo{background:#000;object-fit:contain;max-height:70vh}
 .card-big{margin:2px auto 4px;display:flex;justify-content:center}
 .card-zoom{border:none;background:none;padding:0;flex:none;position:relative;z-index:1}
 #lightbox{position:fixed;inset:0;z-index:70;background:rgba(5,10,30,.88);display:grid;place-items:center;padding:20px}
@@ -371,8 +376,12 @@ const lookOf = p => Object.assign({}, LOOK_DEFAULT, (p && p.look) || {});
 const BUILD_W = { slim: 22, normal: 26, sturdy: 30, chubby: 33, muscle: 30 };
 // 選手カード（admin.html で ChatGPT などで作った画像）。あれば2Dキャラクターの代わりに表示
 const cardOf = p => p && S.cards && S.cards[p.id];
+// スコアブックに登録された選手写真（あれば丸い写真で表示。カードがあればカードを優先）
+const photoOf = p => p && p.photo ? p.photo : null;
+const imageOf = p => cardOf(p) || photoOf(p);
 function avatar(p, size = 64, crown = false) {
-  const cu = cardOf(p);
+  const cu = cardOf(p), ph = !cu && photoOf(p);
+  if (ph) return `<span class="photo-ava" style="width:${size}px;height:${size}px">${crown ? '<i class="card-crown">👑</i>' : ''}<img src="${esc(ph)}" alt="" loading="lazy" onerror="this.parentNode.classList.add('noimg')"></span>`;
   if (cu) return `<span class="card-ava" style="width:${Math.round(size * 0.78)}px;height:${Math.round(size * 1.15)}px">${crown ? '<i class="card-crown">👑</i>' : ''}<img src="${cu}" alt="" loading="lazy"></span>`;
   const no = esc(p ? (p.number || '') : '?');
   const L = lookOf(p), bw = BUILD_W[L.build] || 26, hc = esc(L.hairColor);
@@ -451,7 +460,7 @@ VIEWS.roster = () => {
   const html = `${kindChips()}<div class="muted" style="margin:-4px 0 8px">MVP・準MVPの回数とWPは ${esc(SL())} の集計です${note}</div><div class="roster">${ps.map(p => {
     const wp = C.wpSummary(D(), p.id, SC()).current, m = C.mvpCounts(D(), p.id, SC());
     return `<div class="pcard ${p.active === false ? 'inactive' : ''}" data-player="${esc(p.id)}">
-      <span class="wp">${m.game ? `<b class="mv1">🏆MVP ${m.game}回</b>` : ''}${m.game2 ? `<b class="mv2">🥈準MVP ${m.game2}回</b>` : ''}</span>${cardOf(p) ? `<div class="card-big">${avatar(p, 128)}</div>` : avatar(p, 70)}
+      <span class="wp">${m.game ? `<b class="mv1">🏆MVP ${m.game}回</b>` : ''}${m.game2 ? `<b class="mv2">🥈準MVP ${m.game2}回</b>` : ''}</span>${cardOf(p) ? `<div class="card-big">${avatar(p, 128)}</div>` : photoOf(p) ? `<div class="card-big">${avatar(p, 92)}</div>` : avatar(p, 70)}
       <div class="nm">${esc(p.name)}</div>
       <div class="pos">${p.number ? `#${esc(p.number)}・` : ''}${esc(p.position || '未登録')}${p.active === false ? '・休部/退団' : ''}</div>
       <div class="wpline">${wp.toLocaleString('ja-JP')} WP</div></div>`;
@@ -601,12 +610,12 @@ const splitCard = `<div class="card"><h3>🏆 大会・練習試合別<span clas
 
   const html = `
   ${kindChips()}
-  <div class="hero">${cardOf(p) ? `<button class="card-zoom" data-zoomcard="${esc(p.id)}" aria-label="カードを拡大">${avatar(p, 128, ranks.WP && ranks.WP.rank === 1)}</button>` : avatar(p, 86, ranks.WP && ranks.WP.rank === 1)}
+  <div class="hero">${imageOf(p) ? `<button class="card-zoom" data-zoomcard="${esc(p.id)}" aria-label="写真を拡大">${avatar(p, cardOf(p) ? 128 : 104, ranks.WP && ranks.WP.rank === 1)}</button>` : avatar(p, 86, ranks.WP && ranks.WP.rank === 1)}
     <div style="position:relative;z-index:1;min-width:0">
       <div class="big-no">#${esc(p.number || '—')}</div>
       <div class="nm">${esc(p.name)}</div>
       <div class="meta">${esc(p.position || 'ポジション未登録')}・${p.throws || p.bats ? `${esc(p.throws || '?')}投${esc(p.bats || '?')}打` : '投打 未登録'}${p.active === false ? '・休部/退団' : ''}</div>
-      ${p.look && p.look.photo ? '<div class="meta">📷 キャラクターは登録写真を参考に作成</div>' : ''}
+      ${!imageOf(p) && p.look && p.look.photo ? '<div class="meta">📷 キャラクターは登録写真を参考に作成</div>' : ''}
       ${p.comment ? `<div class="meta">${esc(p.comment)}</div>` : ''}
     </div></div>
   <div class="row" style="margin-bottom:12px">
@@ -832,7 +841,7 @@ document.addEventListener('click', e => {
   if (ds.nav) { if (ds.nav === 'home') closeSheet(); else openView(ds.nav, {}, false); return; }
   if (ds.spot) { World && World.flyTo(ds.spot); document.querySelectorAll('#spots .chip').forEach(c => c.classList.toggle('on', c === t)); toast('看板や選手をタップすると詳しく見られます'); return; }
   if (ds.rank) { S.boardCat = ds.rank; World && World.setBoard(ds.rank); S.stack.pop(); openView('ranking', { key: ds.rank }, true, true); return; }
-if (ds.zoomcard) { const lb = document.createElement('div'); lb.id = 'lightbox'; lb.innerHTML = `<img src="${cardOf(P(ds.zoomcard))}" alt="">`; lb.onclick = () => lb.remove(); document.body.appendChild(lb); return; }
+if (ds.zoomcard) { const lb = document.createElement('div'); lb.id = 'lightbox'; lb.innerHTML = `<img src="${esc(imageOf(P(ds.zoomcard)))}" alt=""${cardOf(P(ds.zoomcard)) ? '' : ' class="lb-photo"'}>`; lb.onclick = () => lb.remove(); document.body.appendChild(lb); return; }
 if (ds.kind) { setScope(S.season, ds.kind); return; }
   if (ds.tsort) { const st = S.tableSort[ds.ttype]; if (st.k === ds.tsort) st.dir *= -1; else { st.k = ds.tsort; st.dir = ['ERA', 'WHIP'].includes(ds.tsort) ? 1 : -1; } refreshSheet(); return; }
   if (ds.order) { S.gamesOrder = ds.order; refreshSheet(); return; }
